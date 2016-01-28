@@ -2,12 +2,12 @@
 Répertoire pour les travaux de Optimisation combinatoire
 
 ## TP1
-Travail pratique__
-IFT 4001 / IFT 7020 Optimisation Combinatoire__
-Enseignant: Claude-Guy Quimper__
-Session: Hiver 2016__
-Date de remise: 21 février 2016, 23h55__
-Équipes de 2 ou 3 personnes__
+Travail pratique <br />
+IFT 4001 / IFT 7020 Optimisation Combinatoire <br />
+Enseignant: Claude-Guy Quimper<br />
+Session: Hiver 2016 <br />
+Date de remise: 21 février 2016, 23h55<br />
+Équipes de 2 ou 3 personnes<br />
 
 Premier problème
 ----------------
