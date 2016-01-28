@@ -1,4 +1,4 @@
-# ift4001
+# IFT4001
 Répertoire pour les travaux de Optimisation combinatoire
 
 ## TP1
@@ -22,7 +22,7 @@ aligner.
 
 
 
-######Les livrables
+#### Les livrables
 * Le code de programmation. Un seul fichier .java devrait suffire pour cette question;
 * Un document PDF comportant;
 * Une page titre avec les noms et numéros de dossier de chaque membre de l’équipe;
@@ -51,14 +51,14 @@ D’après les propriétaires de la boutique, le nombre d’employés travaillan
 période d'une demie-heure de la journée devrait fluctuer de la façon suivante.
 
 En aucun cas la boutique ne doit être laissée sans employé. Le nombre d’employés
-souhaité ne pourra pas toujours être atteint. On estime à * 20x * $ par demi-heure la perte de
-profit lorsqu’il y a * x * employés de moins ou * x * employés de plus que le nombre souhaité. Il
+souhaité ne pourra pas toujours être atteint. On estime à *20x* $ par demi-heure la perte de
+profit lorsqu’il y a *x* employés de moins ou *x* employés de plus que le nombre souhaité. Il
 vous faut donc trouver l’horaire de travail qui minimise les pertes de profit.
 L’horaire suivant mène à une perte de profit de 180$. Cette solution n’est pas optimale.
 
 Vous devez modéliser ce problème en utilisant les contraintes disponibles dans le solveur
 Choco 3. Vous devez aussi fournir une analyse de votre modèle, c'est-à-dire le nombre de
-variables, de contraintes et de valeurs dans les domaines en utilisant la notation ⇥ . Pour
+variables, de contraintes et de valeurs dans les domaines en utilisant la notation theta. Pour
 votre analyse, supposez qu'il y a p périodes dans une journée et n employés et donnez le
 nombre de contraintes, de variables, de valeurs et d'entrées dans les contraintes tableau
 en fonction de p et de n. Dans l'instance que vous devez résoudre, nous avons p = 16 et
