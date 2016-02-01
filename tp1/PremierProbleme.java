@@ -1,8 +1,7 @@
 import org.chocosolver.solver.constraints.*;
 import org.chocosolver.solver.search.strategy.*;
 import org.chocosolver.solver.variables.*;
-import org.chocosolver.util.objects.graphs.DirectedGraph;
-import org.chocosolver.util.objects.setDataStructures.SetType;
+import org.chocosolver.util.objects.graphs.MultivaluedDecisionDiagram;
 import org.chocosolver.solver.*;
 import org.chocosolver.solver.trace.*;
 import org.chocosolver.solver.search.limits.*;
@@ -64,7 +63,7 @@ public class PremierProbleme {
 
         // Modelisation de l'emplacement des couleurs
         //solver.post(IntConstraintFactory.(colonnes[i], "BC"));
-        GraphVarFactory
+        //MultivaluedDecisionDiagram MDD = new MultivaluedDecisionDiagram(;
         
         // Vecteur contenant toutes les variables de la matrice dans un seul vecteur
         IntVar[] toutesLesVariables = new IntVar[n * n];
