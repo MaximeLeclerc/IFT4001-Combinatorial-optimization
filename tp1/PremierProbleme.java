@@ -66,8 +66,11 @@ public class PremierProbleme {
         // Ajout des couleurs par l'oppose du cube 1
         Tuples tuples1 = new Tuples();
         tuples1.add(JAUNE, VERT);
+        tuples1.add(VERT, JAUNE);
         tuples1.add(ROUGE, BLEU);
+        tuples1.add(BLEU, ROUGE);
         tuples1.add(VERT, ROUGE);
+        tuples1.add(ROUGE, VERT);
         MultivaluedDecisionDiagram mdd1 = new MultivaluedDecisionDiagram(colonnes[0], tuples1);
         solver.post(IntConstraintFactory.mddc(colonnes[0], mdd1));
         
@@ -75,23 +78,30 @@ public class PremierProbleme {
         Tuples tuples2 = new Tuples();
         tuples2.add(VERT, VERT);
         tuples2.add(ROUGE, BLEU);
+        tuples2.add(BLEU, ROUGE);
         tuples2.add(JAUNE, BLEU);
+        tuples2.add(BLEU, JAUNE);
         MultivaluedDecisionDiagram mdd2 = new MultivaluedDecisionDiagram(colonnes[1], tuples2);
         solver.post(IntConstraintFactory.mddc(colonnes[1], mdd2));
         
         // Ajout des couleurs par l'oppose du cube 3
         Tuples tuples3 = new Tuples();
         tuples3.add(BLEU, ROUGE);
+        tuples3.add(ROUGE, BLEU);
         tuples3.add(JAUNE, JAUNE);
         tuples3.add(JAUNE, VERT);
+        tuples3.add(VERT, JAUNE);
         MultivaluedDecisionDiagram mdd3 = new MultivaluedDecisionDiagram(colonnes[2], tuples3);
         solver.post(IntConstraintFactory.mddc(colonnes[2], mdd3));
         
         // Ajout des couleurs par l'oppose du cube 4
         Tuples tuples4 = new Tuples();
         tuples4.add(JAUNE, ROUGE);
+        tuples4.add(ROUGE, JAUNE);
         tuples4.add(ROUGE, VERT);
+        tuples4.add(VERT, ROUGE);
         tuples4.add(BLEU, JAUNE);
+        tuples4.add(JAUNE, BLEU);
         MultivaluedDecisionDiagram mdd4 = new MultivaluedDecisionDiagram(colonnes[3], tuples4);
         solver.post(IntConstraintFactory.mddc(colonnes[3], mdd4));
         
