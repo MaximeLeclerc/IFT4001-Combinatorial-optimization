@@ -1,4 +1,5 @@
 import org.chocosolver.solver.constraints.*;
+import org.chocosolver.solver.constraints.extension.Tuples;
 import org.chocosolver.solver.search.strategy.*;
 import org.chocosolver.solver.variables.*;
 import org.chocosolver.util.objects.graphs.MultivaluedDecisionDiagram;
@@ -8,8 +9,9 @@ import org.chocosolver.solver.search.limits.*;
 import org.chocosolver.solver.search.loop.monitors.*;
 
 public class PremierProbleme {
-	public static final int NOMBRE_DE_CUBES = 4;
 	
+	public static final int INVERSE = 2;
+
 	public static final int JAUNE = 1;
 	public static final int ROUGE = 2;
 	public static final int BLEU = 3;
@@ -38,37 +40,65 @@ public class PremierProbleme {
     	// Creation du solveur
         Solver solver = new Solver();
 
-        // Creation d'une matrice de dimensions n x n de variables dont les domaines sont les entiers de 1 a n.
-        IntVar[][] lignes;
+        // Creation d'une matrice de dimensions NOMBRE_DE_COTES x n de variables dont les domaines sont les entiers de 1 a n.
+        IntVar[][] lignesAvantArriere;
         if (coherence == COHERENCE_DE_BORNES)
-            lignes = VariableFactory.boundedMatrix("x", n, n, 1, n, solver);
+        	lignesAvantArriere = VariableFactory.boundedMatrix("x", INVERSE, n, 1, n, solver);
         else
-            lignes = VariableFactory.enumeratedMatrix("x", n, n, 1, n, solver);
+        	lignesAvantArriere = VariableFactory.enumeratedMatrix("x", INVERSE, n, 1, n, solver);
         
         // Ajout des contraintes forcant chacun des elements d'une ligne a avoir une couleur differente
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < INVERSE; i++) {
         	if (coherence == COHERENCE_DE_BORNES)
-                solver.post(IntConstraintFactory.alldifferent(lignes[i], "BC"));
+                solver.post(IntConstraintFactory.alldifferent(lignesAvantArriere[i], "BC"));
             else
-                solver.post(IntConstraintFactory.alldifferent(lignes[i], "AC"));
+                solver.post(IntConstraintFactory.alldifferent(lignesAvantArriere[i], "AC"));
         }
         
         // Creation de la tranpose de la matrice lignes.
-        IntVar[][] colonnes = new IntVar[n][n];
+        IntVar[][] colonnes = new IntVar[n][INVERSE];
         for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                colonnes[i][j] = lignes[j][i];
+            for (int j = 0; j < INVERSE; j++) {
+                colonnes[i][j] = lignesAvantArriere[j][i];
             }
         }
-
-        // Modelisation de l'emplacement des couleurs
-        //solver.post(IntConstraintFactory.(colonnes[i], "BC"));
-        //MultivaluedDecisionDiagram MDD = new MultivaluedDecisionDiagram(;
+        
+        // Ajout des couleurs par l'oppose du cube 1
+        Tuples tuples1 = new Tuples();
+        tuples1.add(JAUNE, VERT);
+        tuples1.add(ROUGE, BLEU);
+        tuples1.add(VERT, ROUGE);
+        MultivaluedDecisionDiagram mdd1 = new MultivaluedDecisionDiagram(colonnes[0], tuples1);
+        solver.post(IntConstraintFactory.mddc(colonnes[0], mdd1));
+        
+        // Ajout des couleurs par l'oppose du cube 2
+        Tuples tuples2 = new Tuples();
+        tuples2.add(VERT, VERT);
+        tuples2.add(ROUGE, BLEU);
+        tuples2.add(JAUNE, BLEU);
+        MultivaluedDecisionDiagram mdd2 = new MultivaluedDecisionDiagram(colonnes[1], tuples2);
+        solver.post(IntConstraintFactory.mddc(colonnes[1], mdd2));
+        
+        // Ajout des couleurs par l'oppose du cube 3
+        Tuples tuples3 = new Tuples();
+        tuples3.add(BLEU, ROUGE);
+        tuples3.add(JAUNE, JAUNE);
+        tuples3.add(JAUNE, VERT);
+        MultivaluedDecisionDiagram mdd3 = new MultivaluedDecisionDiagram(colonnes[2], tuples3);
+        solver.post(IntConstraintFactory.mddc(colonnes[2], mdd3));
+        
+        // Ajout des couleurs par l'oppose du cube 4
+        Tuples tuples4 = new Tuples();
+        tuples4.add(JAUNE, ROUGE);
+        tuples4.add(ROUGE, VERT);
+        tuples4.add(BLEU, JAUNE);
+        MultivaluedDecisionDiagram mdd4 = new MultivaluedDecisionDiagram(colonnes[3], tuples4);
+        solver.post(IntConstraintFactory.mddc(colonnes[3], mdd4));
         
         // Vecteur contenant toutes les variables de la matrice dans un seul vecteur
-        IntVar[] toutesLesVariables = new IntVar[n * n];
-        for (int i = 0; i < n * n; i++) {
-            toutesLesVariables[i] = lignes[i / n][i % n];
+        IntVar[] toutesLesVariables = new IntVar[INVERSE * n];
+        for (int i = 0; i < INVERSE * n; i++) {
+            toutesLesVariables[i] = lignesAvantArriere[i / n][i % n];
         }
         
         switch(heuristique) {
@@ -91,13 +121,13 @@ public class PremierProbleme {
 
         solver.findSolution();
 
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < INVERSE; i++) {
             for (int j = 0; j < n; j++) {
-                if (lignes[i][j].getValue() < 10)
+                if (lignesAvantArriere[i][j].getValue() < 10)
                     System.out.print(" ");
-                if (lignes[i][j].getValue() < 100)
+                if (lignesAvantArriere[i][j].getValue() < 100)
                     System.out.print(" ");
-                System.out.print(lignes[i][j].getValue());
+                System.out.print(lignesAvantArriere[i][j].getValue());
                 System.out.print("  ");
             }
             System.out.println("");
