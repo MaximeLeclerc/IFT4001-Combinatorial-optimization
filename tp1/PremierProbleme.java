@@ -10,7 +10,7 @@ import org.chocosolver.solver.search.loop.monitors.*;
 
 public class PremierProbleme {
 	
-	public static final int INVERSE = 2;
+	public static final int NOMBRE_DE_COTES = 4;
 
 	public static final int JAUNE = 1;
 	public static final int ROUGE = 2;
@@ -41,74 +41,39 @@ public class PremierProbleme {
         Solver solver = new Solver();
 
         // Creation d'une matrice de dimensions NOMBRE_DE_COTES x n de variables dont les domaines sont les entiers de 1 a n.
-        IntVar[][] lignesAvantArriere;
+        IntVar[][] lignes;
         if (coherence == COHERENCE_DE_BORNES)
-        	lignesAvantArriere = VariableFactory.boundedMatrix("x", INVERSE, n, 1, n, solver);
+        	lignes = VariableFactory.boundedMatrix("x", NOMBRE_DE_COTES, n, 1, n, solver);
         else
-        	lignesAvantArriere = VariableFactory.enumeratedMatrix("x", INVERSE, n, 1, n, solver);
+        	lignes = VariableFactory.enumeratedMatrix("x", NOMBRE_DE_COTES, n, 1, n, solver);
         
         // Ajout des contraintes forcant chacun des elements d'une ligne a avoir une couleur differente
-        for (int i = 0; i < INVERSE; i++) {
+        for (int i = 0; i < NOMBRE_DE_COTES; i++) {
         	if (coherence == COHERENCE_DE_BORNES)
-                solver.post(IntConstraintFactory.alldifferent(lignesAvantArriere[i], "BC"));
+                solver.post(IntConstraintFactory.alldifferent(lignes[i], "BC"));
             else
-                solver.post(IntConstraintFactory.alldifferent(lignesAvantArriere[i], "AC"));
+                solver.post(IntConstraintFactory.alldifferent(lignes[i], "AC"));
         }
         
-        // Creation de la tranpose de la matrice lignes.
-        IntVar[][] colonnes = new IntVar[n][INVERSE];
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < INVERSE; j++) {
-                colonnes[i][j] = lignesAvantArriere[j][i];
+        // Creation de la matrice des opposes NOMBRE_DE_COTES / 2 x 2 * n.
+        IntVar[][] opposes = new IntVar[2 * n][NOMBRE_DE_COTES / 2];
+        for (int i = 0; i < NOMBRE_DE_COTES; i++) {
+        	for (int j = 0; j < n; j++) {
+            	opposes[i % 2 + j * 2][i / 2] = lignes[i][j];
             }
         }
         
-        // Ajout des couleurs par l'oppose du cube 1
-        Tuples tuples1 = new Tuples();
-        tuples1.add(JAUNE, VERT);
-        tuples1.add(VERT, JAUNE);
-        tuples1.add(ROUGE, BLEU);
-        tuples1.add(BLEU, ROUGE);
-        tuples1.add(VERT, ROUGE);
-        tuples1.add(ROUGE, VERT);
-        MultivaluedDecisionDiagram mdd1 = new MultivaluedDecisionDiagram(colonnes[0], tuples1);
-        solver.post(IntConstraintFactory.mddc(colonnes[0], mdd1));
-        
-        // Ajout des couleurs par l'oppose du cube 2
-        Tuples tuples2 = new Tuples();
-        tuples2.add(VERT, VERT);
-        tuples2.add(ROUGE, BLEU);
-        tuples2.add(BLEU, ROUGE);
-        tuples2.add(JAUNE, BLEU);
-        tuples2.add(BLEU, JAUNE);
-        MultivaluedDecisionDiagram mdd2 = new MultivaluedDecisionDiagram(colonnes[1], tuples2);
-        solver.post(IntConstraintFactory.mddc(colonnes[1], mdd2));
-        
-        // Ajout des couleurs par l'oppose du cube 3
-        Tuples tuples3 = new Tuples();
-        tuples3.add(BLEU, ROUGE);
-        tuples3.add(ROUGE, BLEU);
-        tuples3.add(JAUNE, JAUNE);
-        tuples3.add(JAUNE, VERT);
-        tuples3.add(VERT, JAUNE);
-        MultivaluedDecisionDiagram mdd3 = new MultivaluedDecisionDiagram(colonnes[2], tuples3);
-        solver.post(IntConstraintFactory.mddc(colonnes[2], mdd3));
-        
-        // Ajout des couleurs par l'oppose du cube 4
-        Tuples tuples4 = new Tuples();
-        tuples4.add(JAUNE, ROUGE);
-        tuples4.add(ROUGE, JAUNE);
-        tuples4.add(ROUGE, VERT);
-        tuples4.add(VERT, ROUGE);
-        tuples4.add(BLEU, JAUNE);
-        tuples4.add(JAUNE, BLEU);
-        MultivaluedDecisionDiagram mdd4 = new MultivaluedDecisionDiagram(colonnes[3], tuples4);
-        solver.post(IntConstraintFactory.mddc(colonnes[3], mdd4));
+        // Ajout des couleurs par l'oppose des cubes
+        for (int i = 0; i < 2 * n; i++) {
+        	Tuples tuples = creerTuples(i / 2);
+            MultivaluedDecisionDiagram mdd = new MultivaluedDecisionDiagram(opposes[i], tuples);
+            solver.post(IntConstraintFactory.mddc(opposes[i], mdd));
+        }
         
         // Vecteur contenant toutes les variables de la matrice dans un seul vecteur
-        IntVar[] toutesLesVariables = new IntVar[INVERSE * n];
-        for (int i = 0; i < INVERSE * n; i++) {
-            toutesLesVariables[i] = lignesAvantArriere[i / n][i % n];
+        IntVar[] toutesLesVariables = new IntVar[NOMBRE_DE_COTES * n];
+        for (int i = 0; i < NOMBRE_DE_COTES * n; i++) {
+            toutesLesVariables[i] = lignes[i / n][i % n];
         }
         
         switch(heuristique) {
@@ -131,17 +96,58 @@ public class PremierProbleme {
 
         solver.findSolution();
 
-        for (int i = 0; i < INVERSE; i++) {
+        for (int i = 0; i < NOMBRE_DE_COTES; i++) {
             for (int j = 0; j < n; j++) {
-                if (lignesAvantArriere[i][j].getValue() < 10)
+                if (lignes[i][j].getValue() < 10)
                     System.out.print(" ");
-                if (lignesAvantArriere[i][j].getValue() < 100)
+                if (lignes[i][j].getValue() < 100)
                     System.out.print(" ");
-                System.out.print(lignesAvantArriere[i][j].getValue());
+                System.out.print(lignes[i][j].getValue());
                 System.out.print("  ");
             }
             System.out.println("");
         }
+        
         Chatterbox.printStatistics(solver);
     }
+    
+    private static Tuples creerTuples(int cote) {
+    	Tuples tuples = new Tuples();
+    	
+    	switch (cote) {
+    	    case 0:
+    	    	tuples.add(JAUNE, VERT);
+    	    	tuples.add(VERT, JAUNE);
+    	    	tuples.add(ROUGE, BLEU);
+    	    	tuples.add(BLEU, ROUGE);
+    	    	tuples.add(VERT, ROUGE);
+    	    	tuples.add(ROUGE, VERT);
+                break;
+    	    case 1:
+    	    	tuples.add(VERT, VERT);
+    	    	tuples.add(ROUGE, BLEU);
+    	    	tuples.add(BLEU, ROUGE);
+    	    	tuples.add(JAUNE, BLEU);
+    	    	tuples.add(BLEU, JAUNE);
+                break;
+    	    case 2:
+    	    	tuples.add(BLEU, ROUGE);
+    	    	tuples.add(ROUGE, BLEU);
+    	    	tuples.add(JAUNE, JAUNE);
+    	    	tuples.add(JAUNE, VERT);
+    	    	tuples.add(VERT, JAUNE);
+                break;
+    	    case 3:
+    	    	tuples.add(JAUNE, ROUGE);
+    	    	tuples.add(ROUGE, JAUNE);
+    	    	tuples.add(ROUGE, VERT);
+    	    	tuples.add(VERT, ROUGE);
+    	    	tuples.add(BLEU, JAUNE);
+    	    	tuples.add(JAUNE, BLEU);
+                break;
+    	}
+    	
+    	return tuples;
+    }
 }
+
