@@ -1,0 +1,114 @@
+\documentclass[12pt]{report}
+\usepackage[francais]{babel}
+\usepackage{latexsym}
+
+\usepackage{enumerate}
+
+% Les paquetage suivants peuvent être utiles. Les décommenter au besoin
+% \usepackage{amssymb}
+% \usepackage{amsmath}
+
+\usepackage[latin1]{inputenc} % Pour pouvoir taper les accent directement et non pas passer par \'
+
+
+\setlength{\oddsidemargin}{-0,4in} \topmargin -12,0mm
+ \textheight 24,5cm \textwidth 17,8cm
+
+
+
+\begin{document}
+	
+\title{IFT-4001 (Hiver 2016) Travail pratique}
+\date{21 février 2016}
+\author{Vincent Beaudoin (111 103 778)\\Alexandre Picard-Lemieux (111 103 625)}
+
+\maketitle
+\newpage
+
+\textbf{\Large Premier problème}\\
+
+On déclare une variable pour chaque élément de la matrice. Ainsi, la variable $X_{ij}$ représente la valeur inscrite à la ligne $i$ et la colonne $j$ pour $1 \leq i \leq 4$ et $1 \leq j \leq n$. $n$ représente le nombre de cube. Le domaine de chaque variable est l'ensemble des entiers entre 1 et n, c'est-à-dire les couleurs.\\
+
+Nous avons les couleurs décidées aléatoirement:\\
+JAUNE = 1;\\ROUGE = 2;\\BLEU = 3;\\VERT = 4;\\
+
+Nous avons les tuples pour $n = 4$ qui ont été définis dans le problème:\\
+
+$T_1$:
+\begin{tabular}{ |c|c| } 
+	\hline
+	x & y \\
+	\hline
+	JAUNE & VERT \\
+	VERT & JAUNE \\
+	ROUGE & BLEU \\
+	BLEU & ROUGE \\
+	VERT & ROUGE \\
+	ROUGE & VERT \\
+	\hline
+\end{tabular}
+\quad
+$T_2$:
+\begin{tabular}{ |c|c| } 
+	\hline
+	x & y \\
+	\hline
+	VERT & VERT \\
+	ROUGE & BLEU \\
+	BLEU & ROUGE \\
+	JAUNE & BLEU \\
+	BLEU & JAUNE \\
+	\hline
+\end{tabular}
+
+$T_3$:
+\begin{tabular}{ |c|c| } 
+	\hline
+	x & y \\
+	\hline
+	BLEU & ROUGE \\
+	ROUGE & BLEU \\
+	JAUNE & JAUNE \\
+	JAUNE & VERT \\
+	VERT & JAUNE \\
+	\hline
+\end{tabular}
+\quad
+$T_4$:
+\begin{tabular}{ |c|c| } 
+	\hline
+	x & y \\
+	\hline
+	JAUNE & ROUGE \\
+	ROUGE & JAUNE \\
+	ROUGE & VERT \\
+	VERT & ROUGE \\
+	BLEU & JAUNE \\
+	JAUNE & BLEU \\
+	\hline
+\end{tabular}
+
+Pour chaque ligne $i$, nous avons une contrainte $X_{ij} \neq X_{ik}$ pour chacune des $\frac{n(n-1)}{2}$ paires de variables.
+
+\begin{equation}
+X_{ij} \neq X_{ik} \quad \forall 1 \leq j, k \leq n
+\end{equation}
+
+Pour chaque colonne j, nous avons ces contraintes.
+
+\begin{equation}
+Tableau(X_{ij}, X_{(i+2)j}, T_j) \quad \forall 1 \leq i \leq 2
+\end{equation}
+
+\begin{equation}
+ifThen(X_{ij} = X_{(i+1)j}, X_{(i+2)j} \neq X_{(i+3)j})
+\end{equation}
+
+\begin{equation}
+ifThen(X_{ij} = X_{(i+3)j}, X_{(i+1)j} \neq X_{(i+2)j})
+\end{equation}
+
+Nous avons donc $4n \in \Theta(n)$ variables. Chaque variable a $n$ valeurs dans son domaine pour un total de $\Theta(n^2)$ valeurs. Nous avons $4$ contraintes de type (1), $2n$ contraintes de type (2), $n$ contraintes de type (3) et $n$ contraintes de type (4). Nous avons donc au total $4 + 2n + n + n \in \Theta(n)$ contraintes.
+
+
+\end{document}

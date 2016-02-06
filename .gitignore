@@ -1,6 +1,7 @@
 *.class
 *.project
 *.classpath
+*.synctex.gz
 
 .metadata/
 .recommenders/
