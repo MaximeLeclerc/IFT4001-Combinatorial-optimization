@@ -27,12 +27,7 @@
 
 \textbf{\Large Premier problème}\\
 
-On déclare une variable pour chaque élément de la matrice. Ainsi, la variable $X_{ij}$ représente la valeur inscrite à la ligne $i$ et la colonne $j$ pour $1 \leq i \leq 4$ et $1 \leq j \leq n$. $n$ représente le nombre de cube. Le domaine de chaque variable est l'ensemble des entiers entre 1 et n, c'est-à-dire les couleurs.\\
-
-Nous avons les couleurs décidées aléatoirement:\\
-JAUNE = 1;\\ROUGE = 2;\\BLEU = 3;\\VERT = 4;\\
-
-Nous avons les tuples pour $n = 4$ qui ont été définis dans le problème:\\
+On déclare une variable pour chaque élément de la matrice. Ainsi, la variable $X_{ij}$ représente la valeur inscrite à la ligne $i$ et la colonne $j$ pour $1 \leq i \leq 4$ et $1 \leq j \leq n$. $n$ représente le nombre de cube. Le domaine de chaque variable est l'ensemble des entiers entre 1 et n, c'est-à-dire les couleurs.\\ Nous avons les couleurs décidées aléatoirement: JAUNE = 1; ROUGE = 2; BLEU = 3; VERT = 4;. Nous avons les tuples pour $n = 4$ qui ont été définis dans le problème:\\
 
 $T_1$:
 \begin{tabular}{ |c|c| } 
@@ -108,7 +103,19 @@ ifThen(X_{ij} = X_{(i+1)j}, X_{(i+2)j} \neq X_{(i+3)j})
 ifThen(X_{ij} = X_{(i+3)j}, X_{(i+1)j} \neq X_{(i+2)j})
 \end{equation}
 
-Nous avons donc $4n \in \Theta(n)$ variables. Chaque variable a $n$ valeurs dans son domaine pour un total de $\Theta(n^2)$ valeurs. Nous avons $4$ contraintes de type (1), $2n$ contraintes de type (2), $n$ contraintes de type (3) et $n$ contraintes de type (4). Nous avons donc au total $4 + 2n + n + n \in \Theta(n)$ contraintes.
+Nous avons donc $4n \in \Theta(n)$ variables. Chaque variable a $n$ valeurs dans son domaine pour un total de $\Theta(n^2)$ valeurs. Nous avons $4$ contraintes de type (1), $2n$ contraintes de type (2), $n$ contraintes de type (3) et $n$ contraintes de type (4). Nous avons donc au total $4 + 2n + n + n \in \Theta(n)$ contraintes.\\
+
+La solution retournée par le solveur Choco 3:\\
+VERT  ROUGE  JAUNE  BLEU  \\
+JAUNE  BLEU  ROUGE  VERT  \\
+ROUGE  BLEU  VERT  JAUNE  \\
+VERT  JAUNE  BLEU  ROUGE  \\
+
+Le temps requis au solveur pour trouver notre solution: 0,045s\\
+
+Le nombre de retours arrière effectués par le solveur: 2\\
+
+
 
 
 \end{document}
