@@ -42,11 +42,11 @@ public class DeuxiemeProbleme {
 			lignes = VariableFactory.enumeratedMatrix("x", n, p, 0, 1, solver);
 
 		// Un employe doit travailler entre 5 et 7 heures.
-		IntVar variableNombreHeuresMinimum = VariableFactory.fixed(NOMBRE_HEURES_MINIMUM, solver);
-		IntVar variableNombreHeuresMaximum = VariableFactory.fixed(NOMBRE_HEURES_MAXIMUM, solver);
+		IntVar variableNombreDemiHeuresMinimum = VariableFactory.fixed(NOMBRE_HEURES_MINIMUM * 2, solver);
+		IntVar variableNombreDemiHeuresMaximum = VariableFactory.fixed(NOMBRE_HEURES_MAXIMUM * 2, solver);
 		for (int i = 0; i < n; i++) {
-			solver.post(IntConstraintFactory.sum(lignes[i], ">=", variableNombreHeuresMinimum));
-			solver.post(IntConstraintFactory.sum(lignes[i], "<=", variableNombreHeuresMaximum));
+			solver.post(IntConstraintFactory.sum(lignes[i], ">=", variableNombreDemiHeuresMinimum));
+			solver.post(IntConstraintFactory.sum(lignes[i], "<=", variableNombreDemiHeuresMaximum));
 		}
 
 		// Vecteur contenant toutes les variables de la matrice dans un seul
