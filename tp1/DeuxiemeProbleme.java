@@ -66,13 +66,9 @@ public class DeuxiemeProbleme {
 			solver.post(IntConstraintFactory.sum(lignes[i], "<=", variableNombreDemiHeuresMaximum));
 		}
 
-		// Pour chaque employe
+		// Chaque plage doit avoir un employe
 		IntVar variableNombreEmployesMinimum = VariableFactory.fixed(NOMBRE_EMPLOYES_MINIMUM, solver);
 		for (int i = 0; i < p; i++) {
-			// On garde la somme
-			solver.post(IntConstraintFactory.sum(colonnes[i], "=", variableNombreEmployesMinimum));
-
-			// Chaque plage doit avoir un employe
 			solver.post(IntConstraintFactory.sum(colonnes[i], ">=", variableNombreEmployesMinimum));
 
 		}
