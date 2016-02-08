@@ -36,12 +36,19 @@ public class DeuxiemeProbleme {
 		Solver solver = new Solver();
 
 		// Creation d'une matrice de dimensions n x p de variables dont les
-		// domaines sont les entiers de 0 ou 1.
+		// domaines sont les entiers de 0 ou 1 et des variables pour la minimization.
 		IntVar[][] lignes;
-		if (coherence == COHERENCE_DE_BORNES)
+		IntVar[] sommeColonnes;
+		IntVar[] diffHeuresSouhaite;
+		if (coherence == COHERENCE_DE_BORNES) {
 			lignes = VariableFactory.boundedMatrix("x", n, p, 0, 1, solver);
-		else
+			sommeColonnes = VariableFactory.boundedArray("s", p, 0, n, solver);
+			diffHeuresSouhaite = VariableFactory.boundedArray("d", p, 0, n, solver);
+		} else {
 			lignes = VariableFactory.enumeratedMatrix("x", n, p, 0, 1, solver);
+			sommeColonnes = VariableFactory.enumeratedArray("s", p, 0, n, solver);
+			diffHeuresSouhaite = VariableFactory.boundedArray("d", p, 0, n, solver);
+		}
 
 		// Creation de la tranpose de la matrice lignes.
 		IntVar[][] colonnes = new IntVar[p][n];
@@ -59,10 +66,15 @@ public class DeuxiemeProbleme {
 			solver.post(IntConstraintFactory.sum(lignes[i], "<=", variableNombreDemiHeuresMaximum));
 		}
 
-		// Chaque plage doit avoir un employe
+		// Pour chaque employe
 		IntVar variableNombreEmployesMinimum = VariableFactory.fixed(NOMBRE_EMPLOYES_MINIMUM, solver);
 		for (int i = 0; i < p; i++) {
+			// On garde la somme
+			solver.post(IntConstraintFactory.sum(colonnes[i], "=", variableNombreEmployesMinimum));
+
+			// Chaque plage doit avoir un employe
 			solver.post(IntConstraintFactory.sum(colonnes[i], ">=", variableNombreEmployesMinimum));
+
 		}
 
 		// Vecteur contenant toutes les variables de la matrice dans un seul
@@ -116,10 +128,10 @@ public class DeuxiemeProbleme {
 		}
 		Chatterbox.printStatistics(solver);
 	}
-	
-	private static Tuples nombreEmployesSouhaite(int indice) {
+
+	private static int nombreEmployesSouhaite(int indice) {
 		int retour = 0;
-		
+
 		switch (indice) {
 		case 0:
 			retour = 1;
