@@ -11,7 +11,6 @@ public class DeuxiemeProbleme {
 	public static final int NOMBRE_HEURES_MINIMUM = 5;
 	public static final int NOMBRE_HEURES_MAXIMUM = 7;
 	public static final int NOMBRE_EMPLOYES_MINIMUM = 1;
-	public static final int MULTIPLE_PERTE = 20;
 
 	public static final int HEURISTIQUE_DEFAUT = 0;
 	public static final int HEURISTIQUE_DOMOVERWDEG = 1;
@@ -73,6 +72,9 @@ public class DeuxiemeProbleme {
 			solver.post(ICF.distance(offre[i], demande[i], "=", perte[i]));
 		}
 
+		// On trouve la perte totale
+		solver.post(IntConstraintFactory.sum(perte, "=", perteTotal));
+
 		// Un employe doit travailler entre 5 et 7 heures.
 		IntVar variableNombreDemiHeuresMinimum = VariableFactory.fixed(NOMBRE_HEURES_MINIMUM * 2, solver);
 		IntVar variableNombreDemiHeuresMaximum = VariableFactory.fixed(NOMBRE_HEURES_MAXIMUM * 2, solver);
@@ -81,10 +83,7 @@ public class DeuxiemeProbleme {
 			solver.post(IntConstraintFactory.sum(lignes[i], "<=", variableNombreDemiHeuresMaximum));
 		}
 
-		// On trouve la perte totale
-		solver.post(IntConstraintFactory.sum(perte, "=", perteTotal));
-
-		// Il doit toujours y avoir un employe
+		// Il doit toujours y avoir au moins un employe
 		for (int i = 0; i < p; i++) {
 			solver.post(IntConstraintFactory.arithm(offre[i], ">=", NOMBRE_EMPLOYES_MINIMUM));
 		}
@@ -127,6 +126,8 @@ public class DeuxiemeProbleme {
 
 		solver.findOptimalSolution(ResolutionPolicy.MINIMIZE, perteTotal);
 
+		// Horaire
+		System.out.println("Horaire:");
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < p; j++) {
 				if (lignes[i][j].getValue() < 10)
@@ -138,6 +139,43 @@ public class DeuxiemeProbleme {
 			}
 			System.out.println("");
 		}
+
+		// Offre
+		System.out.println("Offre:");
+		for (int i = 0; i < p; i++) {
+			if (offre[i].getValue() < 10)
+				System.out.print(" ");
+			if (offre[i].getValue() < 100)
+				System.out.print(" ");
+			System.out.print(offre[i].getValue());
+			System.out.print("  ");
+		}
+		System.out.println("");
+
+		// Demande
+		System.out.println("Demande:");
+		for (int i = 0; i < p; i++) {
+			if (demande[i].getValue() < 10)
+				System.out.print(" ");
+			if (demande[i].getValue() < 100)
+				System.out.print(" ");
+			System.out.print(demande[i].getValue());
+			System.out.print("  ");
+		}
+		System.out.println("");
+
+		// Perte (x20$)
+		System.out.println("Perte (x20$):");
+		for (int i = 0; i < p; i++) {
+			if (perte[i].getValue() < 10)
+				System.out.print(" ");
+			if (perte[i].getValue() < 100)
+				System.out.print(" ");
+			System.out.print(perte[i].getValue());
+			System.out.print("  ");
+		}
+		System.out.println("");
+
 		Chatterbox.printStatistics(solver);
 	}
 
