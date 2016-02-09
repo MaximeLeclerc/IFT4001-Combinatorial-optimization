@@ -37,21 +37,25 @@ public class DeuxiemeProbleme {
 		Solver solver = new Solver();
 
 		// Creation d'une matrice de dimensions n x p de variables dont les
-		// domaines sont les entiers de 0 ou 1 et des variables pour la minimization.
+		// domaines sont les entiers de 0 ou 1 et des variables pour la
+		// minimization.
 		IntVar[][] lignes;
 		IntVar[] offre;
 		IntVar[] demande;
 		IntVar[] perte;
+		IntVar perteTotal;
 		if (coherence == COHERENCE_DE_BORNES) {
 			lignes = VariableFactory.boundedMatrix("x", n, p, 0, 1, solver);
 			offre = VariableFactory.boundedArray("s", p, 0, n, solver);
 			demande = VariableFactory.boundedArray("d", p, 0, n, solver);
-			perte = VariableFactory.boundedArray("p", p, 0, n * MULTIPLE_PERTE, solver);
+			perte = VariableFactory.boundedArray("p", p, 0, n, solver);
+			perteTotal = VariableFactory.bounded("t", 0, p * n, solver);
 		} else {
 			lignes = VariableFactory.enumeratedMatrix("x", n, p, 0, 1, solver);
 			offre = VariableFactory.enumeratedArray("o", p, 0, n, solver);
 			demande = VariableFactory.enumeratedArray("d", p, 0, n, solver);
-			perte = VariableFactory.enumeratedArray("p", p, 0, n * MULTIPLE_PERTE, solver);
+			perte = VariableFactory.enumeratedArray("p", p, 0, n, solver);
+			perteTotal = VariableFactory.bounded("t", 0, p * n, solver);
 		}
 
 		// Creation de la tranpose de la matrice lignes.
@@ -61,7 +65,7 @@ public class DeuxiemeProbleme {
 				colonnes[i][j] = lignes[j][i];
 			}
 		}
-		
+
 		// Assignation de l'offre et de la demande et de la perte
 		for (int i = 0; i < p; i++) {
 			solver.post(IntConstraintFactory.sum(colonnes[i], "=", offre[i]));
@@ -76,7 +80,15 @@ public class DeuxiemeProbleme {
 			solver.post(IntConstraintFactory.sum(lignes[i], ">=", variableNombreDemiHeuresMinimum));
 			solver.post(IntConstraintFactory.sum(lignes[i], "<=", variableNombreDemiHeuresMaximum));
 		}
-		
+
+		// On trouve la perte totale
+		solver.post(IntConstraintFactory.sum(perte, "=", perteTotal));
+
+		// Il doit toujours y avoir un employe
+		for (int i = 0; i < p; i++) {
+			solver.post(IntConstraintFactory.arithm(offre[i], ">=", NOMBRE_EMPLOYES_MINIMUM));
+		}
+
 		// Vecteur contenant toutes les variables de la matrice dans un seul
 		// vecteur
 		IntVar[] toutesLesVariables = new IntVar[n * n];
@@ -113,7 +125,7 @@ public class DeuxiemeProbleme {
 			break;
 		}
 
-		solver.findSolution();
+		solver.findOptimalSolution(ResolutionPolicy.MINIMIZE, perteTotal);
 
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < p; j++) {
