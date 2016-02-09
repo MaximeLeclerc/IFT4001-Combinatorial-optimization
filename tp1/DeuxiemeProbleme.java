@@ -11,6 +11,7 @@ public class DeuxiemeProbleme {
 	public static final int NOMBRE_HEURES_MINIMUM = 5;
 	public static final int NOMBRE_HEURES_MAXIMUM = 7;
 	public static final int NOMBRE_EMPLOYES_MINIMUM = 1;
+	public static final int MULTIPLE_PERTE = 20;
 
 	public static final int HEURISTIQUE_DEFAUT = 0;
 	public static final int HEURISTIQUE_DOMOVERWDEG = 1;
@@ -38,16 +39,19 @@ public class DeuxiemeProbleme {
 		// Creation d'une matrice de dimensions n x p de variables dont les
 		// domaines sont les entiers de 0 ou 1 et des variables pour la minimization.
 		IntVar[][] lignes;
-		IntVar[] sommeColonnes;
-		IntVar[] diffHeuresSouhaite;
+		IntVar[] offre;
+		IntVar[] demande;
+		IntVar[] perte;
 		if (coherence == COHERENCE_DE_BORNES) {
 			lignes = VariableFactory.boundedMatrix("x", n, p, 0, 1, solver);
-			sommeColonnes = VariableFactory.boundedArray("s", p, 0, n, solver);
-			diffHeuresSouhaite = VariableFactory.boundedArray("d", p, 0, n, solver);
+			offre = VariableFactory.boundedArray("s", p, 0, n, solver);
+			demande = VariableFactory.boundedArray("d", p, 0, n, solver);
+			perte = VariableFactory.boundedArray("p", p, 0, n * MULTIPLE_PERTE, solver);
 		} else {
 			lignes = VariableFactory.enumeratedMatrix("x", n, p, 0, 1, solver);
-			sommeColonnes = VariableFactory.enumeratedArray("s", p, 0, n, solver);
-			diffHeuresSouhaite = VariableFactory.boundedArray("d", p, 0, n, solver);
+			offre = VariableFactory.enumeratedArray("o", p, 0, n, solver);
+			demande = VariableFactory.enumeratedArray("d", p, 0, n, solver);
+			perte = VariableFactory.enumeratedArray("p", p, 0, n * MULTIPLE_PERTE, solver);
 		}
 
 		// Creation de la tranpose de la matrice lignes.
@@ -57,6 +61,13 @@ public class DeuxiemeProbleme {
 				colonnes[i][j] = lignes[j][i];
 			}
 		}
+		
+		// Assignation de l'offre et de la demande et de la perte
+		for (int i = 0; i < p; i++) {
+			solver.post(IntConstraintFactory.sum(colonnes[i], "=", offre[i]));
+			demande[i] = VariableFactory.fixed(nombreEmployesSouhaite(i), solver);
+			solver.post(ICF.distance(offre[i], demande[i], "=", perte[i]));
+		}
 
 		// Un employe doit travailler entre 5 et 7 heures.
 		IntVar variableNombreDemiHeuresMinimum = VariableFactory.fixed(NOMBRE_HEURES_MINIMUM * 2, solver);
@@ -65,14 +76,7 @@ public class DeuxiemeProbleme {
 			solver.post(IntConstraintFactory.sum(lignes[i], ">=", variableNombreDemiHeuresMinimum));
 			solver.post(IntConstraintFactory.sum(lignes[i], "<=", variableNombreDemiHeuresMaximum));
 		}
-
-		// Chaque plage doit avoir un employe
-		IntVar variableNombreEmployesMinimum = VariableFactory.fixed(NOMBRE_EMPLOYES_MINIMUM, solver);
-		for (int i = 0; i < p; i++) {
-			solver.post(IntConstraintFactory.sum(colonnes[i], ">=", variableNombreEmployesMinimum));
-
-		}
-
+		
 		// Vecteur contenant toutes les variables de la matrice dans un seul
 		// vecteur
 		IntVar[] toutesLesVariables = new IntVar[n * n];
