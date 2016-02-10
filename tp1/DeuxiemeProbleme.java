@@ -38,19 +38,17 @@ public class DeuxiemeProbleme {
 		// Creation d'une matrice de dimensions n x p de variables dont les
 		// domaines sont les entiers de 0 ou 1 et des variables pour la
 		// minimization.
-		IntVar[][] lignes;
+		BoolVar[][] lignes = VariableFactory.boolMatrix("x", n, p, solver);
 		IntVar[] offre;
 		IntVar[] demande;
 		IntVar[] perte;
 		IntVar perteTotal;
 		if (coherence == COHERENCE_DE_BORNES) {
-			lignes = VariableFactory.boundedMatrix("x", n, p, 0, 1, solver);
 			offre = VariableFactory.boundedArray("s", p, 0, n, solver);
 			demande = VariableFactory.boundedArray("d", p, 0, n, solver);
 			perte = VariableFactory.boundedArray("p", p, 0, n, solver);
 			perteTotal = VariableFactory.bounded("t", 0, p * n, solver);
 		} else {
-			lignes = VariableFactory.enumeratedMatrix("x", n, p, 0, 1, solver);
 			offre = VariableFactory.enumeratedArray("o", p, 0, n, solver);
 			demande = VariableFactory.enumeratedArray("d", p, 0, n, solver);
 			perte = VariableFactory.enumeratedArray("p", p, 0, n, solver);
@@ -58,7 +56,7 @@ public class DeuxiemeProbleme {
 		}
 
 		// Creation de la tranpose de la matrice lignes.
-		IntVar[][] colonnes = new IntVar[p][n];
+		BoolVar[][] colonnes = new BoolVar[p][n];
 		for (int i = 0; i < p; i++) {
 			for (int j = 0; j < n; j++) {
 				colonnes[i][j] = lignes[j][i];
@@ -67,17 +65,17 @@ public class DeuxiemeProbleme {
 
 		// Assignation de l'offre et de la demande et de la perte
 		for (int i = 0; i < p; i++) {
-			solver.post(IntConstraintFactory.sum(colonnes[i], "=", offre[i]));
+			solver.post(IntConstraintFactory.sum(colonnes[i], offre[i]));
 			demande[i] = VariableFactory.fixed(nombreEmployesSouhaite(i), solver);
 			solver.post(ICF.distance(offre[i], demande[i], "=", perte[i]));
 		}
 
 		// On trouve la perte totale
-		solver.post(IntConstraintFactory.sum(perte, "=", perteTotal));
+		solver.post(IntConstraintFactory.sum(perte, perteTotal));
 
 		// Un employe doit travailler entre 5 et 7 heures.
-		IntVar variableNombreDemiHeuresMinimum = VariableFactory.fixed(NOMBRE_HEURES_MINIMUM * 2, solver);
-		IntVar variableNombreDemiHeuresMaximum = VariableFactory.fixed(NOMBRE_HEURES_MAXIMUM * 2, solver);
+		IntVar variableNombreDemiHeuresMinimum = VariableFactory.fixed(NOMBRE_HEURES_MINIMUM * 2 - 1, solver);
+		IntVar variableNombreDemiHeuresMaximum = VariableFactory.fixed(NOMBRE_HEURES_MAXIMUM * 2 - 1, solver);
 		for (int i = 0; i < n; i++) {
 			solver.post(IntConstraintFactory.sum(lignes[i], ">=", variableNombreDemiHeuresMinimum));
 			solver.post(IntConstraintFactory.sum(lignes[i], "<=", variableNombreDemiHeuresMaximum));
@@ -90,9 +88,11 @@ public class DeuxiemeProbleme {
 
 		// Vecteur contenant toutes les variables de la matrice dans un seul
 		// vecteur
-		IntVar[] toutesLesVariables = new IntVar[n * n];
-		for (int i = 0; i < n * n; i++) {
-			toutesLesVariables[i] = lignes[i / n][i % n];
+		BoolVar[] toutesLesVariables = new BoolVar[n * p];
+		for (int i = 0; i < n * p; i++) {
+			int x = i / n;
+			int y = i % p;
+			toutesLesVariables[i] = lignes[i / p][i % p];
 		}
 
 		if (bris_symetries) {
