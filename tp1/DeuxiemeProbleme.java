@@ -1,5 +1,6 @@
 import org.chocosolver.solver.constraints.*;
 import org.chocosolver.solver.constraints.extension.Tuples;
+import org.chocosolver.solver.constraints.nary.cnf.LogOp;
 import org.chocosolver.solver.search.strategy.*;
 import org.chocosolver.solver.variables.*;
 import org.chocosolver.solver.*;
@@ -77,21 +78,41 @@ public class DeuxiemeProbleme {
 		IntVar variableNombreDemiHeuresMinimum = VariableFactory.fixed(NOMBRE_HEURES_MINIMUM * 2 - 1, solver);
 		IntVar variableNombreDemiHeuresMaximum = VariableFactory.fixed(NOMBRE_HEURES_MAXIMUM * 2 - 1, solver);
 		for (int i = 0; i < n; i++) {
-			solver.post(IntConstraintFactory.sum(lignes[i], ">=", variableNombreDemiHeuresMinimum));
-			solver.post(IntConstraintFactory.sum(lignes[i], "<=", variableNombreDemiHeuresMaximum));
+			//solver.post(IntConstraintFactory.sum(lignes[i], ">=", variableNombreDemiHeuresMinimum));
+			//solver.post(IntConstraintFactory.sum(lignes[i], "<=", variableNombreDemiHeuresMaximum));
 		}
 
 		// Il doit toujours y avoir au moins un employe
 		for (int i = 0; i < p; i++) {
-			solver.post(IntConstraintFactory.arithm(offre[i], ">=", NOMBRE_EMPLOYES_MINIMUM));
+			//solver.post(IntConstraintFactory.arithm(offre[i], ">=", NOMBRE_EMPLOYES_MINIMUM));
+		}
+
+		// On ajoute les contraintes pour les bloques
+		LogOp[][] A = new LogOp[n][p];
+		LogOp[][] B = new LogOp[n][p];
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < p - 1; j++) {
+				A[i][j] = LogOp.or(lignes[i][j].not(), lignes[i][j + 1]);
+				B[i][j] = LogOp.or(lignes[i][j], lignes[i][j + 1].not());
+			}
+
+			A[i][p - 1] = LogOp.and(lignes[i][p - 1]);
+			B[i][p - 1] = LogOp.and(lignes[i][p - 1]);
+		}
+
+		// On ajoute les contraintes pour les bloques
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < p; j++) {
+				SatFactory.addClauses(LogOp.or(A[i][j], lignes[i][j].not()), solver);
+				SatFactory.addClauses(LogOp.or(B[i][j], lignes[i][j].not()), solver);
+				SatFactory.addClauses(LogOp.or(LogOp.nand(A[i][j]), LogOp.nand(B[i][j]), lignes[i][j]), solver);
+			}
 		}
 
 		// Vecteur contenant toutes les variables de la matrice dans un seul
 		// vecteur
 		BoolVar[] toutesLesVariables = new BoolVar[n * p];
 		for (int i = 0; i < n * p; i++) {
-			int x = i / n;
-			int y = i % p;
 			toutesLesVariables[i] = lignes[i / p][i % p];
 		}
 
