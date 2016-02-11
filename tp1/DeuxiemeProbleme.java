@@ -9,10 +9,20 @@ import org.chocosolver.solver.search.limits.*;
 import org.chocosolver.solver.search.loop.monitors.*;
 
 public class DeuxiemeProbleme {
-	public static final int NOMBRE_HEURES_MINIMUM = 5;
-	public static final int NOMBRE_HEURES_MAXIMUM = 7;
+	public static final int NOMBRE_DEMIHEURES_MINIMUM = 9; // 5 * 2 -1
+	public static final int NOMBRE_DEMIHEURES_MAXIMUM = 13; // 7 * 2 - 1
 	public static final int NOMBRE_EMPLOYES_MINIMUM = 1;
+	public static final int NOMBRE_DEMIHEURES_MINIMUM_PAR_PERIODE_TRAVAIL = 4; // 2 * 2
+	public static final int NOMBRE_DEMIHEURES_EXACT_POUR_PAUSE = 1;
 	public static final int MULTIPLE_PERTE = 20;
+	public static final int NOMBRE_PERIODE = 5; // Pause | Travail | Pause |
+												// Travail | Pause
+
+	public static final int PERIODE_PAUSE_1 = 1;
+	public static final int PERIODE_TRAVAIL_1 = 2;
+	public static final int PERIODE_PAUSE_2 = 3;
+	public static final int PERIODE_TRAVAIL_2 = 4;
+	public static final int PERIODE_PAUSE_3 = 5;
 
 	public static final int HEURISTIQUE_DEFAUT = 0;
 	public static final int HEURISTIQUE_DOMOVERWDEG = 1;
@@ -37,22 +47,28 @@ public class DeuxiemeProbleme {
 		// Creation du solveur
 		Solver solver = new Solver();
 
-		// Creation d'une matrice de dimensions n x p de variables dont les
-		// domaines sont les entiers de 0 ou 1 et des variables pour la
-		// minimization.
+		// Creation d'une matrice de dimensions n x p de variables de booleans
 		BoolVar[][] lignes = VariableFactory.boolMatrix("x", n, p, solver);
+
+		// Creation d'une matrice de dimensions n x p de variables dont les
+		// domaines sont les entiers de 1 a NOMBRE_PERIODE et des variables pour
+		// la
+		// minimization.
+		IntVar[][] periodes;
 		IntVar[] offre;
 		IntVar[] demande;
 		IntVar[] perteTemp;
 		IntVar[] perte;
 		IntVar perteTotal;
 		if (coherence == COHERENCE_DE_BORNES) {
+			periodes = VariableFactory.boundedMatrix("y", n, p, 1, NOMBRE_PERIODE, solver);
 			offre = VariableFactory.boundedArray("s", p, 0, n, solver);
 			demande = VariableFactory.boundedArray("d", p, 0, n, solver);
 			perteTemp = VariableFactory.boundedArray("t", p, 0, n, solver);
 			perte = VariableFactory.boundedArray("p", p, 0, n * MULTIPLE_PERTE, solver);
 			perteTotal = VariableFactory.bounded("m", 0, p * n * MULTIPLE_PERTE, solver);
 		} else {
+			periodes = VariableFactory.enumeratedMatrix("y", n, p, 1, NOMBRE_PERIODE, solver);
 			offre = VariableFactory.enumeratedArray("o", p, 0, n, solver);
 			demande = VariableFactory.enumeratedArray("d", p, 0, n, solver);
 			perteTemp = VariableFactory.enumeratedArray("t", p, 0, n, solver);
@@ -81,8 +97,8 @@ public class DeuxiemeProbleme {
 		solver.post(IntConstraintFactory.sum(perte, perteTotal));
 
 		// Un employe doit travailler entre 5 et 7 heures.
-		IntVar variableNombreDemiHeuresMinimum = VariableFactory.fixed(NOMBRE_HEURES_MINIMUM * 2 - 1, solver);
-		IntVar variableNombreDemiHeuresMaximum = VariableFactory.fixed(NOMBRE_HEURES_MAXIMUM * 2 - 1, solver);
+		IntVar variableNombreDemiHeuresMinimum = VariableFactory.fixed(NOMBRE_DEMIHEURES_MINIMUM, solver);
+		IntVar variableNombreDemiHeuresMaximum = VariableFactory.fixed(NOMBRE_DEMIHEURES_MAXIMUM, solver);
 		for (int i = 0; i < n; i++) {
 			solver.post(IntConstraintFactory.sum(lignes[i], ">=", variableNombreDemiHeuresMinimum));
 			solver.post(IntConstraintFactory.sum(lignes[i], "<=", variableNombreDemiHeuresMaximum));
@@ -93,23 +109,36 @@ public class DeuxiemeProbleme {
 			solver.post(IntConstraintFactory.arithm(offre[i], ">=", NOMBRE_EMPLOYES_MINIMUM));
 		}
 
-		// Création de A et de B
-		BoolVar[][] A = VariableFactory.boolMatrix("a", n, p, solver);
-		BoolVar[][] B = VariableFactory.boolMatrix("b", n, p, solver);
+		// On s'assure que les periodes se suivent
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < p - 1; j++) {
-				solver.post(LogicalConstraintFactory.or(A[i][j].not(), A[i][j + 1]));
-				solver.post(LogicalConstraintFactory.or(B[i][j], B[i][j + 1].not()));
+				solver.post(IntConstraintFactory.arithm(periodes[i][j], "<=", periodes[i][j + 1]));
 			}
 		}
 
-		// On ajoute les contraintes pour les bloques
+		// On s'assure que les employes travaillent dans les temps
+		IntVar variableNombreDemiHeuresExactPourPause = VariableFactory.fixed(NOMBRE_DEMIHEURES_EXACT_POUR_PAUSE, solver);
+		IntVar variableNombreDemiHeuresMinimumParPeriodeTravail = VariableFactory.fixed(NOMBRE_DEMIHEURES_MINIMUM_PAR_PERIODE_TRAVAIL, solver);
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < p; j++) {
-				solver.post(LogicalConstraintFactory.or(A[i][j], lignes[i][j].not()));
-				solver.post(LogicalConstraintFactory.or(B[i][j], lignes[i][j].not()));
-				solver.post(LogicalConstraintFactory.or(A[i][j].not(), B[i][j].not(), lignes[i][j]));
+				// Si et seulement si sur les periodes de temps
+				LogicalConstraintFactory.ifThen(
+						LogicalConstraintFactory.or(
+								IntConstraintFactory.arithm(periodes[i][j], "=", PERIODE_TRAVAIL_1),
+								IntConstraintFactory.arithm(periodes[i][j], "=", PERIODE_TRAVAIL_2)
+						),
+						IntConstraintFactory.arithm(lignes[i][j], "=", 1)
+				);
+				
+				
 			}
+			
+			// Il doit deulement y avoir une pause au milieu
+			solver.post(IntConstraintFactory.count(PERIODE_PAUSE_2, periodes[i], variableNombreDemiHeuresExactPourPause));
+			
+			// Les deux periodes de travail doivent etre d'au moins 2 heures
+			solver.post(IntConstraintFactory.count(PERIODE_TRAVAIL_1, periodes[i], variableNombreDemiHeuresMinimumParPeriodeTravail));
+			solver.post(IntConstraintFactory.count(PERIODE_TRAVAIL_2, periodes[i], variableNombreDemiHeuresMinimumParPeriodeTravail));
 		}
 
 		// Vecteur contenant toutes les variables de la matrice dans un seul
