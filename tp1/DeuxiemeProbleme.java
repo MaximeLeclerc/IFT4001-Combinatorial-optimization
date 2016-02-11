@@ -12,6 +12,7 @@ public class DeuxiemeProbleme {
 	public static final int NOMBRE_HEURES_MINIMUM = 5;
 	public static final int NOMBRE_HEURES_MAXIMUM = 7;
 	public static final int NOMBRE_EMPLOYES_MINIMUM = 1;
+	public static final int MULTIPLE_PERTE = 20;
 
 	public static final int HEURISTIQUE_DEFAUT = 0;
 	public static final int HEURISTIQUE_DOMOVERWDEG = 1;
@@ -42,18 +43,21 @@ public class DeuxiemeProbleme {
 		BoolVar[][] lignes = VariableFactory.boolMatrix("x", n, p, solver);
 		IntVar[] offre;
 		IntVar[] demande;
+		IntVar[] perteTemp;
 		IntVar[] perte;
 		IntVar perteTotal;
 		if (coherence == COHERENCE_DE_BORNES) {
 			offre = VariableFactory.boundedArray("s", p, 0, n, solver);
 			demande = VariableFactory.boundedArray("d", p, 0, n, solver);
-			perte = VariableFactory.boundedArray("p", p, 0, n, solver);
-			perteTotal = VariableFactory.bounded("t", 0, p * n, solver);
+			perteTemp = VariableFactory.boundedArray("t", p, 0, n, solver);
+			perte = VariableFactory.boundedArray("p", p, 0, n * MULTIPLE_PERTE, solver);
+			perteTotal = VariableFactory.bounded("m", 0, p * n * MULTIPLE_PERTE, solver);
 		} else {
 			offre = VariableFactory.enumeratedArray("o", p, 0, n, solver);
 			demande = VariableFactory.enumeratedArray("d", p, 0, n, solver);
-			perte = VariableFactory.enumeratedArray("p", p, 0, n, solver);
-			perteTotal = VariableFactory.bounded("t", 0, p * n, solver);
+			perteTemp = VariableFactory.enumeratedArray("t", p, 0, n, solver);
+			perte = VariableFactory.enumeratedArray("p", p, 0, n * MULTIPLE_PERTE, solver);
+			perteTotal = VariableFactory.enumerated("m", 0, p * n * MULTIPLE_PERTE, solver);
 		}
 
 		// Creation de la tranpose de la matrice lignes.
@@ -65,10 +69,12 @@ public class DeuxiemeProbleme {
 		}
 
 		// Assignation de l'offre et de la demande et de la perte
+		IntVar variableMultiplePerte = VariableFactory.fixed(MULTIPLE_PERTE, solver);
 		for (int i = 0; i < p; i++) {
 			solver.post(IntConstraintFactory.sum(colonnes[i], offre[i]));
 			demande[i] = VariableFactory.fixed(nombreEmployesSouhaite(i), solver);
-			solver.post(ICF.distance(offre[i], demande[i], "=", perte[i]));
+			solver.post(IntConstraintFactory.distance(offre[i], demande[i], "=", perteTemp[i]));
+			solver.post(IntConstraintFactory.eucl_div(perte[i], variableMultiplePerte, perteTemp[i]));
 		}
 
 		// On trouve la perte totale
@@ -182,8 +188,8 @@ public class DeuxiemeProbleme {
 		}
 		System.out.println("");
 
-		// Perte (x20$)
-		System.out.println("Perte (x20$):");
+		// Perte
+		System.out.println("Perte:");
 		for (int i = 0; i < p; i++) {
 			if (perte[i].getValue() < 10)
 				System.out.print(" ");
