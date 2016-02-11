@@ -78,16 +78,13 @@ public class DeuxiemeProbleme {
 		IntVar variableNombreDemiHeuresMinimum = VariableFactory.fixed(NOMBRE_HEURES_MINIMUM * 2 - 1, solver);
 		IntVar variableNombreDemiHeuresMaximum = VariableFactory.fixed(NOMBRE_HEURES_MAXIMUM * 2 - 1, solver);
 		for (int i = 0; i < n; i++) {
-			// solver.post(IntConstraintFactory.sum(lignes[i], ">=",
-			// variableNombreDemiHeuresMinimum));
-			// solver.post(IntConstraintFactory.sum(lignes[i], "<=",
-			// variableNombreDemiHeuresMaximum));
+			solver.post(IntConstraintFactory.sum(lignes[i], ">=", variableNombreDemiHeuresMinimum));
+			solver.post(IntConstraintFactory.sum(lignes[i], "<=", variableNombreDemiHeuresMaximum));
 		}
 
 		// Il doit toujours y avoir au moins un employe
 		for (int i = 0; i < p; i++) {
-			// solver.post(IntConstraintFactory.arithm(offre[i], ">=",
-			// NOMBRE_EMPLOYES_MINIMUM));
+			solver.post(IntConstraintFactory.arithm(offre[i], ">=", NOMBRE_EMPLOYES_MINIMUM));
 		}
 
 		// Création de A et de B
