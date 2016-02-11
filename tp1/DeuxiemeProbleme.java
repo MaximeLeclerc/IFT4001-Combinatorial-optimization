@@ -102,10 +102,18 @@ public class DeuxiemeProbleme {
 
 		// On ajoute les contraintes pour les bloques
 		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < p; j++) {
-				SatFactory.addClauses(LogOp.or(A[i][j], lignes[i][j].not()), solver);
-				SatFactory.addClauses(LogOp.or(B[i][j], lignes[i][j].not()), solver);
-				SatFactory.addClauses(LogOp.or(LogOp.nand(A[i][j]), LogOp.nand(B[i][j]), lignes[i][j]), solver);
+			for (int j = 0; j < p - 1; j++) {
+				//SatFactory.addClauses(LogOp.or(A[i][j], lignes[i][j].not()), solver);
+				//SatFactory.addClauses(LogOp.or(B[i][j], lignes[i][j].not()), solver);
+				//SatFactory.addClauses(LogOp.or(LogOp.nand(A[i][j]), LogOp.nand(B[i][j]), lignes[i][j]), solver);
+				
+				Constraint test1 = LCF.or(lignes[i][j].not(), lignes[i][j + 1]);
+				Constraint test2 = LCF.or(lignes[i][j], lignes[i][j + 1].not());
+				Constraint test3 = LCF.or(lignes[i][j]);
+				
+				solver.post(LCF.or(test1, LCF.not(test3)));
+				solver.post(LCF.or(test2, LCF.not(test3)));
+				solver.post(LCF.or(LCF.not(test1), LCF.not(test2), test3));
 			}
 		}
 
