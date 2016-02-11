@@ -78,42 +78,34 @@ public class DeuxiemeProbleme {
 		IntVar variableNombreDemiHeuresMinimum = VariableFactory.fixed(NOMBRE_HEURES_MINIMUM * 2 - 1, solver);
 		IntVar variableNombreDemiHeuresMaximum = VariableFactory.fixed(NOMBRE_HEURES_MAXIMUM * 2 - 1, solver);
 		for (int i = 0; i < n; i++) {
-			//solver.post(IntConstraintFactory.sum(lignes[i], ">=", variableNombreDemiHeuresMinimum));
-			//solver.post(IntConstraintFactory.sum(lignes[i], "<=", variableNombreDemiHeuresMaximum));
+			// solver.post(IntConstraintFactory.sum(lignes[i], ">=",
+			// variableNombreDemiHeuresMinimum));
+			// solver.post(IntConstraintFactory.sum(lignes[i], "<=",
+			// variableNombreDemiHeuresMaximum));
 		}
 
 		// Il doit toujours y avoir au moins un employe
 		for (int i = 0; i < p; i++) {
-			//solver.post(IntConstraintFactory.arithm(offre[i], ">=", NOMBRE_EMPLOYES_MINIMUM));
+			// solver.post(IntConstraintFactory.arithm(offre[i], ">=",
+			// NOMBRE_EMPLOYES_MINIMUM));
 		}
 
-		// On ajoute les contraintes pour les bloques
-		LogOp[][] A = new LogOp[n][p];
-		LogOp[][] B = new LogOp[n][p];
+		// Création de A et de B
+		BoolVar[][] A = VariableFactory.boolMatrix("a", n, p, solver);
+		BoolVar[][] B = VariableFactory.boolMatrix("b", n, p, solver);
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < p - 1; j++) {
-				A[i][j] = LogOp.or(lignes[i][j].not(), lignes[i][j + 1]);
-				B[i][j] = LogOp.or(lignes[i][j], lignes[i][j + 1].not());
+				solver.post(LogicalConstraintFactory.or(A[i][j].not(), A[i][j + 1]));
+				solver.post(LogicalConstraintFactory.or(B[i][j], B[i][j + 1].not()));
 			}
-
-			A[i][p - 1] = LogOp.and(lignes[i][p - 1]);
-			B[i][p - 1] = LogOp.and(lignes[i][p - 1]);
 		}
 
 		// On ajoute les contraintes pour les bloques
 		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < p - 1; j++) {
-				//SatFactory.addClauses(LogOp.or(A[i][j], lignes[i][j].not()), solver);
-				//SatFactory.addClauses(LogOp.or(B[i][j], lignes[i][j].not()), solver);
-				//SatFactory.addClauses(LogOp.or(LogOp.nand(A[i][j]), LogOp.nand(B[i][j]), lignes[i][j]), solver);
-				
-				Constraint test1 = LCF.or(lignes[i][j].not(), lignes[i][j + 1]);
-				Constraint test2 = LCF.or(lignes[i][j], lignes[i][j + 1].not());
-				Constraint test3 = LCF.or(lignes[i][j]);
-				
-				solver.post(LCF.or(test1, LCF.not(test3)));
-				solver.post(LCF.or(test2, LCF.not(test3)));
-				solver.post(LCF.or(LCF.not(test1), LCF.not(test2), test3));
+			for (int j = 0; j < p; j++) {
+				solver.post(LogicalConstraintFactory.or(A[i][j], lignes[i][j].not()));
+				solver.post(LogicalConstraintFactory.or(B[i][j], lignes[i][j].not()));
+				solver.post(LogicalConstraintFactory.or(A[i][j].not(), B[i][j].not(), lignes[i][j]));
 			}
 		}
 
