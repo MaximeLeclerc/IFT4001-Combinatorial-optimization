@@ -16,17 +16,13 @@ public class DeuxiemeProbleme {
 	public static final int NOMBRE_DEMIHEURES_MINIMUM = 9; // 5 * 2 -1
 	public static final int NOMBRE_DEMIHEURES_MAXIMUM = 13; // 7 * 2 - 1
 	public static final int NOMBRE_EMPLOYES_MINIMUM = 1;
-	public static final int NOMBRE_DEMIHEURES_MINIMUM_PAR_PERIODE_TRAVAIL = 4; // 2 * 2
+	public static final int NOMBRE_DEMIHEURES_MINIMUM_PAR_PERIODE_TRAVAIL = 4; // 2
+																				// *
+																				// 2
 	public static final int NOMBRE_DEMIHEURES_EXACT_POUR_PAUSE = 1;
 	public static final int MULTIPLE_PERTE = 20;
 	public static final int NOMBRE_PERIODE = 5; // Pause | Travail | Pause |
 												// Travail | Pause
-
-	public static final int PERIODE_PAUSE_1 = 1;
-	public static final int PERIODE_TRAVAIL_1 = 2;
-	public static final int PERIODE_PAUSE_2 = 3;
-	public static final int PERIODE_TRAVAIL_2 = 4;
-	public static final int PERIODE_PAUSE_3 = 5;
 
 	public static final int HEURISTIQUE_DEFAUT = 0;
 	public static final int HEURISTIQUE_DOMOVERWDEG = 1;
@@ -54,29 +50,20 @@ public class DeuxiemeProbleme {
 		// Creation d'une matrice de dimensions n x p de variables de booleans
 		BoolVar[][] lignes = VariableFactory.boolMatrix("x", n, p, solver);
 
-		// Creation d'une matrice de dimensions n x p de variables dont les
-		// domaines sont les entiers de 1 a NOMBRE_PERIODE et des variables pour
-		// la
-		// minimization.
-		//IntVar[][] lignes;
-		IntVar[][] periodes;
+		// Creation des variables pour la minimization.
 		IntVar[] offre;
 		IntVar[] demande;
 		IntVar[] perteTemp;
 		IntVar[] perte;
 		IntVar perteTotal;
 		if (coherence == COHERENCE_DE_BORNES) {
-			//lignes = VariableFactory.boundedMatrix("x", n, p, 0, 1, solver);
-			periodes = VariableFactory.boundedMatrix("y", n, p, 1, NOMBRE_PERIODE, solver);
 			offre = VariableFactory.boundedArray("s", p, 0, n, solver);
 			demande = VariableFactory.boundedArray("d", p, 0, n, solver);
 			perteTemp = VariableFactory.boundedArray("t", p, 0, n, solver);
 			perte = VariableFactory.boundedArray("p", p, 0, n * MULTIPLE_PERTE, solver);
 			perteTotal = VariableFactory.bounded("m", 0, p * n * MULTIPLE_PERTE, solver);
-			
+
 		} else {
-			periodes = VariableFactory.enumeratedMatrix("y", n, p, 1, NOMBRE_PERIODE, solver);
-			//lignes = VariableFactory.enumeratedMatrix("x", n, p, 0, 1, solver);
 			offre = VariableFactory.enumeratedArray("o", p, 0, n, solver);
 			demande = VariableFactory.enumeratedArray("d", p, 0, n, solver);
 			perteTemp = VariableFactory.enumeratedArray("t", p, 0, n, solver);
@@ -104,55 +91,15 @@ public class DeuxiemeProbleme {
 		// On trouve la perte totale
 		solver.post(IntConstraintFactory.sum(perte, perteTotal));
 
-		// Un employe doit travailler entre 5 et 7 heures.
-//		IntVar variableNombreDemiHeuresMinimum = VariableFactory.fixed(NOMBRE_DEMIHEURES_MINIMUM, solver);
-//		IntVar variableNombreDemiHeuresMaximum = VariableFactory.fixed(NOMBRE_DEMIHEURES_MAXIMUM, solver);
-//		for (int i = 0; i < n; i++) {
-//			solver.post(IntConstraintFactory.sum(lignes[i], ">=", variableNombreDemiHeuresMinimum));
-//			solver.post(IntConstraintFactory.sum(lignes[i], "<=", variableNombreDemiHeuresMaximum));
-//		}
-//
-//		// Il doit toujours y avoir au moins un employe
-//		for (int i = 0; i < p; i++) {
-//			solver.post(IntConstraintFactory.arithm(offre[i], ">=", NOMBRE_EMPLOYES_MINIMUM));
-//		}
+		// Il doit toujours y avoir au moins un employe
+		for (int i = 0; i < p; i++) {
+			solver.post(IntConstraintFactory.arithm(offre[i], ">=", NOMBRE_EMPLOYES_MINIMUM));
+		}
 
-//		// On s'assure que les periodes se suivent
-//		for (int i = 0; i < n; i++) {
-//			for (int j = 0; j < p - 1; j++) {
-//				solver.post(IntConstraintFactory.arithm(periodes[i][j], "<=", periodes[i][j + 1]));
-//			}
-//		}
-//		
-//
-//		// On s'assure que les employes travaillent dans les temps
-//		IntVar variableNombreDemiHeuresExactPourPause = VariableFactory.fixed(NOMBRE_DEMIHEURES_EXACT_POUR_PAUSE, solver);
-//		IntVar variableNombreDemiHeuresMinimumParPeriodeTravail = VariableFactory.fixed(NOMBRE_DEMIHEURES_MINIMUM_PAR_PERIODE_TRAVAIL, solver);
-//		for (int i = 0; i < n; i++) {
-//			for (int j = 0; j < p; j++) {
-//				// Si et seulement si sur les periodes de temps
-//				LogicalConstraintFactory.ifThen(
-//						LogicalConstraintFactory.or(
-//								IntConstraintFactory.arithm(periodes[i][j], "=", PERIODE_TRAVAIL_1),
-//								IntConstraintFactory.arithm(periodes[i][j], "=", PERIODE_TRAVAIL_2)
-//						),
-//						IntConstraintFactory.arithm(lignes[i][j], "=", 1)
-//				);
-//				
-//				
-//			}
-//			
-//			// Il doit deulement y avoir une pause au milieu
-//			solver.post(IntConstraintFactory.count(PERIODE_PAUSE_2, periodes[i], variableNombreDemiHeuresExactPourPause));
-//			
-//			// Les deux periodes de travail doivent etre d'au moins 2 heures
-//			solver.post(IntConstraintFactory.count(PERIODE_TRAVAIL_1, periodes[i], variableNombreDemiHeuresMinimumParPeriodeTravail));
-//			solver.post(IntConstraintFactory.count(PERIODE_TRAVAIL_2, periodes[i], variableNombreDemiHeuresMinimumParPeriodeTravail));
-//		}
-		
-		
+		// Création de l'automate
+		FiniteAutomaton automaton = createAutomaton();
 		for (int i = 0; i < n; i++) {
-		        solver.post(ICF.regular(lignes[i],createAutomaton()));
+			solver.post(ICF.regular(lignes[i], automaton));
 		}
 
 		// Vecteur contenant toutes les variables de la matrice dans un seul
@@ -302,13 +249,10 @@ public class DeuxiemeProbleme {
 
 		return retour;
 	}
-	
-	
-	
+
 	private static FiniteAutomaton createAutomaton() {
 		FiniteAutomaton automaton = new FiniteAutomaton();
-		
-		
+
 		int start = automaton.addState();
 		automaton.setInitialState(start);
 		int end = automaton.addState();
@@ -331,51 +275,50 @@ public class DeuxiemeProbleme {
 		int s16 = automaton.addState();
 		int s17 = automaton.addState();
 		int s18 = automaton.addState();
-		
-		
+
 		automaton.addTransition(start, start, 0);
 		automaton.addTransition(start, s1, 1);
-		automaton.addTransition(s1,s2,1);
+		automaton.addTransition(s1, s2, 1);
 		automaton.addTransition(s2, s3, 1);
 		automaton.addTransition(s3, s4, 1);
-		
+
 		automaton.addTransition(s4, s5, 0);
 		automaton.addTransition(s4, s15, 1);
-		
+
 		automaton.addTransition(s5, s11, 1);
 		automaton.addTransition(s5, s6, 1);
-		
+
 		automaton.addTransition(s11, s12, 1);
 		automaton.addTransition(s11, s6, 1);
-		
+
 		automaton.addTransition(s12, s13, 1);
 		automaton.addTransition(s12, s6, 1);
-		
+
 		automaton.addTransition(s13, s14, 1);
 		automaton.addTransition(s13, s6, 1);
-		
+
 		automaton.addTransition(s14, s6, 1);
-		
+
 		automaton.addTransition(s15, s16, 1);
 		automaton.addTransition(s15, s6, 0);
-		
+
 		automaton.addTransition(s16, s17, 1);
 		automaton.addTransition(s16, s6, 0);
-		
+
 		automaton.addTransition(s17, s18, 1);
 		automaton.addTransition(s17, s6, 0);
-		
+
 		automaton.addTransition(s18, s10, 1);
 		automaton.addTransition(s18, s6, 0);
-		
+
 		automaton.addTransition(s10, s6, 0);
-		
+
 		automaton.addTransition(s6, s7, 1);
 		automaton.addTransition(s7, s8, 1);
 		automaton.addTransition(s8, s9, 1);
 		automaton.addTransition(s9, end, 1);
 		automaton.addTransition(end, end, 0);
-		
+
 		return automaton;
 	}
 }
