@@ -114,6 +114,26 @@ VERT  JAUNE  BLEU  ROUGE  \\
 Le temps requis au solveur pour trouver la solution est de 0,045 secondes. Le nombre de retours arrière effectués par le solveur est de 2.\\
 
 
+\textbf{\Large Deuxième problème}\\
 
+On déclare une variable pour chaque élément de la matrice. Ainsi, la variable $X_{ij}$ représente la valeur inscrite à la ligne $i$ et la colonne $j$ pour $1 \leq i \leq 5$ et $1 \leq j \leq 16$. Les 5 lignes correspondent aux employés et les colonnes représentent les périodes de temps de 30 minutes.Le domaine de chaque variable est les entiers 0 et 1.
+
+
+Nous avons $p$ variables d'offre $O$, de demande $D$ et de perte $P$.
+
+Le $dom(P_i) = \lbrace 1... n \times p \rbrace $.
+
+Pour ce qui est de la demande $D$, nous avons les valeurs fixes suivantes :
+$$ D_1 = 1 , D_2 = 2, D_3 = 3, D_4 = 4, D_5 = 5 , D_6 = 4$$
+$$ D_7 = 2, D_8 = 3, D_9 = 4, D_{10} =  3, D_{11} = 5, D_{12} = 5$$
+$$ D_{13} = 4, D_{14} = 3, D_{15} = 3, D_{16} = 3$$
+
+Pour chaque colonne $j$, nous avons la contrainte.
+\begin{equation}
+	\sum^{n}_{i=1} X_{i,j} = O_{j}
+\end{equation}
+\begin{equation}
+	min( D[j]- O[j])
+\end{equation}
 
 \end{document}
