@@ -117,52 +117,57 @@ Le temps requis au solveur pour trouver la solution est de 0,045 secondes. Le no
 
 \textbf{\Large Deuxième problème}\\
 
-On déclare une variable pour chaque élément de la matrice. Ainsi, la variable $X_{ij}$ représente la valeur inscrite à la ligne $i$ et la colonne $j$ pour $1 \leq i \leq 5$ et $1 \leq j \leq 16$. Les 5 lignes correspondent aux employés et les colonnes représentent les périodes de temps de 30 minutes.Le domaine de chaque variable est les entiers 0 et 1.
+On déclare une variable pour chaque élément de la matrice. Ainsi, la variable $X_{ij}$ représente la valeur inscrite à la ligne $i$ et la colonne $j$ pour $1 \leq i \leq n$ et $1 \leq j \leq p$. Les n lignes correspondent aux employés et les colonnes représentent les périodes de temps de 30 minutes. Le domaine de chaque variable est les entiers 0 et 1.\\
 
+Nous avons $p$ variables d'offre $O$, de demande $D$ et de perte $P$. Le domaine de chaque variable de $O$ et de $P$ est l'ensemble des entiers entre 1 et n. Le domaine de chaque variable de $D$ est l'ensemble des entiers entre 1 et n * p.\\
 
-Nous avons $p$ variables d'offre $O$, de demande $D$ et de perte $P$.
-
-Le $dom(P_i) = \lbrace 1... n \times p \rbrace $.
-
-Pour ce qui est de la demande $D$, nous avons les valeurs fixes suivantes :
-$$ D_1 = 1 , D_2 = 2, D_3 = 3, D_4 = 4, D_5 = 5 , D_6 = 4$$
-$$ D_7 = 2, D_8 = 3, D_9 = 4, D_{10} =  3, D_{11} = 5, D_{12} = 5$$
-$$ D_{13} = 4, D_{14} = 3, D_{15} = 3, D_{16} = 3$$
-
-Pour chaque colonne $j$, nous avons la contrainte.
+Pour chaque offre $j$, nous avons les contraintes.
 \begin{equation}
-	\sum^{n}_{i=1} X_{i,j} = O_{j}
+	O_{j} = \sum^{n}_{i=1} X_{i,j}
 \end{equation}
 \begin{equation}
 	O_j \geq  1
 \end{equation}
 
-
-Nous avons aussi une contraite de minimum
+Pour ce qui est de la demande $D$, nous avons les valeurs fixes.
+$$ D_1 = 1 , D_2 = 2, D_3 = 3, D_4 = 4, D_5 = 5 , D_6 = 4$$
 \begin{equation}
-	min(P_0 + P_1 + P_2 + ... + P_{p-1})
+D_7 = 2, D_8 = 3, D_9 = 4, D_{10} =  3, D_{11} = 5, D_{12} = 5
+\end{equation}
+$$ D_{13} = 4, D_{14} = 3, D_{15} = 3, D_{16} = 3$$
+
+Pour chaque perte $j$, nous avons la contrainte.
+\begin{equation}
+P_{j} = | D_j - O_j | * 20
 \end{equation}
 
+Nous avons aussi une contraite de minimum pour la perte.
+\begin{equation}
+	min(P_1 + P_1 + P_2 + ... + P_{p})
+\end{equation}
 
 Pour chaque ligne $i$, nous avons la contrainte.
 \begin{equation}
-	Regular(X_{1}, ..., X_p,A)
+	Regular(X_{i1}, ..., X_{ip},A)
 \end{equation}
 
 $A$ est l'automate suivant : 
 \begin{center}
 	\includegraphics[width=230mm]{./automate.jpg}
 \end{center}
-Donc nous avons,
-$$ dom(X_{i,j}) = \lbrace 0 , 1 \rbrace $$
-On créé  21 variables de $Q_0$ ... $Q_p$ avec les domaines,
-$$ dom(Q_0) = {q_0} $$
-$$ dom(Q_i) = Q , \;   0 < i < n $$
-$$ dom(Q_p) = q_{10} $$
 
+Donc, nous avons pour l'automate $A = (\Sigma, Q, q_0, F, T)$.
+$$ dom(X_{i,j}) = \Sigma $$
 
+Pour chaque ligne $i$, on crée $p + 1$ variables de $Q_{i0}$ ... $Q_{ip}$ avec les domaines,
+$$ dom(Q_{i0}) = \{q_0\} $$
+$$ dom(Q_{ij}) = Q , \;   0 < j < p $$
+$$ dom(Q_{ip}) = F $$
 
-Nous avons les contraintes $Tableau(Q_{i-1},X_i,Q_i,T)$ 
+Nous avons les contraintes.
+\begin{equation}
+Tableau(Q_{i(j-1)},X_{ij},Q_{ij},T)
+\end{equation}
 
 \begin{tabular}{ |c|c|c| } 
 	\hline
