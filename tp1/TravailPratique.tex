@@ -169,9 +169,10 @@ Nous avons les contraintes.
 Tableau(Q_{i(j-1)},X_{ij},Q_{ij},T)
 \end{equation}
 
+$T$:
 \begin{tabular}{ |c|c|c| } 
 	\hline
-	 & T &  \\
+	x & y & z \\
 	\hline
 	$q_0$ & 0 & $q_0$ \\
 	$q_0$ & 1 & $q_1$ \\
@@ -204,22 +205,25 @@ Tableau(Q_{i(j-1)},X_{ij},Q_{ij},T)
 	$q_{18}$ & 1 & $q_{19}$\\
 	$q_{19}$ & 0 & $q_{6}$\\
 	\hline
-\end{tabular}
-
+\end{tabular}\\
 
 Nous avons utilisé comme heuristique Impact based search avec la cohérence de bornes et aucun redémarrage. \\ 
-\bigskip
+
 La solution retournée par le solveur Choco 3: \\
+
 Horaire: \\
   0    0    1    1    1    1    0    1    1    1    1    1    1    1    1    1  \\
   1    1    1    1    1    1    1    0    1    1    1    1    0    0    0    0  \\
   0    0    0    0    1    1    1    1    0    1    1    1    1    1    1    1  \\
   0    1    1    1    1    0    1    1    1    1    1    1    1    0    0    0  \\
   0    0    0    1    1    1    1    0    1    1    1    1    1    1    1    1  \\
+  
 Offre: \\
   1    2    3    4    5    4    4    3    4    5    5    5    4    3    3    3  \\
+  
 Demande: \\
   1    2    3    4    5    4    2    3    4    3    5    5    4    3    3    3   \\
+  
 Perte: \\
   0    0    0    0    0    0   40    0    0   40    0    0    0    0    0    0  \\
 \end{document}
