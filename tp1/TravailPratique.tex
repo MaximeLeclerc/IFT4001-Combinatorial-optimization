@@ -2,6 +2,7 @@
 \usepackage[francais]{babel}
 \usepackage{latexsym}
 
+\usepackage{graphicx}
 \usepackage{enumerate}
 
 % Les paquetage suivants peuvent être utiles. Les décommenter au besoin
@@ -133,10 +134,70 @@ Pour chaque colonne $j$, nous avons la contrainte.
 	\sum^{n}_{i=1} X_{i,j} = O_{j}
 \end{equation}
 \begin{equation}
-	min( D[j]- O[j])
-\end{equation}
-\begin{equation}
-	O[j] \geq  1
+	O_j \geq  1
 \end{equation}
 
+
+Nous avons aussi une contraite de minimum
+\begin{equation}
+	min(P_0 + P_1 + P_2 + ... + P_{p-1})
+\end{equation}
+
+
+Pour chaque ligne $i$, nous avons la contrainte.
+\begin{equation}
+	Regular(X_{1}, ..., X_p,A)
+\end{equation}
+
+$A$ est l'automate suivant : 
+\begin{center}
+	\includegraphics[width=230mm]{./automate.jpg}
+\end{center}
+Donc nous avons,
+$$ dom(X_{i,j}) = \lbrace 0 , 1 \rbrace $$
+On créé  21 variables de $Q_0$ ... $Q_p$ avec les domaines,
+$$ dom(Q_0) = {q_0} $$
+$$ dom(Q_i) = Q , \;   0 < i < n $$
+$$ dom(Q_p) = q_{10} $$
+
+
+
+Nous avons les contraintes $Tableau(Q_{i-1},X_i,Q_i,T)$ 
+
+\begin{tabular}{ |c|c|c| } 
+	\hline
+	 & T &  \\
+	\hline
+	$q_0$ & 0 & $q_0$ \\
+	$q_0$ & 1 & $q_1$ \\
+	$q_1$ & 1  & $q_2$ \\
+	$q_2$ & 1  & $q_3$ \\
+	$q_3$ & 1  & $q_4$ \\
+	$q_4$ & 0  & $q_5$ \\
+	$q_4$ & 1 & $q_{15}$ \\
+	$q_5$ & 1 &  $q_{11}$ \\
+	$q_5$ & 1 &  $q_{6}$ \\
+	$q_6$ & 1 &  $q_7$ \\
+	$q_7$ & 1 & $q_8$ \\
+	$q_8$ & 1 & $q_9$ \\ 
+	$q_9$ & 1 & $q_{10}$ \\
+	$q_{10}$ & 0 &  $q_{10}$ \\
+	$q_{11}$ & 1 & $q_{6}$\\
+	$q_{11}$ & 1 & $q_{12}$\\
+	$q_{12}$ & 1 & $q_{6}$\\
+	$q_{12}$ & 1 & $q_{13}$\\
+	$q_{13}$ & 1 & $q_{6}$\\
+	$q_{13}$ & 1 & $q_{14}$\\
+	$q_{14}$ & 1 & $q_{6}$\\
+	$q_{15}$ & 0 & $q_{6}$\\
+	$q_{15}$ & 1 & $q_{16}$\\
+	$q_{16}$ & 0 & $q_{6}$\\
+	$q_{16}$ & 1 & $q_{17}$\\
+	$q_{17}$ & 0 & $q_{6}$\\
+	$q_{17}$ & 1 & $q_{18}$\\
+	$q_{18}$ & 0 & $q_{6}$\\
+	$q_{18}$ & 1 & $q_{19}$\\
+	$q_{19}$ & 0 & $q_{6}$\\
+	\hline
+\end{tabular}
 \end{document}
