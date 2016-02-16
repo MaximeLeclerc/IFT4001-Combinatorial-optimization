@@ -119,7 +119,6 @@ Le temps requis au solveur pour trouver la solution est de 0,045 secondes. Le no
 
 On déclare une variable pour chaque élément de la matrice. Ainsi, la variable $X_{ij}$ représente la valeur inscrite à la ligne $i$ et la colonne $j$ pour $1 \leq i \leq n$ et $1 \leq j \leq p$. Les n lignes correspondent aux employés et les colonnes représentent les périodes de temps de 30 minutes. Le domaine de chaque variable est les entiers 0 et 1.\\
 
-Nous avons $p$ variables d'offre $O$, de demande $D$ et de perte $P$. Le domaine de chaque variable de $O$ et de $P$ est l'ensemble des entiers entre 1 et n. Le domaine de chaque variable de $D$ est l'ensemble des entiers entre 1 et n * p.\\
 
 Pour chaque offre $j$, nous avons les contraintes.
 \begin{equation}
@@ -160,9 +159,15 @@ Donc, nous avons pour l'automate $A = (\Sigma, Q, q_0, F, T)$.
 $$ dom(X_{i,j}) = \Sigma $$
 
 Pour chaque ligne $i$, on crée $p + 1$ variables de $Q_{i0}$ ... $Q_{ip}$ avec les domaines,
-$$ dom(Q_{i0}) = \{q_0\} $$
-$$ dom(Q_{ij}) = Q , \;   0 < j < p $$
-$$ dom(Q_{ip}) = F $$
+\begin{equation}
+	dom(Q_{i0}) = \{q_0\}
+\end{equation}
+\begin{equation}
+	dom(Q_{ij}) = Q , \;   0 < j < p
+\end{equation}
+\begin{equation}
+	dom(Q_{ip}) = F
+\end{equation}
 
 Nous avons les contraintes.
 \begin{equation}
@@ -226,4 +231,14 @@ Demande: \\
   
 Perte: \\
   0    0    0    0    0    0   40    0    0   40    0    0    0    0    0    0  \\
+
+
+Nous avons $np$ variables pour la matrice ,$p$ variables d'offre $O$, de demande $D$, de perte $P$ et $n(p+1)$ variables pour l'automate. Le domaine de chaque variable de $O$ et de $P$ est l'ensemble des entiers entre 1 et n. Le domaine de la matrice est l'ensemble $ \lbrace 0,1 \rbrace $. Le domaine de chaque variable de $D$ est l'ensemble des entiers entre 1 et $n * p$ .Pour ce qui est du domaine de chacune des variables voir (11), (12) et (13).Donc, nous avons : 
+$$ np + p + p + p + n(p+1) = \Theta(np) $$
+
+Pour ce qui est des contraintes, nous avons $p$ contraintes de type (5) , $p$ contraintes de type (6) , $p$ contraintes de type (8), une contrainte de type (9), et $n$ contraintes de type (10) et qui contient 30 contraintes de type tableau. Donc, nous avons :
+$$ p + p + p + n = \Theta(n+p) $$
+
+  
+La solution est optimal car il minimise la perte. Le temps requis pour pour trouver une solution varie entre 0,795 secondes à 1,3 secondes. Le nombre de retourne arrière est entre 30 000 à 33 000.
 \end{document}
