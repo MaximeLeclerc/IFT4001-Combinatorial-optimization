@@ -159,15 +159,15 @@ Donc, nous avons pour l'automate $A = (\Sigma, Q, q_0, F, T)$.
 $$ dom(X_{i,j}) = \Sigma $$
 
 Pour chaque ligne $i$, on crée $p + 1$ variables de $Q_{i0}$ ... $Q_{ip}$ avec les domaines,
-\begin{equation}
-	dom(Q_{i0}) = \{q_0\}
-\end{equation}
-\begin{equation}
-	dom(Q_{ij}) = Q , \;   0 < j < p
-\end{equation}
-\begin{equation}
-	dom(Q_{ip}) = F
-\end{equation}
+\begin{center}
+	$dom(Q_{i0}) = \{q_0\}$
+\end{center}
+\begin{center}
+	$dom(Q_{ij}) = Q , \;   0 < j < p$
+\end{center}
+\begin{center}
+	$dom(Q_{ip}) = F$
+\end{center}
 
 Nous avons les contraintes.
 \begin{equation}
@@ -211,34 +211,35 @@ $T$:
 	$q_{19}$ & 0 & $q_{6}$\\
 	\hline
 \end{tabular}\\
+\\
+\\
+\\
+\\
+Nous avons $np$ variables pour la matrice $X$, $p$ variables d'offre $O$, de demande $D$, de perte $P$ et $n(p+1)$ variables pour $Q$ pour un total de $np + p + p + p + n(p+1) \in \Theta(np)$.\\
 
-Nous avons utilisé comme heuristique Impact based search avec la cohérence de bornes et aucun redémarrage. \\ 
+Chaque variable de $X$ a $2$ valeurs dans son domaine. Chaque variable de $O$ et de $D$ a $n$ valeurs dans son domaine. Chaque variable de $P$ a $20n$ valeurs dans son domaine. Chaque variable de $Q$ a $20$ valeurs (nombre d'états de l'automate) dans son domaine sauf la première et la dernière colonne qui ont une valeur dans leur domaine. Nous avons donc un total de $2np + np + np + 20np + (n + n + 20(n(p+1) - 2n)) \in \Theta(np)$.\\
+
+Pour ce qui est des contraintes, nous avons $p$ contraintes de type (5), (6), (7) et (8), une contrainte de type (9), et $n$ contraintes de type (10). Les contraintes de type (10) contiennent p contraintes de type (11). Donc, nous avons : $p + p + p + p + 1 + np = \Theta(np)$. Chaque contrainte tableau possède 30 entrées.\\
+
+Nous avons utilisé comme heuristique Impact based search avec la cohérence de bornes et aucun redémarrage.\\ 
 
 La solution retournée par le solveur Choco 3: \\
 
 Horaire: \\
-  0    0    1    1    1    1    0    1    1    1    1    1    1    1    1    1  \\
-  1    1    1    1    1    1    1    0    1    1    1    1    0    0    0    0  \\
-  0    0    0    0    1    1    1    1    0    1    1    1    1    1    1    1  \\
-  0    1    1    1    1    0    1    1    1    1    1    1    1    0    0    0  \\
-  0    0    0    1    1    1    1    0    1    1    1    1    1    1    1    1  \\
-  
+0    0    1    1    1    1    0    1    1    1    1    1    1    1    1    1  \\
+1    1    1    1    1    1    1    0    1    1    1    1    0    0    0    0  \\
+0    0    0    0    1    1    1    1    0    1    1    1    1    1    1    1  \\
+0    1    1    1    1    0    1    1    1    1    1    1    1    0    0    0  \\
+0    0    0    1    1    1    1    0    1    1    1    1    1    1    1    1  \\
+
 Offre: \\
-  1    2    3    4    5    4    4    3    4    5    5    5    4    3    3    3  \\
-  
+1    2    3    4    5    4    4    3    4    5    5    5    4    3    3    3  \\
+
 Demande: \\
-  1    2    3    4    5    4    2    3    4    3    5    5    4    3    3    3   \\
-  
+1    2    3    4    5    4    2    3    4    3    5    5    4    3    3    3   \\
+
 Perte: \\
-  0    0    0    0    0    0   40    0    0   40    0    0    0    0    0    0  \\
+0    0    0    0    0    0   40    0    0   40    0    0    0    0    0    0  \\
 
-
-Nous avons $np$ variables pour la matrice ,$p$ variables d'offre $O$, de demande $D$, de perte $P$ et $n(p+1)$ variables pour l'automate. Le domaine de chaque variable de $O$ et de $P$ est l'ensemble des entiers entre 1 et n. Le domaine de la matrice est l'ensemble $ \lbrace 0,1 \rbrace $. Le domaine de chaque variable de $D$ est l'ensemble des entiers entre 1 et $n * p$ .Pour ce qui est du domaine de chacune des variables voir (11), (12) et (13).Donc, nous avons : 
-$$ np + p + p + p + n(p+1) = \Theta(np) $$
-
-Pour ce qui est des contraintes, nous avons $p$ contraintes de type (5) , $p$ contraintes de type (6) , $p$ contraintes de type (8), une contrainte de type (9), et $n$ contraintes de type (10) et qui contient 30 contraintes de type tableau. Donc, nous avons :
-$$ p + p + p + n = \Theta(n+p) $$
-
-  
-La solution est optimal car il minimise la perte. Le temps requis pour pour trouver une solution varie entre 0,795 secondes à 1,3 secondes. Le nombre de retourne arrière est entre 30 000 à 33 000.
+La solution a donc une perte de 80\$. La solution est optimale car elle minimise la perte. Le temps requis au solveur pour trouver la solution est de 0,945 secondes. Le nombre de retours arrière effectués par le solveur est de 32 929.\\
 \end{document}
