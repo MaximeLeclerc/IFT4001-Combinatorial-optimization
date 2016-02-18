@@ -119,6 +119,7 @@ Le temps requis au solveur pour trouver la solution est de 0,045 secondes. Le no
 
 On déclare une variable pour chaque élément de la matrice. Ainsi, la variable $X_{ij}$ représente la valeur inscrite à la ligne $i$ et la colonne $j$ pour $1 \leq i \leq n$ et $1 \leq j \leq p$. Les n lignes correspondent aux employés et les colonnes représentent les périodes de temps de 30 minutes. Le domaine de chaque variable est les entiers 0 et 1.\\
 
+Nous avons $p$ variables d'offre $O$, de demande $D$ et de perte $P$. Le domaine de chaque variable de $O$ et de $D$ est l'ensemble des entiers entre 0 et n. Le domaine de chaque variable de $P$ est l'ensemble des entiers qui sont des multiples de 20 entre 0 et n * 20.\\
 
 Pour chaque offre $j$, nous avons les contraintes.
 \begin{equation}
@@ -217,7 +218,7 @@ $T$:
 \\
 Nous avons $np$ variables pour la matrice $X$, $p$ variables d'offre $O$, de demande $D$, de perte $P$ et $n(p+1)$ variables pour $Q$ pour un total de $np + p + p + p + n(p+1) \in \Theta(np)$.\\
 
-Chaque variable de $X$ a $2$ valeurs dans son domaine. Chaque variable de $O$ et de $D$ a $n$ valeurs dans son domaine. Chaque variable de $P$ a $20n$ valeurs dans son domaine. Chaque variable de $Q$ a $20$ valeurs (nombre d'états de l'automate) dans son domaine sauf la première et la dernière colonne qui ont une valeur dans leur domaine. Nous avons donc un total de $2np + np + np + 20np + (n + n + 20(n(p+1) - 2n)) \in \Theta(np)$.\\
+Chaque variable de $X$ a $2$ valeurs dans son domaine. Chaque variable de $O$, de $D$ et de $P$ a $n + 1$ valeurs dans son domaine. Chaque variable de $Q$ a $20$ valeurs (nombre d'états de l'automate) dans son domaine sauf la première et la dernière colonne qui ont une valeur dans leur domaine. Nous avons donc un total de $2np + p(n + 1) + p(n + 1) + p(n + 1) + n + 20(n(p+1) - 2n) + n \in \Theta(np)$.\\
 
 Pour ce qui est des contraintes, nous avons $p$ contraintes de type (5), (6), (7) et (8), une contrainte de type (9), et $n$ contraintes de type (10). Les contraintes de type (10) contiennent p contraintes de type (11). Donc, nous avons : $p + p + p + p + 1 + np = \Theta(np)$. Chaque contrainte tableau possède 30 entrées.\\
 
