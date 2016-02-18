@@ -1,3 +1,10 @@
+/*
+ * IFT-4001 (Hiver 2016) Travail pratique
+ * 21 février 2016
+ * Vincent Beaudoin (111 103 778)
+ * Alexandre Picard-Lemieux (111 103 625)
+ */
+
 import org.chocosolver.solver.constraints.*;
 import org.chocosolver.solver.constraints.extension.Tuples;
 import org.chocosolver.solver.constraints.nary.automata.FA.FiniteAutomaton;
