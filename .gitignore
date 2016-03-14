@@ -21,5 +21,4 @@ hs_err_pid*
 *.aux
 *.fdb_latexmk
 *.out
-*.pdf
 *.odt
