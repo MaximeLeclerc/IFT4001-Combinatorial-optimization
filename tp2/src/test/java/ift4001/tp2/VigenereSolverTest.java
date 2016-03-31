@@ -3,6 +3,8 @@ package ift4001.tp2;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
+import java.util.List;
+
 import org.junit.Test;
 
 public class VigenereSolverTest {
@@ -16,8 +18,8 @@ public class VigenereSolverTest {
                 .setPossibleKeyLengths(1);
         VigenereSolver solver = new VigenereSolver(settings);
 
-        String result = solver.solve(CAESAR_CIPHER_TEXT);
+        List<SolveResult> result = solver.solve(CAESAR_CIPHER_TEXT);
 
-        assertThat(result, is(equalTo(PLAIN_TEXT)));
+        assertThat(result.stream().anyMatch(r -> r.plainText.equals(PLAIN_TEXT)), is(true));
     }
 }

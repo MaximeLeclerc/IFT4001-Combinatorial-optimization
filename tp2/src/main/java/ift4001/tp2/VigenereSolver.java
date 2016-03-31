@@ -2,14 +2,19 @@ package ift4001.tp2;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.chocosolver.solver.ResolutionPolicy;
 import org.chocosolver.solver.Solver;
 import org.chocosolver.solver.constraints.ICF;
+import org.chocosolver.solver.trace.Chatterbox;
 import org.chocosolver.solver.variables.IntVar;
 import org.chocosolver.solver.variables.VF;
 import org.chocosolver.solver.variables.VariableFactory;
+
+import com.google.common.collect.MinMaxPriorityQueue;
 
 public class VigenereSolver {
 
@@ -43,14 +48,19 @@ public class VigenereSolver {
         this.settings = settings;
     }
 
-    public String solve(String cipherText) {
-        for (Language language : this.settings.languages) {
-            return this.solveForLanguage(cipherText, language);
+    public List<SolveResult> solve(String cipherText) {
+        MinMaxPriorityQueue<SolveResult> results = MinMaxPriorityQueue.maximumSize(10).create();
+        for (int keyLength : this.settings.keyLengths) {
+            for (Language language : this.settings.languages) {
+                for (SolveResult result : this.solveForLanguageAndKeyLength(cipherText, language, keyLength)) {
+                    results.offer(result);
+                }
+            }
         }
-        return cipherText;
+        return Stream.generate(() -> results.removeFirst()).limit(results.size()).collect(Collectors.toList());
     }
 
-    private String solveForLanguage(String cipherText, Language language) {
+    private List<SolveResult> solveForLanguageAndKeyLength(String cipherText, Language language, int keyLength) {
         Solver solver = new Solver();
 
         IntVar[] cipherTextVars = cipherText.chars().filter(c -> c != ' ').map(c -> c - 'A')
@@ -61,8 +71,7 @@ public class VigenereSolver {
         IntVar messageLengthVar = VF.fixed(messageLength, solver);
         IntVar alphabetLengthVar = VF.fixed(language.alphabetLength(), solver);
 
-        IntVar[] keyComplement = VF.enumeratedArray("key", settings.keyLengths.iterator().next(), 0,
-                language.alphabetLength() - 1, solver);
+        IntVar[] keyComplement = VF.enumeratedArray("key", keyLength, 0, language.alphabetLength() - 1, solver);
         IntVar[] intermediateText = VF.enumeratedArray("intermediatetext", messageLength, 0,
                 2 * (language.alphabetLength() - 1), solver);
         IntVar[] plainText = VF.enumeratedArray("plaintext", messageLength, 0, language.alphabetLength() - 1, solver);
@@ -101,13 +110,19 @@ public class VigenereSolver {
                 language.alphabetLength() * frequencyPrecision, solver);
         solver.post(ICF.sum(absDifferences, frequencyDiffsSum));
 
-        solver.findOptimalSolution(ResolutionPolicy.MINIMIZE, frequencyDiffsSum);
+        NBestSolutionsRecorder solutionRecorder = new NBestSolutionsRecorder(10, frequencyDiffsSum);
+        solver.set(solutionRecorder);
+        solver.findAllOptimalSolutions(ResolutionPolicy.MINIMIZE, frequencyDiffsSum, false);
 
-        String key = Arrays.stream(keyComplement).map(x -> language.letterAt(language.alphabetLength() - x.getValue()))
-                .map(c -> String.valueOf(c)).collect(Collectors.joining());
-        System.out.println("Key: " + key);
-        Vigenere vigenere = new Vigenere(cipherText, language);
-        return vigenere.decrypt(key);
+        Chatterbox.printStatistics(solver);
+
+        SolveResult.Builder builder = new SolveResult.Builder(cipherText, language);
+        return solutionRecorder.getSolutions().stream().map(solution -> {
+            String key = Arrays.stream(keyComplement)
+                    .map(x -> language.letterAt((language.alphabetLength() - solution.getIntVal(x)) % 26))
+                    .map(c -> String.valueOf(c)).collect(Collectors.joining());
+            return builder.create(key, solution.getIntVal(frequencyDiffsSum));
+        }).collect(Collectors.toList());
     }
 
 }
