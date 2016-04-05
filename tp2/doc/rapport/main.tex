@@ -44,16 +44,20 @@
 		
 	\section{Protocole d'expérimentation}
 	
-		On prend $n$ qui est la longueur de la chaine à déchiffrer, $c$ qui est la lonueur de la clé et $l$ qui est le nombre de lettre dans l'alphabet.\\
+		On prend $n$ qui est la longueur de la chaine à déchiffrer, $c$ qui est la lonueur de la clé, $l$ qui est le nombre de lettre dans l'alphabet, et $p$ qui est la précision de la fréquence.\\
 		
 		On déclare une variable pour chaque lettre de la chaine cryptée. Ainsi, la variable $X_i$ représente la valeur de la lettre de la chaine cryptée à la position $i$ pour $1 \leq i \leq n$. Le domaine de chaque variable est l'ensemble des entiers entre $0$ et $l - 1$.\\
 		
 		On déclare une variable pour chaque complément de clé. Ainsi, la variable $K_i$ représente la valeur de la lettre de la clé à la position $i$ pour $1 \leq i \leq c$. Le domaine de chaque variable est l'ensemble des entiers entre $0$ et $l - 1$.\\
 		
-		On déclare une variable pour le texte intermédiaire. Ainsi, la variable $I_i$ représente la valeur de la la lettre de la chaine à la position $i$ pour $1 \leq i \leq l$. Le domaine de chaque variable est l'ensemble des entiers entre $0$ et $2 * (l - 1)$.\\
+		On déclare une variable pour le texte intermédiaire. Ainsi, la variable $I_i$ représente la valeur de la la lettre de la chaine à la position $i$ pour $1 \leq i \leq n$. Le domaine de chaque variable est l'ensemble des entiers entre $0$ et $2 * (l - 1)$.\\
 		
-		On déclare une variable pour le texte intermédiaire. Ainsi, la variable $I_i$ représente la valeur de la la lettre de la chaine à la position $i$ pour $1 \leq i \leq l$. Le domaine de chaque variable est l'ensemble des entiers entre $0$ et $2 * (l - 1)$.\\
+		On déclare une variable pour le texte brut. Ainsi, la variable $B_i$ représente la valeur de la lettre de la chaine à la position $i$ pour $1 \leq i \leq n$. Le domaine de chaque variable est l'ensemble des entiers entre $0$ et $l - 1$.\\
 		
-		On déclare une variable pour le texte brut. Ainsi, la variable $B_i$ représente la valeur de la la lettre de la chaine à la position $i$ pour $1 \leq i \leq l$. Le domaine de chaque variable est l'ensemble des entiers entre $0$ et $l - 1$.\\
+		On déclare une variable pour les comptes. Ainsi, la variable $C_i$ représente le compte de chaque lettre dans la chaine à la position $i$ pour $1 \leq i \leq l$. Le domaine de chaque variable est l'ensemble des entiers entre $0$ et $n$.\\
+		
+		On déclare une variable pour les comptes multipliés. Ainsi, la variable $M_i$ représente le compte multiplié par la précision de la fréquence de chaque lettre dans la chaine à la position $i$ pour $1 \leq i \leq l$. Le domaine de chaque variable est l'ensemble des entiers entre $0$ et $n * p$.\\
+		
+		On déclare une variable pour les fréquences multipliées. Ainsi, la variable $F_i$ représente la fréquence multipliée de chaque lettre dans la chaine à la position $i$ pour $1 \leq i \leq l$. Le domaine de chaque variable est l'ensemble des entiers entre $0$ et $p$.\\
 
 \end{document}
