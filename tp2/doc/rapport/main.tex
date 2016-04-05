@@ -41,5 +41,19 @@
 		L'objectif ici est d'étudier la viabilité d'une telle approche, par contrainte, pour l'attaque du chiffrement par substitution. Nous étudierons l'efficacité de l'approche selon la longueur du message et, dans le cas du chiffre de Vigenère, de la longueur de la clé.\\
 		
 		Par exemple, en prenant le message encrypté LXFOPVEFRNHR, le solveur doit trouver que la clé la plus probable est LEMON et que le texte original est ATTACKATDAWN. L'implémentation utilisée utilisera les fréquences des lettres trouvées d'une langue donnée.\footnote{Wikipedia, [En ligne]. \url{https://en.wikipedia.org/wiki/Letter\_frequency} (Page consultée le 3 avril 2016)} Cette implémentation sera donc plus efficace si la chaine est longue et si elle utilise des vrais mots de la langue choisie.\\
+		
+	\section{Protocole d'expérimentation}
+	
+		On prend $n$ qui est la longueur de la chaine à déchiffrer, $c$ qui est la lonueur de la clé et $l$ qui est le nombre de lettre dans l'alphabet.\\
+		
+		On déclare une variable pour chaque lettre de la chaine cryptée. Ainsi, la variable $X_i$ représente la valeur de la lettre de la chaine cryptée à la position $i$ pour $1 \leq i \leq n$. Le domaine de chaque variable est l'ensemble des entiers entre $0$ et $l - 1$.\\
+		
+		On déclare une variable pour chaque complément de clé. Ainsi, la variable $K_i$ représente la valeur de la lettre de la clé à la position $i$ pour $1 \leq i \leq c$. Le domaine de chaque variable est l'ensemble des entiers entre $0$ et $l - 1$.\\
+		
+		On déclare une variable pour le texte intermédiaire. Ainsi, la variable $I_i$ représente la valeur de la la lettre de la chaine à la position $i$ pour $1 \leq i \leq l$. Le domaine de chaque variable est l'ensemble des entiers entre $0$ et $2 * (l - 1)$.\\
+		
+		On déclare une variable pour le texte intermédiaire. Ainsi, la variable $I_i$ représente la valeur de la la lettre de la chaine à la position $i$ pour $1 \leq i \leq l$. Le domaine de chaque variable est l'ensemble des entiers entre $0$ et $2 * (l - 1)$.\\
+		
+		On déclare une variable pour le texte brut. Ainsi, la variable $B_i$ représente la valeur de la la lettre de la chaine à la position $i$ pour $1 \leq i \leq l$. Le domaine de chaque variable est l'ensemble des entiers entre $0$ et $l - 1$.\\
 
 \end{document}
