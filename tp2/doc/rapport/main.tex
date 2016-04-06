@@ -106,6 +106,21 @@
 		A_1 + A_2 + ... + A_l = S
 		\end{equation}
 		
-		La fonction objective est de minimiser S. L'heuristique par défaut a été utilisé.
+		La fonction objective est de minimiser S. L'heuristique par défaut a été utilisé.\\
+		
+		Nous avons donc $n + c + n + n + l + l + l + l + l + l + 1 \in \Theta(n + c + l)$ variables.\\
+		
+		Nous avons donc
+		\begin{multline*}
+		nl + cl + n(2l - 1) + nl + l(n+1) + l(np + 1) + l(p + 1) + l(p + 1) + l(2p + 1) + l(p + 1) + (lp + 1) \\
+		= nl + cl + 2nl - n + nl + ln + l + nlp + l + lp + l + lp + l + 2lp + l + lp + l + lp + 1 \\
+		= 5nl + cl - n + 6l + nlp + 6lp + 1 \\
+		\in \Theta(nlp + cl + ln + lp + l - n)
+		\end{multline*}
+		valeurs.\\
+		
+		Nous avons n contraintes de type (1) et (2). Nous avons l de type (3), (4), (5), (6) et (7). Nous avons une contrainte de type (8). Nous avons donc au total $2n + 5l + 1 \in \Theta(n + l)$.\\
+		
+		Ceci est donc notre modèle finale. Lors de nos premières itérations, nous avions mis que la fréquence des lettres était restée dans des variables réelles. Par contre, grâce à la variable de précision, nous convertissons les fréquences, qui sont réelles, en entiers.\\
 
 \end{document}
