@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.chocosolver.solver.ResolutionPolicy;
 import org.chocosolver.solver.Solver;
@@ -20,8 +21,8 @@ public class VigenereSolver {
 
     public static class Settings {
 
-        private Iterable<Integer> keyLengths = new ArrayList<Integer>(0);
-        private Iterable<Language> languages = new ArrayList<Language>(0);
+        private Iterable<Integer> keyLengths = new ArrayList<>(0);
+        private Iterable<Language> languages = new ArrayList<>(0);
 
         public Settings setPossibleKeyLengths(Integer... lengths) {
             return this.setPossibleKeyLengths(Arrays.asList(lengths));
@@ -50,13 +51,13 @@ public class VigenereSolver {
 
     public List<SolveResult> solve(String cipherText) {
         MinMaxPriorityQueue<SolveResult> results = MinMaxPriorityQueue.maximumSize(10).create();
-        for (int keyLength : this.settings.keyLengths) {
-            for (Language language : this.settings.languages) {
+        StreamSupport.stream(this.settings.keyLengths.spliterator(), true).forEach(keyLength -> {
+            StreamSupport.stream(this.settings.languages.spliterator(), true).forEach(language -> {
                 for (SolveResult result : this.solveForLanguageAndKeyLength(cipherText, language, keyLength)) {
                     results.offer(result);
                 }
-            }
-        }
+            });
+        });
         return Stream.generate(() -> results.removeFirst()).limit(results.size()).collect(Collectors.toList());
     }
 
