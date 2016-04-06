@@ -67,5 +67,29 @@
 		On déclare une variable pour les différences absolues. Ainsi, la variable $A_i$ représente valeur absolue de la différence entre les fréquences multipliées et les fréquences multipliés du language à la position $i$ pour $1 \leq i \leq l$. Le domaine de chaque variable est l'ensemble des entiers entre $0$ et $p$.\\
 		
 		On déclare une variable pour la somme des différences. Le domaine de la variable est l'ensemble des entiers entre $0$ et $l * p$.\\
+		
+		Pour chaque lettre i de la chaine, nous avons ces contraintes.
+		
+		\begin{equation}
+		X_i + K_{i \% c} = I_i
+		\end{equation}
+		
+		\begin{equation}
+		I_i \% l = B_i
+		\end{equation}
+		
+		Pour chaque lettre i de l'alphabet, nous avons ces contraintes.
+		
+		\begin{equation}
+		Compte(i, B, C_i)
+		\end{equation}
+		
+		\begin{equation}
+		C_i * p = M_i
+		\end{equation}
+		
+		\begin{equation}
+		M_i / n = F_i
+		\end{equation}
 
 \end{document}
