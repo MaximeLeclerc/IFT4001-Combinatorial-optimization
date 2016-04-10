@@ -23,6 +23,7 @@ public class VigenereSolver {
 
         private Iterable<Integer> keyLengths = new ArrayList<>(0);
         private Iterable<Language> languages = new ArrayList<>(0);
+        private int nbResultsToReturn = 10;
 
         public Settings setPossibleKeyLengths(Integer... lengths) {
             return this.setPossibleKeyLengths(Arrays.asList(lengths));
@@ -41,6 +42,11 @@ public class VigenereSolver {
             this.languages = languages;
             return this;
         }
+
+        public Settings setNumberOfResultsToReturn(int n) {
+            this.nbResultsToReturn = n;
+            return this;
+        }
     }
 
     private final Settings settings;
@@ -50,7 +56,8 @@ public class VigenereSolver {
     }
 
     public List<SolveResult> solve(String cipherText) {
-        MinMaxPriorityQueue<SolveResult> results = MinMaxPriorityQueue.maximumSize(10).create();
+        MinMaxPriorityQueue<SolveResult> results = MinMaxPriorityQueue.maximumSize(this.settings.nbResultsToReturn)
+                .create();
         StreamSupport.stream(this.settings.keyLengths.spliterator(), true).forEach(keyLength -> {
             StreamSupport.stream(this.settings.languages.spliterator(), true).forEach(language -> {
                 for (SolveResult result : this.solveForLanguageAndKeyLength(cipherText, language, keyLength)) {
@@ -111,7 +118,8 @@ public class VigenereSolver {
                 language.alphabetLength() * frequencyPrecision, solver);
         solver.post(ICF.sum(absDifferences, frequencyDiffsSum));
 
-        NBestSolutionsRecorder solutionRecorder = new NBestSolutionsRecorder(10, frequencyDiffsSum);
+        NBestSolutionsRecorder solutionRecorder = new NBestSolutionsRecorder(this.settings.nbResultsToReturn,
+                frequencyDiffsSum);
         solver.set(solutionRecorder);
         solver.findAllOptimalSolutions(ResolutionPolicy.MINIMIZE, frequencyDiffsSum, false);
 
