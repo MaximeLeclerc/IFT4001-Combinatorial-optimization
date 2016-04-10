@@ -7,20 +7,21 @@ import org.junit.Test;
 
 public class VigenereTest {
 
-    private static final String CAESAR_CIPHER_TEXT = "YKBXG WLKHF TGLVH NGMKR FXGEX GWFXR HNKXT KLBVH FXMHU NKRVT XLTKG HMMHI KTBLX ABFMA XXOBE MATMF XGWHE BOXLT YMXKM AXFMA XZHHW BLHYM BGMXK KXWPB MAMAX BKUHG XLLHE XMBMU XPBMA VTXLT KMAXG HUEXU KNMNL ATMAM HEWRH NVTXL TKPTL TFUBM BHNLB YBMPX KXLHB MPTLT ZKBXO HNLYT NEMTG WZKBX OHNLE RATMA VTXLT KTGLP XKWBM AXKXN GWXKE XTOXH YUKNM NLTGW MAXKX LMYHK UKNMN LBLTG AHGHN KTUEX FTGLH TKXMA XRTEE TEEAH GHNKT UEXFX GVHFX BMHLI XTDBG VTXLT KLYNG XKTE";
+    private static final String CAESAR_CIPHER_TEXT = "fskhr iyywv kyepc jdkjr gzjic mdngb szxli actob atjft nltyx crasp rxyuw zjsdq uwbjy wxpdh qfztn gqhtr pdncl rgsgj ywfnc admnd jurjy oubnb cqqkx jylay dnymm eturp jzpbk ohugv rqvkt lodbl nbmge vzzba qketg catpg nwvap yqwbu dqgoa qxedu swimv jxmje quzsb iumjb vcbpl gyhpd uykcz rlsrl zjdxm ihmbk cmagl uivbn caoct negup jgcmx pmdhh jirfw ncaoc rtgqu fwaac bsdma vddfm kuwhb kzntq dvjzo mhkwx nzaxf fhomw yjdmf pfsrk pbxca qnyxd tsxmv npdtn ftdp"
+            .toUpperCase();
     private static final String PLAIN_TEXT = "FRIEN DSROM ANSCO UNTRY MENLE NDMEY OUREA RSICO METOB URYCA ESARN OTTOP RAISE HIMTH EEVIL THATM ENDOL IVESA FTERT HEMTH EGOOD ISOFT INTER REDWI THTHE IRBON ESSOL ETITB EWITH CAESA RTHEN OBLEB RUTUS HATHT OLDYO UCAES ARWAS AMBIT IOUSI FITWE RESOI TWASA GRIEV OUSFA ULTAN DGRIE VOUSL YHATH CAESA RANSW ERDIT HEREU NDERL EAVEO FBRUT USAND THERE STFOR BRUTU SISAN HONOU RABLE MANSO ARETH EYALL ALLHO NOURA BLEME NCOME ITOSP EAKIN CAESA RSFUN ERAL";
 
     @Test
     public void encryption_returnsExpectedResult() {
         Vigenere vigenere = new Vigenere(PLAIN_TEXT, Language.ENGLISH);
-        String result = vigenere.encrypt("TTTT");
+        String result = vigenere.encrypt("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
         assertThat(result, is(equalTo(CAESAR_CIPHER_TEXT)));
     }
 
     @Test
     public void decryption_returnsExpectedResult() {
         Vigenere vigenere = new Vigenere(CAESAR_CIPHER_TEXT, Language.ENGLISH);
-        String result = vigenere.decrypt("TTTT");
+        String result = vigenere.decrypt("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
         assertThat(result, is(equalTo(PLAIN_TEXT)));
     }
 
