@@ -136,18 +136,36 @@
 			La première instance est une instance qui est considéré comme étant un message
 			long ayant une clé de longeur 4 et qui devrait avoir une distribution correct de la fréquence des lettres. \\
 			Voici le texte brut : {\tiny FRIEN DSROM ANSCO UNTRY MENLE NDMEY OUREA RSICO METOB URYCA ESARN OTTOP RAISE HIMTH EEVIL THATM ENDOL IVESA FTERT HEMTH EGOOD ISOFT INTER REDWI THTHE IRBON ESSOL ETITB EWITH CAESA RTHEN OBLEB RUTUS HATHT OLDYO UCAES ARWAS AMBIT IOUSI FITWE RESOI TWASA GRIEV OUSFA ULTAN DGRIE VOUSL YHATH CAESA RANSW ERDIT HEREU NDERL EAVEO FBRUT USAND THERE STFOR BRUTU SISAN HONOU RABLE MANSO ARETH EYALL ALLHO NOURA BLEME NCOME ITOSP EAKIN CAESA RSFUN ERAL} \\
-			{\tiny } \\
-			Voici le texte encrypté : {\tiny YKBXG WLKHF TGLVH NGMKR FXGEX GWFXR HNKXT KLBVH FXMHU NKRVT XLTKG HMMHI KTBLX ABFMA XXOBE MATMF XGWHE BOXLT YMXKM AXFMA XZHHW BLHYM BGMXK KXWPB MAMAX BKUHG XLLHE XMBMU XPBMA VTXLT KMAXG HUEXU KNMNL ATMAM HEWRH NVTXL TKPTL TFUBM BHNLB YBMPX KXLHB MPTLT ZKBXO HNLYT NEMTG WZKBX OHNLE RATMA VTXLT KTGLP XKWBM AXKXN GWXKE XTOXH YUKNM NLTGW MAXKX LMYHK UKNMN LBLTG AHGHN KTUEX FTGLH TKXMA XRTEE TEEAH GHNKT UEXFX GVHFX BMHLI XTDBG VTXLT KLYNG XKTE} \\
+			\\ Voici le texte encrypté : {\tiny YKBXG WLKHF TGLVH NGMKR FXGEX GWFXR HNKXT KLBVH FXMHU NKRVT XLTKG HMMHI KTBLX ABFMA XXOBE MATMF XGWHE BOXLT YMXKM AXFMA XZHHW BLHYM BGMXK KXWPB MAMAX BKUHG XLLHE XMBMU XPBMA VTXLT KMAXG HUEXU KNMNL ATMAM HEWRH NVTXL TKPTL TFUBM BHNLB YBMPX KXLHB MPTLT ZKBXO HNLYT NEMTG WZKBX OHNLE RATMA VTXLT KTGLP XKWBM AXKXN GWXKE XTOXH YUKNM NLTGW MAXKX LMYHK UKNMN LBLTG AHGHN KTUEX FTGLH TKXMA XRTEE TEEAH GHNKT UEXFX GVHFX BMHLI XTDBG VTXLT KLYNG XKTE} \\
 
 
-			\smallskip La deuxième instance est une instance qui est considéré comme étant un message
+			La deuxième instance est une instance qui est considéré comme étant un message
 			d'une courte longueur ayant un clé de longueur 1 et qui a une bonne distribution de la fréquence des lettres.
-			De plus, cette instance va être réutilisé pour faire des tests avec des clés de longueur 2,3,4,5. \\
+			De plus, cette instance va être réutilisé pour faire des tests avec des clés de longueur 2,3,4,5.
+			\\ Voici le texte brut : {\tiny GENIUS WITHOUT EDUCATION IS LIKE SILVER IN THE MINE} \\
 
-			La troisième instance est une instance qui est considéré comme un long message ayant une très bonne distribution
-			de la fréquence des lettres, {\tiny }
+			La troisième instance est une instance qui est considéré comme un long message ayant une
+			très bonne distribution de la fréquence des lettres que nous avons testé sur une clé de 1 et de deux.
+			\\ Voici le texte brut : {\tiny HEREUPON LEGRAND AROSE WITH A GRAVE AND STATELY AIR AND BROUGHT ME THE BEETLE FROM A GLASS CASE IN WHICH IT WAS ENCLOSED IT WAS A BEAUTIFUL SCARABAEUS AND AT THAT TIME UNKNOWN TO NATURALISTS OF COURSE A GREAT PRIZE IN A SCIENTIFIC POINT OF VIEW THERE WERE TWO ROUND BLACK SPOTS NEAR ONE EXTREMITY OF THE BACK AND A LONG ONE NEAR THE OTHER THE SCALES WERE EXCEEDINGLY HARD AND GLOSSY WITH ALL THE APPEARANCE OF BURNISHED GOLD THE WEIGHT OF THE INSECT WAS VERY REMARKABLE AND TAKING ALL THINGS INTO CONSIDERATION I COULD HARDLY BLAME JUPITER FOR HIS OPINION RESPECTING IT}\\
+
+			La quatrième instance est une instance ayant une longueur courte et qui
+			ne respect pas très bien la distributions des lettres. Nous l'avons testé
+			sur un clé de longueur 1. \\ Voici le texte brut : {\tiny ZJXQKB} \\
     \section{Résultats}
+			\noindent{Première instance : Retour arrière : 219 421,Temps de réponse : 93,992 secondes, Nombre de solution trouvé : 158, Présent dans les solutions retournées : Oui} \\
+			Deuxième instance : \\
+			Avec une clé de 1 : Retour arrière : 55,Temps de réponse : 0,373 secondes, Nombre de solution trouvé : 21, Présent dans les solutions retournées : Oui \\
+			Avec une clé de 2 : Retour arrière : 1 369,Temps de réponse : 1,467 secondes, Nombre de solution trouvé : 82, Présent dans les solutions retournées : Oui \\
+			Avec une clé de 3 : Retour arrière : 61 985,Temps de réponse : 8,274 secondes, Nombre de solution trouvé : 121, Présent dans les solutions retournées : Oui \\
+			Avec une clé de 4 : Retour arrière : 219 421,Temps de réponse : 93,992 secondes, Nombre de solution trouvé : 158, Présent dans les solutions retournées : Oui \\
+			Avec une clé de 5 : Retour arrière : 219 421,Temps de réponse : 93,992 secondes, Nombre de solution trouvé : 158, Présent dans les solutions retournées : Oui \\
 
+			\noindent{Troisième instance :} \\
+			Avec une clé de 1 : Retour arrière : 51 ,Temps de réponse : 1,018 secondes, Nombre de solution trouvé : 18, Présent dans les solutions retournées : Oui \\
+			Avec une clé de 2 : Retour arrière : 1 323 ,Temps de réponse : 4,099 secondes, Nombre de solution trouvé : 65, Présent dans les solutions retournées : Oui \\
+
+			\noindent{Quatrième instance :} \\
+			Avec une clé de 1 : Retour arrière : 63 ,Temps de réponse : 0,198 secondes, Nombre de solution trouvé : 17, Présent dans les solutions retournées : Non \\
     \section{Discussion}
 
     \section{Conclusion}
