@@ -24,145 +24,161 @@ import com.google.common.collect.MinMaxPriorityQueue;
 
 public class VigenereSolver {
 
-    public static class Settings {
+	public static class Settings {
 
-        private Iterable<Integer> keyLengths = new ArrayList<>(0);
-        private Iterable<Language> languages = new ArrayList<>(0);
-        private int nbResultsToReturn = 10;
+		private Iterable<Integer> keyLengths = new ArrayList<>(0);
+		private Iterable<Language> languages = new ArrayList<>(0);
+		private int nbResultsToReturn = 10;
+		private boolean customHeuristic = false;
+		private boolean printInFile = false;
 
-        public Settings setPossibleKeyLengths(Integer... lengths) {
-            return this.setPossibleKeyLengths(Arrays.asList(lengths));
-        }
+		public Settings setPossibleKeyLengths(Integer... lengths) {
+			return this.setPossibleKeyLengths(Arrays.asList(lengths));
+		}
 
-        public Settings setPossibleKeyLengths(Iterable<Integer> lengths) {
-            this.keyLengths = lengths;
-            return this;
-        }
+		public Settings setPossibleKeyLengths(Iterable<Integer> lengths) {
+			this.keyLengths = lengths;
+			return this;
+		}
 
-        public Settings setPossibleLanguages(Language... languages) {
-            return this.setPossibleLanguages(Arrays.asList(languages));
-        }
+		public Settings setPossibleLanguages(Language... languages) {
+			return this.setPossibleLanguages(Arrays.asList(languages));
+		}
 
-        public Settings setPossibleLanguages(Iterable<Language> languages) {
-            this.languages = languages;
-            return this;
-        }
+		public Settings setPossibleLanguages(Iterable<Language> languages) {
+			this.languages = languages;
+			return this;
+		}
 
-        public Settings setNumberOfResultsToReturn(int n) {
-            this.nbResultsToReturn = n;
-            return this;
-        }
-    }
+		public Settings setNumberOfResultsToReturn(int n) {
+			this.nbResultsToReturn = n;
+			return this;
+		}
 
-    private final Settings settings;
+		public Settings setUseCustomHeuristic(boolean useHeuristic) {
+			this.customHeuristic = useHeuristic;
+			return this;
+		}
 
-    public VigenereSolver(Settings settings) {
-        this.settings = settings;
-    }
+		public Settings setPrintInFile(boolean printInFile) {
+			this.printInFile = printInFile;
+			return this;
+		}
+	}
 
-    public List<SolveResult> solve(String cipherText) {
-        MinMaxPriorityQueue<SolveResult> results = MinMaxPriorityQueue.maximumSize(this.settings.nbResultsToReturn)
-                .create();
-        StreamSupport.stream(this.settings.keyLengths.spliterator(), true).forEach(keyLength -> {
-            StreamSupport.stream(this.settings.languages.spliterator(), true).forEach(language -> {
-                for (SolveResult result : this.solveForLanguageAndKeyLength(cipherText, language, keyLength)) {
-                    results.offer(result);
-                }
-            });
-        });
-        return Stream.generate(() -> results.removeFirst()).limit(results.size()).collect(Collectors.toList());
-    }
+	private final Settings settings;
 
-    private List<SolveResult> solveForLanguageAndKeyLength(String cipherText, Language language, int keyLength) {
-        Solver solver = new Solver();
+	public VigenereSolver(Settings settings) {
+		this.settings = settings;
+	}
 
-        try {
-            File file = new File("ChocoDecision.txt");
-            // if file doesnt exists, then create it
-            if (!file.exists()) {
-                file.createNewFile();
-            }
+	public List<SolveResult> solve(String cipherText) {
+		MinMaxPriorityQueue<SolveResult> results = MinMaxPriorityQueue.maximumSize(this.settings.nbResultsToReturn)
+				.create();
+		StreamSupport.stream(this.settings.keyLengths.spliterator(), true).forEach(keyLength -> {
+			StreamSupport.stream(this.settings.languages.spliterator(), true).forEach(language -> {
+				for (SolveResult result : this.solveForLanguageAndKeyLength(cipherText, language, keyLength)) {
+					results.offer(result);
+				}
+			});
+		});
+		return Stream.generate(() -> results.removeFirst()).limit(results.size()).collect(Collectors.toList());
+	}
 
-            FileOutputStream fos = new FileOutputStream(file);
+	private List<SolveResult> solveForLanguageAndKeyLength(String cipherText, Language language, int keyLength) {
+		Solver solver = new Solver();
 
-            PrintStream printStream = new PrintStream(fos);
-            Chatterbox.setOut(printStream);
+		if (this.settings.printInFile) {
+			try {
+				File file = new File("ChocoDecision.txt");
+				// if file doesnt exists, then create it
+				if (!file.exists()) {
+					file.createNewFile();
+				}
 
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+				FileOutputStream fos = new FileOutputStream(file);
 
-        Chatterbox.showContradiction(solver);
-        Chatterbox.showDecisions(solver);
+				PrintStream printStream = new PrintStream(fos);
+				Chatterbox.setOut(printStream);
 
-        IntVar[] cipherTextVars = cipherText.chars().filter(c -> c != ' ').map(c -> c - 'A')
-                .mapToObj(x -> VF.fixed(x, solver)).toArray(IntVar[]::new);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
-        int messageLength = cipherTextVars.length;
-        int frequencyPrecision = 10000;
-        IntVar messageLengthVar = VF.fixed(messageLength, solver);
-        IntVar alphabetLengthVar = VF.fixed(language.alphabetLength(), solver);
+			Chatterbox.showContradiction(solver);
+			Chatterbox.showDecisions(solver);
+		}
 
-        IntVar[] keyComplement = VF.enumeratedArray("key", keyLength, 0, language.alphabetLength() - 1, solver);
-        IntVar[] intermediateText = VF.enumeratedArray("intermediatetext", messageLength, 0,
-                2 * (language.alphabetLength() - 1), solver);
-        IntVar[] plainText = VF.enumeratedArray("plaintext", messageLength, 0, language.alphabetLength() - 1, solver);
-        for (int i = 0; i < messageLength; ++i) {
-            solver.post(ICF.sum(new IntVar[] { cipherTextVars[i], keyComplement[i % keyComplement.length] },
-                    intermediateText[i]));
-            solver.post(ICF.mod(intermediateText[i], alphabetLengthVar, plainText[i]));
-        }
+		IntVar[] cipherTextVars = cipherText.chars().filter(c -> c != ' ').map(c -> c - 'A')
+				.mapToObj(x -> VF.fixed(x, solver)).toArray(IntVar[]::new);
 
-        IntVar[] counts = VF.boundedArray("counts", language.alphabetLength(), 0, messageLength, solver);
-        IntVar[] multipliedCounts = VF.boundedArray("multipliedCounts", language.alphabetLength(), 0,
-                messageLength * frequencyPrecision, solver);
-        IntVar[] multipliedFrequencies = VF.boundedArray("frequencies", language.alphabetLength(), 0,
-                frequencyPrecision, solver);
+		int messageLength = cipherTextVars.length;
+		int frequencyPrecision = 10000;
+		IntVar messageLengthVar = VF.fixed(messageLength, solver);
+		IntVar alphabetLengthVar = VF.fixed(language.alphabetLength(), solver);
 
-        for (int i = 0; i < language.alphabetLength(); ++i) {
-            solver.post(ICF.count(i, plainText, counts[i]));
-            solver.post(ICF.times(counts[i], frequencyPrecision, multipliedCounts[i]));
-            solver.post(ICF.eucl_div(multipliedCounts[i], messageLengthVar, multipliedFrequencies[i]));
-        }
+		IntVar[] keyComplement = VF.enumeratedArray("key", keyLength, 0, language.alphabetLength() - 1, solver);
+		IntVar[] intermediateText = VF.enumeratedArray("intermediatetext", messageLength, 0,
+				2 * (language.alphabetLength() - 1), solver);
+		IntVar[] plainText = VF.enumeratedArray("plaintext", messageLength, 0, language.alphabetLength() - 1, solver);
+		for (int i = 0; i < messageLength; ++i) {
+			solver.post(ICF.sum(new IntVar[] { cipherTextVars[i], keyComplement[i % keyComplement.length] },
+					intermediateText[i]));
+			solver.post(ICF.mod(intermediateText[i], alphabetLengthVar, plainText[i]));
+		}
 
-        IntVar[] languageNegativeMultipliedFrequencies = Arrays.stream(language.getFrequencies())
-                .mapToObj(x -> VF.fixed((int) (x * -frequencyPrecision), solver)).toArray(IntVar[]::new);
+		IntVar[] counts = VF.boundedArray("counts", language.alphabetLength(), 0, messageLength, solver);
+		IntVar[] multipliedCounts = VF.boundedArray("multipliedCounts", language.alphabetLength(), 0,
+				messageLength * frequencyPrecision, solver);
+		IntVar[] multipliedFrequencies = VF.boundedArray("frequencies", language.alphabetLength(), 0,
+				frequencyPrecision, solver);
 
-        IntVar[] differences = VF.boundedArray("diffs", language.alphabetLength(), -frequencyPrecision,
-                frequencyPrecision, solver);
-        IntVar[] absDifferences = new IntVar[language.alphabetLength()];
+		for (int i = 0; i < language.alphabetLength(); ++i) {
+			solver.post(ICF.count(i, plainText, counts[i]));
+			solver.post(ICF.times(counts[i], frequencyPrecision, multipliedCounts[i]));
+			solver.post(ICF.eucl_div(multipliedCounts[i], messageLengthVar, multipliedFrequencies[i]));
+		}
 
-        for (int i = 0; i < language.alphabetLength(); ++i) {
-            solver.post(ICF.sum(new IntVar[] { multipliedFrequencies[i], languageNegativeMultipliedFrequencies[i] },
-                    differences[i]));
-            absDifferences[i] = VF.abs(differences[i]);
-        }
+		IntVar[] languageNegativeMultipliedFrequencies = Arrays.stream(language.getFrequencies())
+				.mapToObj(x -> VF.fixed((int) (x * -frequencyPrecision), solver)).toArray(IntVar[]::new);
 
-        IntVar frequencyDiffsSum = VariableFactory.enumerated("frequencyDiffsSum", 0,
-                language.alphabetLength() * frequencyPrecision, solver);
-        solver.post(ICF.sum(absDifferences, frequencyDiffsSum));
+		IntVar[] differences = VF.boundedArray("diffs", language.alphabetLength(), -frequencyPrecision,
+				frequencyPrecision, solver);
+		IntVar[] absDifferences = new IntVar[language.alphabetLength()];
 
-        // Custom Heuristics:
-        VarSelectorHeuristic varSelector = new VarSelectorHeuristic(cipherText.replaceAll("\\s+", ""), keyLength);
-        ValSelectorHeuristic valSelector = new ValSelectorHeuristic(Frequencies.ENGLISH);
-        solver.set(ISF.custom(varSelector, valSelector, plainText));
+		for (int i = 0; i < language.alphabetLength(); ++i) {
+			solver.post(ICF.sum(new IntVar[] { multipliedFrequencies[i], languageNegativeMultipliedFrequencies[i] },
+					differences[i]));
+			absDifferences[i] = VF.abs(differences[i]);
+		}
 
-        NBestSolutionsRecorder solutionRecorder = new NBestSolutionsRecorder(this.settings.nbResultsToReturn,
-                frequencyDiffsSum);
-        solver.set(solutionRecorder);
+		IntVar frequencyDiffsSum = VariableFactory.enumerated("frequencyDiffsSum", 0,
+				language.alphabetLength() * frequencyPrecision, solver);
+		solver.post(ICF.sum(absDifferences, frequencyDiffsSum));
 
-        solver.findAllOptimalSolutions(ResolutionPolicy.MINIMIZE, frequencyDiffsSum, false);
+		if(this.settings.customHeuristic) {
+			// Custom Heuristics:
+			VarSelectorHeuristic varSelector = new VarSelectorHeuristic(cipherText.replaceAll("\\s+", ""), keyLength);
+			ValSelectorHeuristic valSelector = new ValSelectorHeuristic(Frequencies.ENGLISH);
+			solver.set(ISF.custom(varSelector, valSelector, plainText));
+		}
 
-        Chatterbox.printStatistics(solver);
+		NBestSolutionsRecorder solutionRecorder = new NBestSolutionsRecorder(this.settings.nbResultsToReturn,
+				frequencyDiffsSum);
+		solver.set(solutionRecorder);
 
-        SolveResult.Builder builder = new SolveResult.Builder(cipherText, language);
-        return solutionRecorder.getSolutions().stream().map(solution -> {
-            String key = Arrays.stream(keyComplement)
-                    .map(x -> language.letterAt((language.alphabetLength() - solution.getIntVal(x)) % 26))
-                    .map(c -> String.valueOf(c)).collect(Collectors.joining());
-            return builder.create(key, solution.getIntVal(frequencyDiffsSum));
-        }).collect(Collectors.toList());
+		solver.findAllOptimalSolutions(ResolutionPolicy.MINIMIZE, frequencyDiffsSum, false);
 
-    }
+		Chatterbox.printStatistics(solver);
+
+		SolveResult.Builder builder = new SolveResult.Builder(cipherText, language);
+		return solutionRecorder.getSolutions().stream().map(solution -> {
+			String key = Arrays.stream(keyComplement)
+					.map(x -> language.letterAt((language.alphabetLength() - solution.getIntVal(x)) % 26))
+					.map(c -> String.valueOf(c)).collect(Collectors.joining());
+			return builder.create(key, solution.getIntVal(frequencyDiffsSum));
+		}).collect(Collectors.toList());
+
+	}
 }

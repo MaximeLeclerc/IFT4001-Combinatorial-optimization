@@ -39,9 +39,10 @@ public final class ValSelectorHeuristic implements IntValueSelector {
         }
         return -1;
     }
-
+    
     private Map<Integer, Double> sortByValue(Map<Integer, Double> map) {
         List list = new LinkedList(map.entrySet());
+        
         Collections.sort(list, new Comparator() {
 
             @Override

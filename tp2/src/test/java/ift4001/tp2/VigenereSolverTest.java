@@ -17,24 +17,23 @@ public class VigenereSolverTest {
     
     private static final String CAESAR_CIPHER_TEXT_3  = "JHQLXV ZLWKRXW HGXFDWLRQ LV OLNH VLOYHU LQ WKH PLQH";
     private static final String CAESAR_CIPHER_TEXT_4 = "KIRMYW AMXLSYX IHYGEXMSR MW PMOI WMPZIV MR XLI QMRI";
+    private static final String CAESAR_CIPHER_TEXT_5 = "LJSNZX BNYMTZY JIZHFYNTS NX QNPJ XNQAJW NS YMJ RNSJ";
     
     @Test
-    public void CaesarCipher_returnsExpectedResult() {
+    public void CaesarCipher_WithPossibleKeyLengths4_returnsExpectedResult() {
         VigenereSolver.Settings settings = new VigenereSolver.Settings().setPossibleLanguages(Language.ENGLISH)
                 .setPossibleKeyLengths(4);
         VigenereSolver solver = new VigenereSolver(settings);
 
         List<SolveResult> result = solver.solve(CAESAR_CIPHER_TEXT);
         
-        result.stream().forEach(c -> System.out.println(c.plainText + " - " + c.key));
-
         assertThat(result.stream().anyMatch(r -> r.plainText.equals(PLAIN_TEXT)), is(true));
     }
     
     @Test
-    public void CaesarCipher_returnsExpectedResult_2() {
+    public void CaesarCipher_WithPossibleKeyLengths2_returnsExpectedResult() {
         VigenereSolver.Settings settings = new VigenereSolver.Settings().setPossibleLanguages(Language.ENGLISH)
-                .setPossibleKeyLengths(1);
+                .setPossibleKeyLengths(2);
         VigenereSolver solver = new VigenereSolver(settings);
 
         List<SolveResult> result = solver.solve(CAESAR_CIPHER_TEXT_2);
@@ -43,9 +42,9 @@ public class VigenereSolverTest {
     }
     
     @Test
-    public void CaesarCipher_returnsExpectedResult_3() {
+    public void CaesarCipher_WithPossibleKeyLengths3_returnsExpectedResult() {
         VigenereSolver.Settings settings = new VigenereSolver.Settings().setPossibleLanguages(Language.ENGLISH)
-                .setPossibleKeyLengths(1);
+                .setPossibleKeyLengths(3);
         VigenereSolver solver = new VigenereSolver(settings);
 
         List<SolveResult> result = solver.solve(CAESAR_CIPHER_TEXT_3);
@@ -54,15 +53,25 @@ public class VigenereSolverTest {
     } 
     
     @Test
-    public void CaesarCipher_returnsExpectedResult_12() {
+    public void CaesarCipher_WithPossibleKeyLengths1_returnsExpectedResult() {
         VigenereSolver.Settings settings = new VigenereSolver.Settings().setPossibleLanguages(Language.ENGLISH)
                 .setPossibleKeyLengths(1);
         VigenereSolver solver = new VigenereSolver(settings);
 
         List<SolveResult> result = solver.solve(CAESAR_CIPHER_TEXT_4);
-        
-        result.stream().forEach(c -> System.out.println(c.plainText + " - " + c.key));
 
         assertThat(result.stream().anyMatch(r -> r.plainText.equals(PLAIN_TEXT_2)), is(true));
-    } 
+    }
+    
+    
+    @Test
+    public void CaesarCipher_WithPossibleKeyLengths5_returnsExpectedResult() {
+        VigenereSolver.Settings settings = new VigenereSolver.Settings().setPossibleLanguages(Language.ENGLISH)
+                .setPossibleKeyLengths(5);
+        VigenereSolver solver = new VigenereSolver(settings);
+
+        List<SolveResult> result = solver.solve(CAESAR_CIPHER_TEXT_5);
+
+        assertThat(result.stream().anyMatch(r -> r.plainText.equals(PLAIN_TEXT_2)), is(true));
+    }
 }
