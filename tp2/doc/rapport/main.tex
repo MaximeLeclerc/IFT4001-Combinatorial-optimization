@@ -8,6 +8,7 @@
 \usepackage[latin1]{inputenc}
 \usepackage{blindtext}
 \usepackage{hyperref}
+\usepackage{fancyvrb}
 
 \title{IFT-4001 (Hiver 2016) Projet d'exploration}
 \date{24 avril 2016}
@@ -130,7 +131,21 @@
 			distribution de lettres anglaise, d'autre qui la respectent pas. Les
 			métriques que nous allons observer durant les expérimentations sont le
 			temps de réponse, le nombre de retour arrière, ainsi que le nombre de
-			solution trouver.
+			solution trouver. \\
+
+			La première instance est une instance qui est considéré comme étant un message
+			long ayant une clé de longeur 4 et qui devrait avoir une distribution correct de la fréquence des lettres. \\
+			Voici le texte brut : {\tiny FRIEN DSROM ANSCO UNTRY MENLE NDMEY OUREA RSICO METOB URYCA ESARN OTTOP RAISE HIMTH EEVIL THATM ENDOL IVESA FTERT HEMTH EGOOD ISOFT INTER REDWI THTHE IRBON ESSOL ETITB EWITH CAESA RTHEN OBLEB RUTUS HATHT OLDYO UCAES ARWAS AMBIT IOUSI FITWE RESOI TWASA GRIEV OUSFA ULTAN DGRIE VOUSL YHATH CAESA RANSW ERDIT HEREU NDERL EAVEO FBRUT USAND THERE STFOR BRUTU SISAN HONOU RABLE MANSO ARETH EYALL ALLHO NOURA BLEME NCOME ITOSP EAKIN CAESA RSFUN ERAL} \\
+			{\tiny } \\
+			Voici le texte encrypté : {\tiny YKBXG WLKHF TGLVH NGMKR FXGEX GWFXR HNKXT KLBVH FXMHU NKRVT XLTKG HMMHI KTBLX ABFMA XXOBE MATMF XGWHE BOXLT YMXKM AXFMA XZHHW BLHYM BGMXK KXWPB MAMAX BKUHG XLLHE XMBMU XPBMA VTXLT KMAXG HUEXU KNMNL ATMAM HEWRH NVTXL TKPTL TFUBM BHNLB YBMPX KXLHB MPTLT ZKBXO HNLYT NEMTG WZKBX OHNLE RATMA VTXLT KTGLP XKWBM AXKXN GWXKE XTOXH YUKNM NLTGW MAXKX LMYHK UKNMN LBLTG AHGHN KTUEX FTGLH TKXMA XRTEE TEEAH GHNKT UEXFX GVHFX BMHLI XTDBG VTXLT KLYNG XKTE} \\
+
+
+			\smallskip La deuxième instance est une instance qui est considéré comme étant un message
+			d'une courte longueur ayant un clé de longueur 1 et qui a une bonne distribution de la fréquence des lettres.
+			De plus, cette instance va être réutilisé pour faire des tests avec des clés de longueur 2,3,4,5. \\
+
+			La troisième instance est une instance qui est considéré comme un long message ayant une très bonne distribution
+			de la fréquence des lettres, {\tiny }
     \section{Résultats}
 
     \section{Discussion}
