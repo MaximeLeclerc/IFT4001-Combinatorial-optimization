@@ -161,4 +161,141 @@ public class VigenereSolverTest {
 
 		assertThat(result.stream().anyMatch(r -> r.plainText.equals(PLAIN_TEXT_VERY_SMALL_TEXT)), is(true));
 	}
+	
+	
+	
+	@Test
+	public void CaesarCipher_WithPossibleKeyLengths4AndBigMessageAndCustomHeuristic_returnsExpectedResult() {
+		VigenereSolver.Settings settings = new VigenereSolver.Settings().setPossibleLanguages(Language.ENGLISH)
+				.setPossibleKeyLengths(4).setUseCustomHeuristic(true);
+		VigenereSolver solver = new VigenereSolver(settings);
+
+		List<SolveResult> result = solver.solve(CAESAR_CIPHER_TEXT);
+
+		assertThat(result.stream().anyMatch(r -> r.plainText.equals(PLAIN_TEXT)), is(true));
+	}
+
+	@Test
+	public void CaesarCipher_WithPossibleKeyLengths1AndCustomHeuristic_returnsExpectedResult() {
+		VigenereSolver.Settings settings = new VigenereSolver.Settings().setPossibleLanguages(Language.ENGLISH)
+				.setPossibleKeyLengths(1).setUseCustomHeuristic(true);
+		VigenereSolver solver = new VigenereSolver(settings);
+
+		List<SolveResult> result = solver.solve(CAESAR_CIPHER_TEXT_1);
+
+		assertThat(result.stream().anyMatch(r -> r.plainText.equals(PLAIN_TEXT_SMALL)), is(true));
+	}
+
+	@Test
+	public void CaesarCipher_WithPossibleKeyLengths2AndCustomHeuristic_returnsExpectedResult() {
+		VigenereSolver.Settings settings = new VigenereSolver.Settings().setPossibleLanguages(Language.ENGLISH)
+				.setPossibleKeyLengths(2).setUseCustomHeuristic(true);
+		VigenereSolver solver = new VigenereSolver(settings);
+
+		List<SolveResult> result = solver.solve(CAESAR_CIPHER_TEXT_2);
+
+		assertThat(result.stream().anyMatch(r -> r.plainText.equals(PLAIN_TEXT_SMALL)), is(true));
+	}
+
+	@Test
+	public void CaesarCipher_WithPossibleKeyLengths3AndCustomHeuristic_returnsExpectedResult() {
+		VigenereSolver.Settings settings = new VigenereSolver.Settings().setPossibleLanguages(Language.ENGLISH)
+				.setPossibleKeyLengths(3).setUseCustomHeuristic(true);
+		VigenereSolver solver = new VigenereSolver(settings);
+
+		List<SolveResult> result = solver.solve(CAESAR_CIPHER_TEXT_3);
+
+		assertThat(result.stream().anyMatch(r -> r.plainText.equals(PLAIN_TEXT_SMALL)), is(true));
+	}
+
+	@Test
+	public void CaesarCipher_WithPossibleKeyLengths4AndCustomHeuristic_returnsExpectedResult() {
+		VigenereSolver.Settings settings = new VigenereSolver.Settings().setPossibleLanguages(Language.ENGLISH)
+				.setPossibleKeyLengths(4).setUseCustomHeuristic(true);
+		VigenereSolver solver = new VigenereSolver(settings);
+
+		List<SolveResult> result = solver.solve(CAESAR_CIPHER_TEXT_4);
+
+		assertThat(result.stream().anyMatch(r -> r.plainText.equals(PLAIN_TEXT_SMALL)), is(true));
+	}
+
+	@Test
+	public void CaesarCipher_WithPossibleKeyLengths5AndCustomHeuristic_returnsExpectedResult() {
+		VigenereSolver.Settings settings = new VigenereSolver.Settings().setPossibleLanguages(Language.ENGLISH)
+				.setPossibleKeyLengths(5).setUseCustomHeuristic(true);
+		VigenereSolver solver = new VigenereSolver(settings);
+
+		List<SolveResult> result = solver.solve(CAESAR_CIPHER_TEXT_5);
+
+		assertThat(result.stream().anyMatch(r -> r.plainText.equals(PLAIN_TEXT_SMALL)), is(true));
+	}
+
+	@Test
+	public void CaesarCipher_WithGoodFrequenciesDistAndCustomHeuristic_returnsExpectedResult() {
+		vigenere = new Vigenere(PLAIN_TEXT_GOOD_DIST_OF_LETTER, Language.ENGLISH);
+		encrypText = vigenere.encrypt("G");
+
+		VigenereSolver.Settings settings = new VigenereSolver.Settings().setPossibleLanguages(Language.ENGLISH)
+				.setPossibleKeyLengths(1).setUseCustomHeuristic(true);
+		VigenereSolver solver = new VigenereSolver(settings);
+
+		List<SolveResult> result = solver.solve(encrypText);
+
+		assertThat(result.stream().anyMatch(r -> r.plainText.equals(PLAIN_TEXT_GOOD_DIST_OF_LETTER)), is(true));
+	}
+
+	@Test
+	public void CaesarCipher_WithGoodFrequenciesDistAndKeyLenghtsOf2AndCustomHeuristic_returnsExpectedResult() {
+		vigenere = new Vigenere(PLAIN_TEXT_GOOD_DIST_OF_LETTER, Language.ENGLISH);
+		encrypText = vigenere.encrypt("GE");
+
+		VigenereSolver.Settings settings = new VigenereSolver.Settings().setPossibleLanguages(Language.ENGLISH)
+				.setPossibleKeyLengths(2).setUseCustomHeuristic(true);
+		VigenereSolver solver = new VigenereSolver(settings);
+
+		List<SolveResult> result = solver.solve(encrypText);
+
+		assertThat(result.stream().anyMatch(r -> r.plainText.equals(PLAIN_TEXT_GOOD_DIST_OF_LETTER)), is(true));
+	}
+
+	@Test
+	public void CaesarCipher_WithBadFrequenciesDistAndCustomHeuristic_returnsNotExpectedResult() {
+		vigenere = new Vigenere(PLAIN_TEXT_BAD_DIST_OF_LETTER, Language.ENGLISH);
+		encrypText = vigenere.encrypt("G");
+
+		VigenereSolver.Settings settings = new VigenereSolver.Settings().setPossibleLanguages(Language.ENGLISH)
+				.setPossibleKeyLengths(1).setUseCustomHeuristic(true);
+		VigenereSolver solver = new VigenereSolver(settings);
+
+		List<SolveResult> result = solver.solve(encrypText);
+
+		assertThat(result.stream().anyMatch(r -> r.plainText.equals(PLAIN_TEXT_BAD_DIST_OF_LETTER)), is(false));
+
+	}
+
+	@Test
+	public void CaesarCipher_WithVerySmallTextAndCustomHeuristic_returnsExprectedResult() {
+		vigenere = new Vigenere(PLAIN_TEXT_VERY_SMALL_TEXT, Language.ENGLISH);
+		encrypText = vigenere.encrypt("D");
+		VigenereSolver.Settings settings = new VigenereSolver.Settings().setPossibleLanguages(Language.ENGLISH)
+				.setPossibleKeyLengths(1).setUseCustomHeuristic(true);
+		VigenereSolver solver = new VigenereSolver(settings);
+
+		List<SolveResult> result = solver.solve(encrypText);
+
+		assertThat(result.stream().anyMatch(r -> r.plainText.equals(PLAIN_TEXT_VERY_SMALL_TEXT)), is(true));
+	}
+
+	@Test
+	public void CaesarCipher_WithVerySmallTextAndNumberOfResultsReturn50AndKeyLengths2AndCustomHeuristic_returnsExprectedResult() {
+		vigenere = new Vigenere(PLAIN_TEXT_VERY_SMALL_TEXT, Language.ENGLISH);
+		encrypText = vigenere.encrypt("DT");
+		VigenereSolver.Settings settings = new VigenereSolver.Settings().setPossibleLanguages(Language.ENGLISH)
+				.setPossibleKeyLengths(2).setNumberOfResultsToReturn(50).setUseCustomHeuristic(true);
+		VigenereSolver solver = new VigenereSolver(settings);
+
+		List<SolveResult> result = solver.solve(encrypText);
+
+		assertThat(result.stream().anyMatch(r -> r.plainText.equals(PLAIN_TEXT_VERY_SMALL_TEXT)), is(true));
+	}
 }
