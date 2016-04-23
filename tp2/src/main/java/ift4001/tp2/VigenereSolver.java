@@ -28,7 +28,7 @@ public class VigenereSolver {
 
 		private Iterable<Integer> keyLengths = new ArrayList<>(0);
 		private Iterable<Language> languages = new ArrayList<>(0);
-		private int nbResultsToReturn = 10;
+		private int nbResultsToReturn = 0;
 		private boolean customHeuristic = false;
 		private boolean printInFile = false;
 
@@ -54,6 +54,17 @@ public class VigenereSolver {
 			this.nbResultsToReturn = n;
 			return this;
 		}
+		
+		public int getNumberOfResultsToReturn() {
+			if (this.nbResultsToReturn != 0) {
+				return this.nbResultsToReturn;
+			}
+			int longestAlphabetLength = StreamSupport.stream(this.languages.spliterator(), false)
+					.mapToInt(l -> l.alphabetLength()).max().orElse(0);
+			int longuestKey = StreamSupport.stream(this.keyLengths.spliterator(), false)
+					.mapToInt(k -> k).max().orElse(0);
+			return (int) Math.pow(longestAlphabetLength / 4, longuestKey);
+		}
 
 		public Settings setUseCustomHeuristic(boolean useHeuristic) {
 			this.customHeuristic = useHeuristic;
@@ -73,7 +84,7 @@ public class VigenereSolver {
 	}
 
 	public List<SolveResult> solve(String cipherText) {
-		MinMaxPriorityQueue<SolveResult> results = MinMaxPriorityQueue.maximumSize(this.settings.nbResultsToReturn)
+		MinMaxPriorityQueue<SolveResult> results = MinMaxPriorityQueue.maximumSize(this.settings.getNumberOfResultsToReturn())
 				.create();
 		StreamSupport.stream(this.settings.keyLengths.spliterator(), true).forEach(keyLength -> {
 			StreamSupport.stream(this.settings.languages.spliterator(), true).forEach(language -> {
@@ -164,7 +175,7 @@ public class VigenereSolver {
 			solver.set(ISF.custom(varSelector, valSelector, plainText));
 		}
 
-		NBestSolutionsRecorder solutionRecorder = new NBestSolutionsRecorder(this.settings.nbResultsToReturn,
+		NBestSolutionsRecorder solutionRecorder = new NBestSolutionsRecorder(this.settings.getNumberOfResultsToReturn(),
 				frequencyDiffsSum);
 		solver.set(solutionRecorder);
 
