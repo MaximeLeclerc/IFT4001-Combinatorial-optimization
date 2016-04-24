@@ -28,11 +28,9 @@
 
 	\section{Introduction}
 
-		L'optimisation combinatoire est une branche de l'informatique et des mathématiques appliquées. C'est la recherche d'une solution au coût minimal d'un problème dont l'espace des solutions est discret.\\
+		Utilisée depuis l'antiquité, la cryptographie sert à protéger des messages. Celle-ci se fait souvent à l'aide de secrets ou de clés. Cette cryptographie a principalement été utilisée à des fins militaires, commerciales ou simplement pour protéger la vie privée. L'opération de déchiffrer un message peut donc avoir des conséquences assez importantes sur la vie des gens, car ces informations peuvent mener à des actions destructives ou créatives.\\
 
-		Pour le projet d'exploration, nous devons apprendre quelque chose sur les solveurs ou l'optimisation combinatoire qui n'a pas été mentionné dans le cours et en faire mention dans notre rapport. Nous ferons une étude de la viabilité de la programmation par contraintes pour attaquer la cryptographie classique par substitution.\\
-
-		Ce rapport sera séparé en plusieurs parties. Nous commencerons par faire une description du problème. Ensuite, nous proposerons des approches. Par la suite, le rapport sera finalisé avec le protocole d'expérimentation, les résultats ainsi qu'une discussion sur ces résultats.\\
+		L'optimisation combinatoire est une branche de l'informatique et des mathématiques appliquées. C'est la recherche d'une solution au coût minimal d'un problème dont l'espace des solutions est discret. Nous ferons une étude de la viabilité de la programmation par contraintes pour attaquer la cryptographie classique par substitution.\\
 
 	\section{Description du problème}
 
@@ -290,14 +288,14 @@
 					& \textbf{Longueur clé} & \textbf{Retour arrière} & \textbf{Temps de réponse} & \textbf{Nb solutions} & \textbf{Présent} \\
 					\hline
 
-					1 & 4 & 219 421 & 93,992 secondes & 158 & Oui \\ \hline
-					2 & 1 & 55 & 0,373 secondes & 21 & Oui \\ \hline
-					2 & 2 & 1369 & 1,467 secondes & 82 & Oui \\ \hline
-					2 & 3 & 61 985 & 8,274 secondes & 121 & Oui \\ \hline
-					2 & 4 &   &  & & \\ \hline
-					2 & 5 &  &  & & \\ \hline
-					3 & 1 & 51 & 1,018 secondes & 18 & Oui \\ \hline
-					3 & 2 & 1323 & 4,099 secondes & 65 & Oui \\ \hline
+					1 & 4 & 559 281 & 87,187 secondes & 9061 & Oui \\ \hline
+					2 & 1 & 55 & 0,007 secondes & 19 & Oui \\ \hline
+					2 & 2 & 1369 & 0,306 secondes & 172 & Oui \\ \hline
+					2 & 3 & 68 345 & 1,944 secondes & 1 576 & Oui \\ \hline
+					2 & 4 & 6 607 263 & 114,837 secondes & 11 646 & Oui \\ \hline
+					2 & 5 & 1 611 566 903 & 6h49m47s & 292 & Oui \\ \hline
+					3 & 1 & 51 & 0,047 secondes & 15 & Oui \\ \hline
+					3 & 2 & 1 345 & 0,535 secondes & 155 & Oui \\ \hline
 					4 & 1 & 63 & 0,198 secondes & 17 & Non \\ \hline
 
 					\end{tabular}
@@ -313,15 +311,15 @@
 					\hline
 					\textbf{Instances} & \multicolumn{5}{ c |}{\textbf{Résultats}}  \\
 					\cline{2-6}
-					& \textbf{Longueur clé} & \textbf{Retour arrière} & \textbf{Temps de réponse} & \textbf{Nb solutions} & \textbf{Présent} \\
+					& \textbf{Longueur clé} & \textbf{Retour arrière} & \textbf{Temps de réponse} & \textbf{Nb solutions} & \textbf{Présent}\\
 					\hline
 
 					1 & 4 & 219 421 & 93,992 secondes & 158 & Oui \\ \hline
 					2 & 1 & 55 & 0,373 secondes & 21 & Oui \\ \hline
-					2 & 2 & 1369 & 1,467 secondes & 82 & Oui \\ \hline
-					2 & 3 & 61 985 & 8,274 secondes & 121 & Oui \\ \hline
-					2 & 4 &   &  & & \\ \hline
-					2 & 5 &  &  & & \\ \hline
+					2 & 2 & 1411 & 0,306 secondes & 172 & Oui \\ \hline
+					2 & 3 & 68 345 & 1,944 secondes & 1 576 & Oui \\ \hline
+					2 & 4 & 6 607 263 & 114,837 secondes & 11 646 & Oui \\ \hline
+					2 & 5 & 1 611 566 903 & 6h49m47s & 292 & Oui \\ \hline
 					3 & 1 & 51 & 1,018 secondes & 18 & Oui \\ \hline
 					3 & 2 & 1323 & 4,099 secondes & 65 & Oui \\ \hline
 					4 & 1 & 63 & 0,198 secondes & 17 & Non \\ \hline
