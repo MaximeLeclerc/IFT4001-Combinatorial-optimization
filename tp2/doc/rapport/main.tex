@@ -245,19 +245,19 @@
 
         Nous avons $n$ contraintes de type (\ref{eq:5}) et (\ref{eq:6}), $l$ contraintes de type (\ref{eq:2}), (\ref{eq:8}), (\ref{eq:9}), (\ref{eq:12}) et (\ref{eq:13}) ainsi qu'une contrainte de type (\ref{eq:10}). Le nombre de contraintes est donc borné par $\theta(n + l)$.
 
-                \subsection{Amélioration des heuristiques}
+        \subsection{Amélioration des heuristiques}
         Pour tenter d'améliorer les performances du solver, nous avons créé une nouvelle heuristique adapté au modèle.
         Cette nouvelle heurisitque comprend le choix de la variable ainsi que le choix de la valeur.
         Elle fait tout ses calculs lors de son initialisation et elle retourne les résultats de ses calculs lors d'une requète par le solveur.
-        
-        \subsubsection{Stratégie pour choisir la variable} 
+
+        \subsubsection{Stratégie pour choisir la variable}
         L'heuristique se contruit avec le message chiffré $C$ et la longueur de la clé à trouver $k$ comme paramètres.
         Ensuite, elle place toutes les indices des caractères $c \in C$ dans une liste, dans l'ordre de celui qui à le plus d'occurences pour l'une des $k$ sous-chaînes.
         Ces sous-chaînes commencent aux différentes indices $[0...k-1]$ dans $C$ et elles contienent toutes les caractères à des bonds de $k$.
         Nous séparons en sous-chaînes, puisqu'on sait que deux caractères identiques dans la chaîne chiffrée resteront identiques s'ils sont à une distance égale à $k$.
         De cette façon, la variable associé au caractère le plus fréquent est aussi celle qui assigne le plus de variable à une valeur (toutes les autres occurences du caractère).
         Lors de la requète d'une variable à choisir par le solveur, l'heurisitque ne fait que retourné les indices de sa liste dans l'ordre.
-        
+
         Voyons deux examples avec $C = "ABABBCACBC"$
         \begin{center}
             \begin{tabular}{| c | c | c | c | c | c | c | c | c | c |}
@@ -268,14 +268,14 @@
                 \hline
             \end{tabular}
         \end{center}
-        
+
         Example avec $k=1$ \\
         Dans ce cas, on a une seule sous-chaîne $S$ qui contient "ABABBCACBC"
         On trouve alors que le caractère le plus présent est 'B' avec 4 occurences.
         On place finalement le premier indice de B dans la sous-chaîne $S$, soit $1$, dans la liste.
         Les caractères restants 'A' et 'C' ont la même fréquence dans $S$, alors on place leur premier indice dans la liste.
         La liste final est donc: [1,0,5] qui représente: ['B','A','C'] \\
-        
+
         Example avec $k=2$
         Maintenant, on a deux sous-chaîne à considérer. \\
         $S_1 = "AABAB"$ les caractères aux indices pairs. \\
@@ -286,10 +286,10 @@
         En cas, d'égalité, on choisi le premier caractère trouvé, soit 'A' dans cet example.
         On ajoute à la liste le premier indice de ce caractère dans la chaîne de départ.
         Après toutes les itération on obtient [0,5,4,1] qui représente: [ 'A', 'C', 'B' de $S_1$, 'B' de $S_2$]
-        
+
         On remarque ici que pour une même chaîne chiffrée de départ, on retourne un indice différent selon la longueur de la clé. \\
-        
-        \subsubsection{Stratégie pour choisir la valeur} 
+
+        \subsubsection{Stratégie pour choisir la valeur}
         Nous avons déterminé les lettres les plus utilité pour un language.
         Par example, pour l'anglais, on à dans l'ordre les lettres suivantes: \\
         e,t,a,o,i,n,s,h,r,d,l,c,u,m,w,f,g,y,p,b,v,k,j,x,q,z \\
@@ -337,8 +337,8 @@
             La quatrième instance est une instance ayant une longueur courte et qui
             ne respect pas très bien la distribution des lettres. Nous l'avons testé
             sur une clé de longueur 1. \\ Voici le texte brut : {\tiny ZJXQKB} \\
-            
-    \newpage        
+
+    \newpage
     \section{Résultats}
 
          \noindent Voici les résultats sans l'heuristique que nous avons créée.
@@ -459,10 +459,17 @@
     \newpage
     \section{Discussion}
 
+				En observant les figures ci-dessus, on peut voir que notre modèle fonctionne bien pour des textes cryptés avec une clé inférieure ou égale à 5.
+				Par contre, on peut voir que lorsque nous utilisons l?heuristique par défaut avec l?instance 2, le temps de résolutions augmente de façon exponentiellement selon la longueur de la clé.
+				Par contre, nous pouvons voir ci-dessus, que lorsque nous utilisons notre heuristique, le temps de résolutions est diminue très considérablement le temps de résolution. Nous avons réussi à faire
+				passer le temps de résolution de presque 7 heures à 9 minutes. Cependant, l?heuristique n?est pas totalement parfaite.
+				Lorsque l?on regarde la figure de l?instance 1 et 4, nous voyons que l?heuristique par défaut fait un meilleur travail que lui que nous avons créé.
+				De plus, cela nous a permis de trouver des limitations telles que lorsque le message est plus court et ainsi que le langage est non formel.
+
     \section{Conclusion}
-    
+
         Dans le cadre de ce travail, nous avons attaqué la cryptographie classique par substitution à l'aide de la programmation par contrainte. Pour faire cela, nous avons fait un modèle que nous avons implémenté à l'aide de « Choco ». L'expérimentation a été un succès et nous avons résolu des problèmes simples de cryptographie. Par contre, nous avons vite réalisé que la programmation par contrainte ne serait pas bien adaptée pour régler des problèmes plus complexes.\\
-        
+
         Il aurait été intéressant de tester différents types de cryptographie pour pouvoir comparer l'efficacité de ceux-ci.\\
 
 \end{document}
