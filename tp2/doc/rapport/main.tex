@@ -29,7 +29,7 @@
 	\section{Introduction}
 
 		Utilisée depuis l'antiquité, la cryptographie sert à protéger des messages. Celle-ci se fait souvent à l'aide de secrets ou de clés. Cette cryptographie a principalement été utilisée à des fins militaires, commerciales ou simplement pour protéger la vie privée. L'opération de déchiffrer un message peut donc avoir des conséquences assez importantes sur la vie des gens, car ces informations peuvent mener à des actions destructives ou créatives.\\
-		
+
 		L'optimisation combinatoire est une branche de l'informatique et des mathématiques appliquées. C'est la recherche d'une solution au coût minimal d'un problème dont l'espace des solutions est discret. Nous ferons une étude de la viabilité de la programmation par contraintes pour attaquer la cryptographie classique par substitution.\\
 
 	\section{Description du problème}
@@ -162,48 +162,50 @@
 			\begin{table}[!h]
 				\label{T:Instances}
 				\begin{center}
-					\begin{tabular}{| c | c | c | c | c | c |}
+					\begin{tabular}{| c | c | c | c | c |}
 					\hline
-					\textbf{Instances} & \multicolumn{5}{ c |}{\textbf{Résultats}}  \\
-					\cline{2-6}
-					& \textbf{Longueur clé} & \textbf{Retour arrière} & \textbf{Temps de réponse} & \textbf{Nb solutions} & \textbf{Présent} \\
+					\textbf{Instances} & \multicolumn{4}{ c |}{\textbf{Résultats}}  \\
+					\cline{2-5}
+					& \textbf{Longueur} & \textbf{Retour} & \textbf{Temps} & \textbf{Solutions}\\
+					& \textbf{clé} & \textbf{arrière} & \textbf{de réponse} & \textbf{(trouvées/retournées)}\\
 					\hline
 
-					1 & 4 & 559 281 & 87,187 secondes & 9061 & Oui \\ \hline
-					2 & 1 & 55 & 0,007 secondes & 19 & Oui \\ \hline
-					2 & 2 & 1369 & 0,306 secondes & 172 & Oui \\ \hline
-					2 & 3 & 68 345 & 1,944 secondes & 1 576 & Oui \\ \hline
-					2 & 4 & 6 607 263 & 114,837 secondes & 11 646 & Oui \\ \hline
-					2 & 5 & 1 611 566 903 & 6h49m47s & 292 & Oui \\ \hline
-					3 & 1 & 51 & 0,047 secondes & 15 & Oui \\ \hline
-					3 & 2 & 1 345 & 0,535 secondes & 155 & Oui \\ \hline
-					4 & 1 & 63 & 0,198 secondes & 17 & Non \\ \hline
+					1 & 4 & 559 281 & 87,187 secondes & 9061/ \\ \hline
+					2 & 1 & 55 & 0,007 secondes & 19/6 \\ \hline
+					2 & 2 & 1369 & 0,306 secondes & 172/36 \\ \hline
+					2 & 3 & 68 345 & 1,944 secondes & 1 576/216 \\ \hline
+					2 & 4 & 6 607 263 & 114,837 secondes & 11 646/1 296 \\ \hline
+					2 & 5 & 1 611 566 903 & 6h49m47s & 292/ \\ \hline
+					3 & 1 & 51 & 0,047 secondes & 15/6 \\ \hline
+					3 & 2 & 1 345 & 0,535 secondes & 155/36 \\ \hline
+					4 & 1 & 57 & 0,002 secondes & 14/6 \\ \hline
 
 					\end{tabular}
 				\end{center}
 			\end{table}
 
 
-			Voici les résultats avec l'heuristique que nous avons créée. * Les résultats sont ceux sans l'heuristique.
+			Voici les résultats avec l'heuristique que nous avons créée.
 			\begin{table}[!h]
 				\label{T:Instances}
 				\begin{center}
-					\begin{tabular}{| c | c | c | c | c | c |}
+					\begin{tabular}{| c | c | c | c | c |}
 					\hline
-					\textbf{Instances} & \multicolumn{5}{ c |}{\textbf{Résultats}}  \\
-					\cline{2-6}
-					& \textbf{Longueur clé} & \textbf{Retour arrière} & \textbf{Temps de réponse} & \textbf{Nb solutions} & \textbf{Présent}\\
+					\textbf{Instances} & \multicolumn{4}{ c |}{\textbf{Résultats}}  \\
+					\cline{2-5}
+					& \textbf{Longueur} & \textbf{Retour} & \textbf{Temps} & \textbf{Solutions}\\
+					& \textbf{clé} & \textbf{arrière} & \textbf{de réponse} & \textbf{(trouvées/retournées)}\\
 					\hline
 
-					1 & 4 & 219 421 & 93,992 secondes & 158 & Oui \\ \hline
-					2 & 1 & 55 & 0,373 secondes & 21 & Oui \\ \hline
-					2 & 2 & 1411 & 0,306 secondes & 172 & Oui \\ \hline
-					2 & 3 & 68 345 & 1,944 secondes & 1 576 & Oui \\ \hline
-					2 & 4 & 6 607 263 & 114,837 secondes & 11 646 & Oui \\ \hline
-					2 & 5 & 1 611 566 903 & 6h49m47s & 292 & Oui \\ \hline
-					3 & 1 & 51 & 1,018 secondes & 18 & Oui \\ \hline
-					3 & 2 & 1323 & 4,099 secondes & 65 & Oui \\ \hline
-					4 & 1 & 63 & 0,198 secondes & 17 & Non \\ \hline
+					1 & 4 & 913 951 & 164,989 secondes & 3 947/1 296 \\ \hline
+					2 & 1 & 51 & 0,029 secondes & 8/6 \\ \hline
+					2 & 2 & 1 351 & 0,073 secondes & 98/36 \\ \hline
+					2 & 3 & 35 151 & 1,266 secondes & 663/216 \\ \hline
+					2 & 4 & 913 951 & 26,016 secondes & 5 920/1 296 \\ \hline
+					2 & 5 & 23 575 363 & 548,744 secondes & 44 471/7 776 \\ \hline
+					3 & 1 & 51 & 0,173 secondes & 12/6 \\ \hline
+					3 & 2 & 1 351 & 0,585 secondes & 67/36 \\ \hline
+					4 & 1 & 51 & 0,002 secondes & 14/7 \\ \hline
 
 					\end{tabular}
 				\end{center}
