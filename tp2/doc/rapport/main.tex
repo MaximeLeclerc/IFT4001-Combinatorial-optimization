@@ -246,8 +246,17 @@
 
 		\subsection{Amélioration des heuristiques}
 
-		\subsection{Recherche des n meilleures solutions}
+		\subsection{Recherche des m meilleures solutions}
+		Dans la majorité des cas, on problème d'optimisation combinatoire demande une solution valide, la meilleure solution ou toutes les solutions.
+		Dans notre cas, seulement la meilleure solution n'est pas suffisante, puisqu'il n'est pas assuré que la solution la plus probable du point de vue de l'analyse de fréquence sera réellement la solution qui mène au bon message en clair.
+		En effet, certains messages peuvent ne pas respecter les fréquences relatives typiques des lettres de la langue dans laquelle il est écrit.
+		Trouver toutes les solutions n'est pas n'ont plus envisageable, puisqu'il serait beaucoup trop long de toutes les calculer et qu'au final, ce serait même moins efficace qu'une attaque par force brute traditionnelle.
 
+		Ce que l'on veut donc, c'est obtenir une liste des $m$ solutions les plus probables, pour qu'elles soit ensuite analysées par un humain ou un autre programme.
+		Le choix de $m$ est important: s'il est trop petit, la bonne solution ne sera pas trouvée; s'il est trop grand, la recherche sera beaucoup trop longue.
+		Pour être efficace, $m$ doit varier selon la longueur de la clé et la longueur de l'alphabet de la langue cible, puisque ce sont les paramètre qui font varier le nombre total de solutions.
+		Le nombre total de solutions est $l^k$. Le nombre de solutions à retourner que nous avons choisi est $(\frac{l}{4})^k$.
+		Par contre, pour trouver toutes ces solutions, plus de $(\frac{l}{4})^k$ solutions doivent être explorées.
 
 
     \section{Protocole d'expérimentation}
