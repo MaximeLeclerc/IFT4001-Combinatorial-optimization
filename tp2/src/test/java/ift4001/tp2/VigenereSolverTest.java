@@ -139,6 +139,37 @@ public class VigenereSolverTest {
 
 		assertThat(result.stream().anyMatch(r -> r.plainText.equals(PLAIN_TEXT_GOOD_DIST_OF_LETTER)), is(true));
 	}
+	
+	
+	@Test
+	public void VigenereCipher_WithGoodFrequenciesDistAndKeyLenghtsOf3_returnsExpectedResult() {
+		vigenere = new Vigenere(PLAIN_TEXT_GOOD_DIST_OF_LETTER, Language.ENGLISH);
+		encrypText = vigenere.encrypt("GEA");
+
+		VigenereSolver.Settings settings = new VigenereSolver.Settings().setPossibleLanguages(Language.ENGLISH)
+				.setPossibleKeyLengths(3);
+		VigenereSolver solver = new VigenereSolver(settings);
+
+		this.printTestInfo(settings);		
+		List<SolveResult> result = solver.solve(encrypText);
+
+		assertThat(result.stream().anyMatch(r -> r.plainText.equals(PLAIN_TEXT_GOOD_DIST_OF_LETTER)), is(true));
+	}
+	
+	@Test
+	public void VigenereCipher_WithGoodFrequenciesDistAndKeyLenghtsOf4_returnsExpectedResult() {
+		vigenere = new Vigenere(PLAIN_TEXT_GOOD_DIST_OF_LETTER, Language.ENGLISH);
+		encrypText = vigenere.encrypt("GEAT");
+
+		VigenereSolver.Settings settings = new VigenereSolver.Settings().setPossibleLanguages(Language.ENGLISH)
+				.setPossibleKeyLengths(4);
+		VigenereSolver solver = new VigenereSolver(settings);
+
+		this.printTestInfo(settings);		
+		List<SolveResult> result = solver.solve(encrypText);
+
+		assertThat(result.stream().anyMatch(r -> r.plainText.equals(PLAIN_TEXT_GOOD_DIST_OF_LETTER)), is(true));
+	}
 
 	@Test
 	public void VigenereCipher_WithBadFrequenciesDist_returnsNotExpectedResult() {
@@ -280,6 +311,36 @@ public class VigenereSolverTest {
 
 		VigenereSolver.Settings settings = new VigenereSolver.Settings().setPossibleLanguages(Language.ENGLISH)
 				.setPossibleKeyLengths(2).setUseCustomHeuristic(true);
+		VigenereSolver solver = new VigenereSolver(settings);
+
+		this.printTestInfo(settings);		
+		List<SolveResult> result = solver.solve(encrypText);
+
+		assertThat(result.stream().anyMatch(r -> r.plainText.equals(PLAIN_TEXT_GOOD_DIST_OF_LETTER)), is(true));
+	}
+	
+	@Test
+	public void VigenereCipher_WithGoodFrequenciesDistAndKeyLenghtsOf3AndCustomHeuristic_returnsExpectedResult() {
+		vigenere = new Vigenere(PLAIN_TEXT_GOOD_DIST_OF_LETTER, Language.ENGLISH);
+		encrypText = vigenere.encrypt("GEA");
+
+		VigenereSolver.Settings settings = new VigenereSolver.Settings().setPossibleLanguages(Language.ENGLISH)
+				.setPossibleKeyLengths(3).setUseCustomHeuristic(true);
+		VigenereSolver solver = new VigenereSolver(settings);
+
+		this.printTestInfo(settings);		
+		List<SolveResult> result = solver.solve(encrypText);
+
+		assertThat(result.stream().anyMatch(r -> r.plainText.equals(PLAIN_TEXT_GOOD_DIST_OF_LETTER)), is(true));
+	}
+	
+	@Test
+	public void VigenereCipher_WithGoodFrequenciesDistAndKeyLenghtsOf4AndCustomHeuristic_returnsExpectedResult() {
+		vigenere = new Vigenere(PLAIN_TEXT_GOOD_DIST_OF_LETTER, Language.ENGLISH);
+		encrypText = vigenere.encrypt("GEAT");
+
+		VigenereSolver.Settings settings = new VigenereSolver.Settings().setPossibleLanguages(Language.ENGLISH)
+				.setPossibleKeyLengths(4).setUseCustomHeuristic(true);
 		VigenereSolver solver = new VigenereSolver(settings);
 
 		this.printTestInfo(settings);		
