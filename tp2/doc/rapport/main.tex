@@ -1,4 +1,4 @@
-\documentclass[12pt]{article}
+\documentclass[11pt]{article}
 \usepackage[francais]{babel}
 \usepackage{latexsym}
 \usepackage{graphicx}
@@ -39,7 +39,7 @@
 
 		Un exemple de chiffrement par substitution monoalphabétique est le chiffre de César. Pour ce chiffre, on associe à chaque lettre sa position dans l'alphabet, commençant par 0. La clé est une lettre et chaque lettre du message est décalée d'un nombre de positions correspondant à la clé. Par exemple, le message ABC chiffré avec la clé B devient BCD. Les calculs de décalage se font en modulo 26, tel que XYZ chiffré avec la même clé devient YZA.\\
 
-		Le chiffre de vigenère est un exemple de chiffrement par substitution polyalphabétique. La clé est composée d'une ou plusieurs lettres et le message est placé divisé en partie de la même longueur que la clé. Si les différentes parties du message sont placées l'une en-dessous de l'autre, il suffit d'appliquer le chiffre de César à chaque colonne $i$ avec la $i^{eme}$ lettre de la clé. Par exemple, le message ABCD chiffré avec la clé BC devient BDDF.\\
+		Le chiffre de vigenère est un exemple de chiffrement par substitution polyalphabétique. La clé est composée d'une ou plusieurs lettres et le message est placé divisé en partie de la même longueur que la clé. Si les différentes parties du message sont placées l'une en-dessous de l'autre, il suffit d'appliquer le chiffre de César à chaque colonne $i$ avec la $i^{\grave{e}me}$ lettre de la clé. Par exemple, le message ABCD chiffré avec la clé BC devient BDDF.\\
 
 		La substition est toujours une composante à la base de la cryptographie moderne, mais ces méthodes de chiffrement simples ne sont plus utilisées comme systèmes cryptographiques à part entière puisqu'elles sont vulnérables à différentes attaques. Il est possible, notamment, d'analyser la fréquence relative des lettres dans le message chiffré et comparer avec la fréquence relative des lettres dans la langue du message d'origine pour trouver les clés les plus probables.\\
 
@@ -49,86 +49,215 @@
 
 		Par exemple, en prenant le message encrypté LXFOPVEFRNHR, le solveur doit trouver que la clé la plus probable est LEMON et que le texte original est ATTACKATDAWN. L'implémentation utilisée utilisera les fréquences des lettres trouvées d'une langue donnée.\footnote{Wikipedia, [En ligne]. \url{https://en.wikipedia.org/wiki/Letter\_frequency} (Page consultée le 3 avril 2016)} Cette implémentation sera donc plus efficace si la chaine est longue et si elle utilise des vrais mots de la langue choisie.\\
 
-	\section{Approche(s) proposée(s)}
+	\section{Approche proposée}
 
-		On prend $n$ qui est la longueur de la chaine à déchiffrer, $c$ qui est la lonueur de la clé, $l$ qui est le nombre de lettre dans l'alphabet, et $p$ qui est la précision de la fréquence.\\
+		La façon la plus préconisée pour attaquer le chiffrement de Vigenère est l'analyse de fréquences. C'est aussi l'approche que nous proposons, seulement elle sera implémentée à l'aide de la programmation par contraintes. Il s'agit de calculer la fréquence de chaque lettre dans le message déchiffré et de comparer avec la fréquence de chaque lettre dans la langue ciblée.
 
-		On déclare une variable pour chaque lettre de la chaine cryptée. Ainsi, la variable $X_i$ représente la valeur de la lettre de la chaine cryptée à la position $i$ pour $1 \leq i \leq n$. Le domaine de chaque variable est l'ensemble des entiers entre $0$ et $l - 1$.\\
+		\subsection{Modèle de base}
 
-		On déclare une variable pour chaque complément de clé. Ainsi, la variable $K_i$ représente la valeur de la lettre de la clé à la position $i$ pour $1 \leq i \leq c$. Le domaine de chaque variable est l'ensemble des entiers entre $0$ et $l - 1$.\\
+		Le modèle présenté ici est le premier modèle conçu, purement théorique, avant toute tentative de l'implémenter dans le solveur de contraintes.
 
-		On déclare une variable pour le texte intermédiaire. Ainsi, la variable $I_i$ représente la valeur de la la lettre de la chaine à la position $i$ pour $1 \leq i \leq n$. Le domaine de chaque variable est l'ensemble des entiers entre $0$ et $2 * (l - 1)$.\\
+		\subsubsection{Modèlisation du chiffrement de Vigenère}
 
-		On déclare une variable pour le texte brut. Ainsi, la variable $B_i$ représente la valeur de la lettre de la chaine à la position $i$ pour $1 \leq i \leq n$. Le domaine de chaque variable est l'ensemble des entiers entre $0$ et $l - 1$.\\
+		Soit:
+		\begin{itemize}
+			\item $n$ la longueur de la chaîne à déchiffrer;
+			\item $k$ la longueur de la clé;
+			\item $l$ le nombre de lettres dans l'alphabet de la langue ciblée;
+			\item $\mathbb{N}_n$ l'ensemble des nombres naturels modulo $n$;
+			\item $\mathbb{Z}_n$ l'ensemble des nombres naturels modulo $n$ ainsi que leur opposé.
+		\end{itemize}
 
-		On déclare une variable pour les comptes. Ainsi, la variable $C_i$ représente le compte de chaque lettre dans la chaine à la position $i$ pour $1 \leq i \leq l$. Le domaine de chaque variable est l'ensemble des entiers entre $0$ et $n$.\\
+		\bigskip
 
-		On déclare une variable pour les comptes multipliés. Ainsi, la variable $M_i$ représente le compte multiplié par la précision de la fréquence de chaque lettre dans la chaine à la position $i$ pour $1 \leq i \leq l$. Le domaine de chaque variable est l'ensemble des entiers entre $0$ et $n * p$.\\
+		On a donc, $(\forall i : 1 \leq i \leq n)$:
+		\begin{itemize}
+			\item $C_i \in \mathbb{N}_l$ la $i^{\grave{e}me}$ lettre de la chaîne chiffrée;
+			\item $P_i \in \mathbb{N}_l$ la $i^{\grave{e}me}$ lettre de la chaîne déchiffrée.
+		\end{itemize}
 
-		On déclare une variable pour les fréquences multipliées. Ainsi, la variable $F_i$ représente la fréquence multipliée de chaque lettre dans la chaine à la position $i$ pour $1 \leq i \leq l$. Le domaine de chaque variable est l'ensemble des entiers entre $0$ et $p$.\\
+		\bigskip
 
-		On déclare une variable pour les fréquences multipliées négatives du langage. Ainsi, la variable $N_i$ représente la fréquence multipliée négative de chaque lettre de l'alphabet à la position $i$ pour $1 \leq i \leq l$. Le domaine de chaque variable est l'ensemble des entiers entre $-p$ et $0$.\\
+		Et aussi, $(\forall i : 1 \leq i \leq k)$:
+		\begin{itemize}
+			\item $K_i \in \mathbb{N}_l$ la $i^{\grave{e}me}$ lettre de la clé.
+		\end{itemize}
 
-		On déclare une variable pour les différences. Ainsi, la variable $D_i$ représente la différence entre les fréquences multipliées et les fréquences multipliés du language à la position $i$ pour $1 \leq i \leq l$. Le domaine de chaque variable est l'ensemble des entiers entre $-p$ et $p$.\\
+		\bigskip
 
-		On déclare une variable pour les différences absolues. Ainsi, la variable $A_i$ représente valeur absolue de la différence entre les fréquences multipliées et les fréquences multipliés du language à la position $i$ pour $1 \leq i \leq l$. Le domaine de chaque variable est l'ensemble des entiers entre $0$ et $p$.\\
+		On a la contrainte suivante:
 
-		On déclare une variable $S$ pour la somme des différence des fréquences. Le domaine de la variable est l'ensemble des entiers entre $0$ et $l * p$.\\
-
-		Pour chaque lettre i de la chaine, nous avons ces contraintes.
-
-		\begin{equation}
-		X_i + K_{i \% c} = I_i
+		\begin{equation} \label{eq:1}
+		P_i + K_{i \bmod k} \equiv C_i \mod l \qquad \forall i : 1 \leq i \leq n
 		\end{equation}
 
-		\begin{equation}
-		I_i \% l = B_i
+		\subsubsection{Modélisation de l'analyse de fréquences}
+
+		Soit, $(\forall i : 1 \leq i \leq l)$:
+		\begin{itemize}
+			\item $f_i$ la fréquence de la $i^{\grave{e}me}$ lettre de l'alphabet dans la langue ciblée;
+			\item $Z_i \in \mathbb{N}_{n+1}$ le nombre de fois qu'apparaît la $i^{\grave{e}me}$ lettre de l'alphabet dans le message déchiffré.
+		\end{itemize}
+
+		\bigskip
+
+		Et soit la contrainte suivante:
+		\begin{equation} \label{eq:2}
+			Z_i = Count(i, P) \qquad \forall i : 1 \leq i \leq l
 		\end{equation}
 
-		Pour chaque lettre i de l'alphabet, nous avons ces contraintes.
-
-		\begin{equation}
-		Compte(i, B, C_i)
+		Nous devons avoir une mesure d'évaluation des solutions trouvées. La distance euclidienne entre la fréquence des lettres dans le message déchiffré et celle dans la langue ciblée est un choix intuitif. La fonction objectif est donc la suivante:
+		\begin{equation} \label{eq:3}
+			\min \sqrt{\sum\limits_{i=1}^n (\frac{Z_i}{n} - f_i)^2}
+		\end{equation}
+		ou de façon équivalente:
+		\begin{equation} \label{eq:4}
+			\min \sum\limits_{i=1}^n (\frac{Z_i}{n} - f_i)^2
 		\end{equation}
 
-		\begin{equation}
-		C_i * p = M_i
+		\subsection{Modèle implémenté}
+
+		Le modèle de base est simple, mais il présente quelques défis à l'implémentation\footnote{Nous avons fait l'implémentation avec le solveur Choco.}, notamment en lien avec les nombres réels pour les fréquences.
+		On doit aussi ajouter quelques variables et contraintes intermédiaires.
+
+		\subsubsection{Variables et contraintes intermédiaires}
+
+		Pour la modélisation du (dé)chiffrement, il faut ajouter des variables supplémentaires, $(\forall i : 1 \leq i \leq n)$. Soit donc:
+		\begin{itemize}
+			\item $I_i \in \mathbb{N}_{2l-1}$ la $i^{\grave{e}me}$ lettre du texte intermédiaire.
+		\end{itemize}
+
+		\bigskip
+
+		La contrainte \ref{eq:1} est alors séparée en deux contraintes distinctes:
+		\begin{equation} \label{eq:5}
+			P_i + K_{i \bmod k} = I_i \qquad \forall i : 1 \leq i \leq n
+		\end{equation}
+		\begin{equation} \label{eq:6}
+			I_i \bmod l = C_i \qquad \forall i : 1 \leq i \leq n
 		\end{equation}
 
-		\begin{equation}
-		M_i / n = F_i
+		De plus, il faut séparer la fonction objectif en plusieurs variables et contraintes. On introduit donc les variables intermédiaires suivantes, $(\forall i : 1 \leq i \leq l)$:
+		\begin{itemize}
+			\item $F_i \in [0,1]$ la fréquence de la $i^{\grave{e}me}$ lettre de l'alphabet dans le message déchiffré;
+			\item $D_i \in [-1,1]$ la différence entre la fréquence de la $i^{\grave{e}me}$ lettre dans le message déchiffré et celle dans la langue ciblée;
+			\item $A_i \in [0,1]$ cette différence élevée à la puissance 2.
+		\end{itemize}
+
+		\bigskip
+
+		Il faut aussi ajouter une variable à minimiser:
+		\begin{itemize}
+			\item $S \in [0,l]$ la somme des différences de fréquences au carré.
+		\end{itemize}
+
+		\bigskip
+
+		Pour lier ces variables ensemble, il faut de nouvelles contraintes:
+		\begin{equation} \label{eq:7}
+			F_i = \frac{Z_i}{n} \qquad \forall i : 1 \leq i \leq l
+		\end{equation}
+		\begin{equation} \label{eq:8}
+			D_i = F_i - f_i \qquad \forall i : 1 \leq i \leq l
+		\end{equation}
+		\begin{equation} \label{eq:9}
+			A_i = D_i^2 \qquad \forall i : 1 \leq i \leq l
+		\end{equation}
+		\begin{equation} \label{eq:10}
+			S = \sum\limits_{i = 1}^n A_i
 		\end{equation}
 
-		\begin{equation}
-		F_i + N_i = D_i
+		\subsubsection{Gestion des nombres réels}
+
+		Pour simplifier l'implémentation avec le solveur, nous avons adopté une stratégie pour les transformer en entiers.
+		Nous avons choisi le niveau de précision désiré, selon la précision des fréquences dont nous disposons\footnote{Wikipedia, [En ligne]. \url{https://en.wikipedia.org/wiki/Letter_frequency} (Page consultée le 24 avril 2016)} pour les langues cibles.
+
+		Soit donc:
+		\begin{itemize}
+			\item $p$ la précision choisie en nombre de décimales.
+		\end{itemize}
+
+		\bigskip
+
+		On applique donc la modification suivante aux fréquences relatives des lettres de la langue ciblée, $(\forall i : 1 \leq i \leq l)$:
+		\begin{equation} \label{eq:11}
+			f_i = f_i * 10^p \qquad \forall i : 1 \leq i \leq l
 		\end{equation}
 
-		\begin{equation}
-		A_i = | D_i |
+		On doit aussi multiplier le compte des lettres, alors on introduit des variables intermédiaires, $(\forall i : 1 \leq i \leq l)$:
+		\begin{itemize}
+			\item $M_i \in \mathbb{N}_{10^p(n+1)}$ le nombre de fois qu'apparaît la $i^{\grave{e}me}$ lettre de l'alphabet dans le message déchiffré, multiplié par $10^p$.
+		\end{itemize}
+
+		\bigskip
+
+		On ajoute donc la contrainte suivante:
+		\begin{equation} \label{eq:12}
+			M_i = Z_i * 10^p \qquad \forall i : 1 \leq i \leq l
 		\end{equation}
 
-		Pour finir, nous avons cette contrainte.
-
-		\begin{equation}
-		A_1 + A_2 + ... + A_l = S
+		Et la contrainte (\ref{eq:7}) devient plutôt:
+		\begin{equation} \label{eq:13}
+			F_i = \frac{M_i}{n} \qquad \forall i : 1 \leq i \leq l
 		\end{equation}
 
-		La fonction objective est de minimiser S. L'heuristique par défaut a été utilisé.\\
+		Puisqu'on se retrouve ainsi avec de grands nombres, il faut se méfier du dépassement d'entiers (\emph{integer overflow}). On peut donc simplifier la fonction objectif en remplaçant le carré par la valeur absolue:
+		\begin{equation} \label{eq:14}
+			\min \sum\limits_{i=1}^n |\frac{Z_i}{n} - f_i|
+		\end{equation}
+		Cette nouvelle fonction objectif n'est pas équivalente à la première, mais elle permet d'éviter des problèmes et nos résultats sont même meilleurs avec celle-ci que nos résultats préliminaires avec la distance euclidienne.
 
-		Nous avons donc $n + c + n + n + l + l + l + l + l + l + 1 \in \Theta(n + c + l)$ variables.\\
+		\bigskip
 
-		Nous avons donc
-		\begin{multline*}
-		nl + cl + n(2l - 1) + nl + l(n+1) + l(np + 1) + l(p + 1) + l(p + 1) + l(2p + 1) + l(p + 1) + (lp + 1) \\
-		= nl + cl + 2nl - n + nl + ln + l + nlp + l + lp + l + lp + l + 2lp + l + lp + l + lp + 1 \\
-		= 5nl + cl - n + 6l + nlp + 6lp + 1 \\
-		\in \Theta(nlp + cl)
-		\end{multline*}
-		valeurs.\\
+		On doit aussi modifier le domaine des variables reliées à la fréquence. Soit, $(\forall i : 1 \leq i \leq l)$:
+		\begin{itemize}
+			\item $F_i \in \mathbb{N}_{10^p + 1}$ la fréquence de la $i^{\grave{e}me}$ lettre de l'alphabet dans le message déchiffré;
+			\item $D_i \in \mathbb{Z}_{10^p + 1}$ la différence entre la fréquence de la $i^{\grave{e}me}$ lettre dans le message déchiffré et celle dans la langue ciblée;
+			\item $A_i \in \mathbb{N}_{10^p + 1}$ la valeur absolue de cette différence.
+		\end{itemize}
 
-		Nous avons n contraintes de type (1) et (2). Nous avons l de type (3), (4), (5), (6) et (7). Nous avons une contrainte de type (8). Nous avons donc au total $2n + 5l + 1 \in \Theta(n + l)$.\\
+		\bigskip
 
-		Ceci est donc notre modèle finale. Lors de nos premières itérations, nous avions mis que la fréquence des lettres était restée dans des variables réelles. Par contre, grâce à la variable de précision, nous convertissons les fréquences, qui sont réelles, en entiers.\\
+		Et de même pour la variable à minimiser:
+		\begin{itemize}
+			\item $S \in \mathbb{N}_{l(10^p + 1)}$ la somme des valeurs absolues des différences de fréquences.
+		\end{itemize}
+
+		\bigskip
+
+		Finalement, la division de la contrainte \ref{eq:7} doit maintenant être une division entière.
+
+		\bigskip
+
+		Au final, nous avons des listes de $n$, $k$ et $l$ variables. Le nombre de variables est donc borné par $\theta(n + k + l)$.
+
+		\bigskip
+
+		Chaque variable dans les listes de $n$ ont $l$ ou $2l - 1$ valeurs possibles.
+
+		Chaque variable dans les listes de $k$ ont $l$ valeurs possibles.
+
+		Chaque variable dans les listes de $l$ ont $n+1$, $10^p(n+1)$ ou $2(10^p(n+1))$ valeurs possibles.
+
+		Le nombre de valeurs est donc borné par $\theta(nl + kl + l(10^pn))$. $p$ peut toutefois être considéré comme une constante (nous utilisons 5) et donc on obtient $\theta(l(n + k))$.
+
+		\bigskip
+
+		Nous avons $n$ contraintes de type (\ref{eq:5}) et (\ref{eq:6}), $l$ contraintes de type (\ref{eq:2}), (\ref{eq:8}), (\ref{eq:9}), (\ref{eq:12}) et (\ref{eq:13}) ainsi qu'une contrainte de type (\ref{eq:10}). Le nombre de contraintes est donc borné par $\theta(n + l)$.
+
+		\subsection{Amélioration des heuristiques}
+
+		\subsection{Recherche des m meilleures solutions}
+		Dans la majorité des cas, on problème d'optimisation combinatoire demande une solution valide, la meilleure solution ou toutes les solutions.
+		Dans notre cas, seulement la meilleure solution n'est pas suffisante, puisqu'il n'est pas assuré que la solution la plus probable du point de vue de l'analyse de fréquence sera réellement la solution qui mène au bon message en clair.
+		En effet, certains messages peuvent ne pas respecter les fréquences relatives typiques des lettres de la langue dans laquelle il est écrit.
+		Trouver toutes les solutions n'est pas n'ont plus envisageable, puisqu'il serait beaucoup trop long de toutes les calculer et qu'au final, ce serait même moins efficace qu'une attaque par force brute traditionnelle.
+
+		Ce que l'on veut donc, c'est obtenir une liste des $m$ solutions les plus probables, pour qu'elles soit ensuite analysées par un humain ou un autre programme.
+		Le choix de $m$ est important: s'il est trop petit, la bonne solution ne sera pas trouvée; s'il est trop grand, la recherche sera beaucoup trop longue.
+		Pour être efficace, $m$ doit varier selon la longueur de la clé et la longueur de l'alphabet de la langue cible, puisque ce sont les paramètre qui font varier le nombre total de solutions.
+		Le nombre total de solutions est $l^k$. Le nombre de solutions à retourner que nous avons choisi est $(\frac{l}{4})^k$.
+		Par contre, pour trouver toutes ces solutions, plus de $(\frac{l}{4})^k$ solutions doivent être explorées.
 
 
     \section{Protocole d'expérimentation}
@@ -212,62 +341,63 @@
 				\end{center}
 			\end{table}
 
-				\begin{figure}
-			    \centering
-					\begin{tikzpicture}
-						\begin{axis}[
-						    axis lines = left,
-						    xlabel = Longueur clé,
-						    ylabel = Temps (sec),
-								xmin=0, xmax=5,
-			 					ymin=-10, ymax=120,
-								xtick={1,2,3,4,5},
-								legend pos=north west,
-		    				ymajorgrids=true,
-		    				grid style=dashed,
-						]
-						\addplot [
-						  	color=red,
-								mark=square,
-						] coordinates {(1,0.007)(2,0.306)(3,1.944)(4,114.837)};
+			\bigskip
+			\begin{figure}[!htbp]
+		    \centering
+				\begin{tikzpicture}
+					\begin{axis}[
+					    axis lines = left,
+					    xlabel = Longueur clé,
+					    ylabel = Temps (sec),
+							xmin=0, xmax=5,
+		 					ymin=-10, ymax=120,
+							xtick={1,2,3,4,5},
+							legend pos=north west,
+	    				ymajorgrids=true,
+	    				grid style=dashed,
+					]
+					\addplot [
+					  	color=red,
+							mark=square,
+					] coordinates {(1,0.007)(2,0.306)(3,1.944)(4,114.837)};
 
-						\addplot [
-						  	color=blue,
-								mark=square,
-						] coordinates {(1,0.029)(2,0.073)(3,1.266)(4,26.016)};
-						\addlegendentry{Sans heuristique}
-						\addlegendentry{Avec heuristique}
+					\addplot [
+					  	color=blue,
+							mark=square,
+					] coordinates {(1,0.029)(2,0.073)(3,1.266)(4,26.016)};
+					\addlegendentry{Sans heuristique}
+					\addlegendentry{Avec heuristique}
 
-						\end{axis}
-					\end{tikzpicture}
-					\begin{tikzpicture}
-						\begin{axis}[
-						    axis lines = left,
-						    xlabel = Longueur clé,
-						    ylabel = Temps (sec),
-								xmin=3.5, xmax=5,
-			 					ymin=20, ymax=600,
-								xtick={3.5,4,4.5,5},
-								legend pos=north west,
-		    				ymajorgrids=true,
-		    				grid style=dashed,
-						]
-						\addplot [
-						  	color=red,
-								mark=square,
-						] coordinates {(4,114.837)(5,23391.998)};
+					\end{axis}
+				\end{tikzpicture}
+				\begin{tikzpicture}
+					\begin{axis}[
+					    axis lines = left,
+					    xlabel = Longueur clé,
+					    ylabel = Temps (sec),
+							xmin=3.5, xmax=5,
+		 					ymin=20, ymax=600,
+							xtick={3.5,4,4.5,5},
+							legend pos=north west,
+	    				ymajorgrids=true,
+	    				grid style=dashed,
+					]
+					\addplot [
+					  	color=red,
+							mark=square,
+					] coordinates {(4,114.837)(5,23391.998)};
 
-						\addplot [
-						  	color=blue,
-								mark=square,
-						] coordinates {(4,26.016)(5,548.744)};
-						\addlegendentry{Sans heuristique}
-						\addlegendentry{Avec heuristique}
+					\addplot [
+					  	color=blue,
+							mark=square,
+					] coordinates {(4,26.016)(5,548.744)};
+					\addlegendentry{Sans heuristique}
+					\addlegendentry{Avec heuristique}
 
-						\end{axis}
-					\end{tikzpicture}
-					\caption{Différence entre sans ou avec heuristque créé avec l'instance 2.}
-			\end{figure}
+					\end{axis}
+				\end{tikzpicture}
+				\caption{Différence entre sans ou avec heuristque créé avec l'instance 2.}
+		\end{figure}
 
 
     \section{Discussion}
