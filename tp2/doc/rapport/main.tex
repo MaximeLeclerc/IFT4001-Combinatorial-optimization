@@ -10,6 +10,7 @@
 \usepackage{hyperref}
 \usepackage{fancyvrb}
 \usepackage{multirow}
+\usepackage{pgfplots}
 
 \setlength{\oddsidemargin}{-0,2in}
 \topmargin -12,0mm
@@ -210,6 +211,65 @@
 					\end{tabular}
 				\end{center}
 			\end{table}
+
+				\begin{figure}
+			    \centering
+					\begin{tikzpicture}
+						\begin{axis}[
+						    axis lines = left,
+						    xlabel = Longueur clé,
+						    ylabel = Temps (sec),
+								xmin=0, xmax=5,
+			 					ymin=-10, ymax=120,
+								xtick={1,2,3,4,5},
+								legend pos=north west,
+		    				ymajorgrids=true,
+		    				grid style=dashed,
+						]
+						\addplot [
+						  	color=red,
+								mark=square,
+						] coordinates {(1,0.007)(2,0.306)(3,1.944)(4,114.837)};
+
+						\addplot [
+						  	color=blue,
+								mark=square,
+						] coordinates {(1,0.029)(2,0.073)(3,1.266)(4,26.016)};
+						\addlegendentry{Sans heuristique}
+						\addlegendentry{Avec heuristique}
+
+						\end{axis}
+					\end{tikzpicture}
+					\begin{tikzpicture}
+						\begin{axis}[
+						    axis lines = left,
+						    xlabel = Longueur clé,
+						    ylabel = Temps (sec),
+								xmin=3.5, xmax=5,
+			 					ymin=20, ymax=600,
+								xtick={3.5,4,4.5,5},
+								legend pos=north west,
+		    				ymajorgrids=true,
+		    				grid style=dashed,
+						]
+						\addplot [
+						  	color=red,
+								mark=square,
+						] coordinates {(4,114.837)(5,23391.998)};
+
+						\addplot [
+						  	color=blue,
+								mark=square,
+						] coordinates {(4,26.016)(5,548.744)};
+						\addlegendentry{Sans heuristique}
+						\addlegendentry{Avec heuristique}
+
+						\end{axis}
+					\end{tikzpicture}
+					\caption{Différence entre sans ou avec heuristque créé avec l'instance 2.}
+			\end{figure}
+
+
     \section{Discussion}
 
     \section{Conclusion}
