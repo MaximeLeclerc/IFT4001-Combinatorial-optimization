@@ -256,11 +256,10 @@
 			Elle fait tous ses calculs lors de son initialisation et elle retourne les résultats de ses calculs lors d'une requête par le solveur.
 
 			\subsubsection{Stratégie pour choisir la variable}
-				L'heuristique se construit avec le message chiffré $C$ et la longueur de la clé à trouver $k$ comme paramètres.
+				L'heuristique requiert le message chiffré $C$ et la longueur de la clé à trouver $k$.
 				Ensuite, elle place tous les indices des caractères $c \in C$ dans une liste, dans l'ordre de celui qui a le plus d'occurrences pour l'une des $k$ sous-chaînes.
 				Ces sous-chaînes commencent aux différents indices $[0...k-1]$ dans $C$ et elles contiennent tous les caractères à des bonds de $k$.
 				Nous séparons en sous-chaînes, puisqu'on sait que deux caractères identiques dans la chaîne chiffrée resteront identiques s'ils sont à une distance égale à $k$.
-				De cette façon, la variable associée au caractère le plus fréquent est aussi celle qui assigne le plus de variables à une valeur (toutes les autres occurrences du caractère).
 				Lors de la requête d'une variable à choisir par le solveur, l'heuristique ne fait que retourner les indices de sa liste dans l'ordre.
 
 				Voyons deux exemples avec $C = "ABABBCACBC"$
@@ -274,23 +273,25 @@
 					\end{tabular}
 				\end{center}
 
-				Exemple avec $k=1$ \\
-				Dans ce cas, on a une seule sous-chaîne $S$ qui contient \emph{ABABBCACBC}
-				On trouve alors que le caractère le plus présent est \emph{B} avec 4 occurrences.
-				On place finalement le premier indice de B dans la sous-chaîne $S$, soit $1$, dans la liste.
-				Les caractères restants \emph{A} et \emph{C} ont la même fréquence dans $S$, alors on place leur premier indice dans la liste.
-				La liste finale est donc: [1,0,5] qui représente: [\emph{B},\emph{A},\emph{C}] \\
+				\begin{description}
+					\item[Exemple avec $k=1$]\mbox{}\\
+					Dans ce cas, on a une seule sous-chaîne $S$ qui contient \emph{ABABBCACBC}.
+					On trouve alors que le caractère le plus présent est \emph{B} avec 4 occurrences.
+					On place finalement le premier indice de B dans la sous-chaîne $S$, soit $1$, dans la liste.
+					Les caractères restants \emph{A} et \emph{C} ont la même fréquence dans $S$, alors on place leur premier indice dans la liste.
+					La liste finale est donc: [1,0,5] qui représente: [\emph{B},\emph{A},\emph{C}]
 
-				Exemple avec $k=2$
-				Maintenant, on a deux sous-chaînes à considérer. \\
-				$S_1 = AABAB$ les caractères aux indices pairs. \\
-				$S_2 = BBCCC$ les caractères aux indices impairs. \\
-				Pour $S_1$, le caractère le plus fréquent est \emph{A} avec 3 occurrences. \\
-				Pour $S_2$, il s'agit plutôt de \emph{C} avec 3 occurrences.
-				On compare maintenant les caractères retournés par les sous-chaînes et on prend celui qui était le plus fréquent dans sa sous-chaîne.
-				En cas, d'égalité, on choisi le premier caractère trouvé, soit \emph{A} dans cet exemple.
-				On ajoute à la liste le premier indice de ce caractère dans la chaîne de départ.
-				Après toutes les itérations on obtient [0,5,4,1] qui représente: [ \emph{A}, \emph{C}, \emph{B} de $S_1$, \emph{B} de $S_2$]
+					\item[Exemple avec $k=2$]\mbox{}\\
+					Maintenant, on a deux sous-chaînes à considérer. \\
+					$S_1 = AABAB$ les caractères aux indices pairs. \\
+					$S_2 = BBCCC$ les caractères aux indices impairs. \\
+					Pour $S_1$, le caractère le plus fréquent est \emph{A} avec 3 occurrences. \\
+					Pour $S_2$, il s'agit plutôt de \emph{C} avec 3 occurrences.
+					On compare maintenant les caractères retournés par les sous-chaînes et on prend celui qui était le plus fréquent dans sa sous-chaîne.
+					En cas, d'égalité, on choisi le premier caractère trouvé, soit \emph{A} dans cet exemple.
+					On ajoute à la liste le premier indice de ce caractère dans la chaîne de départ.
+					Après toutes les itérations on obtient [0,5,4,1] qui représente: [ \emph{A}, \emph{C}, \emph{B} de $S_1$, \emph{B} de $S_2$]
+				\end{description}
 
 				On remarque ici que pour une même chaîne chiffrée de départ, on retourne un indice différent selon la longueur de la clé. \\
 
@@ -300,8 +301,8 @@
 				\begin{center}
 					e,t,a,o,i,n,s,h,r,d,l,c,u,m,w,f,g,y,p,b,v,k,j,x,q,z
 				\end{center}
-				Cette information est passée en paramètre pour construire la stratégie.
-				Elle s'en servira pour créer une liste avec les positions de chaque lettre dans l'alphabet dans le même ordre.
+
+				La stratégie est donc de choisir la première lettre de cette liste, dans cet ordre, qui est toujours dans le domaine de la variable.
 				Il s'agit alors d'une heuristique statique puisqu'elle ne fait que retourner les indices dans un ordre précis.
 				On commence donc par retourner 4 pour la lettre \emph{e}, suivit de 19 pour \emph{t} et ainsi de suite.
 
