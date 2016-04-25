@@ -40,19 +40,19 @@
 
 	\section{Description du problème}
 
-		Le chiffrement par substitution est une façon de cacher un message en remplaçant chaque lettre par une autre. On parle de substutition monoalphabétique lorsque qu'une lettre est toujours remplacée par la même autre lettre. Autrement, on parle de substitution polyalphabétique.\\
+		Le chiffrement par substitution est une façon de cacher un message en remplaçant chaque lettre par une autre. On parle de substutition monoalphabétique lorsqu'une lettre est toujours remplacée par la même autre lettre. Autrement, on parle de substitution polyalphabétique.\\
 
 		Un exemple de chiffrement par substitution monoalphabétique est le chiffre de César. Pour ce chiffre, on associe à chaque lettre sa position dans l'alphabet, commençant par 0. La clé est une lettre et chaque lettre du message est décalée d'un nombre de positions correspondant à la clé. Par exemple, le message ABC chiffré avec la clé B devient BCD. Les calculs de décalage se font en modulo 26, tel que XYZ chiffré avec la même clé devient YZA.\\
 
-		Le chiffre de vigenère est un exemple de chiffrement par substitution polyalphabétique. La clé est composée d'une ou plusieurs lettres et le message est placé divisé en partie de la même longueur que la clé. Si les différentes parties du message sont placées l'une en-dessous de l'autre, il suffit d'appliquer le chiffre de César à chaque colonne $i$ avec la $i^{\grave{e}me}$ lettre de la clé. Par exemple, le message ABCD chiffré avec la clé BC devient BDDF.\\
+		Le chiffre de vigenère est un exemple de chiffrement par substitution polyalphabétique. La clé est composée d'une ou plusieurs lettres et le message est placé divisé en partie de la même longueur que la clé. Si les différentes parties du message sont placées l'une en dessous de l'autre, il suffit d'appliquer le chiffre de César à chaque colonne $i$ avec la $i^{\grave{e}me}$ lettre de la clé. Par exemple, le message ABCD chiffré avec la clé BC devient BDDF.\\
 
-		La substition est toujours une composante à la base de la cryptographie moderne, mais ces méthodes de chiffrement simples ne sont plus utilisées comme systèmes cryptographiques à part entière puisqu'elles sont vulnérables à différentes attaques. Il est possible, notamment, d'analyser la fréquence relative des lettres dans le message chiffré et comparer avec la fréquence relative des lettres dans la langue du message d'origine pour trouver les clés les plus probables.\\
+		La substitution est toujours une composante à la base de la cryptographie moderne, mais ces méthodes de chiffrement simples ne sont plus utilisées comme systèmes cryptographiques à part entière puisqu'elles sont vulnérables à différentes attaques. Il est possible, notamment, d'analyser la fréquence relative des lettres dans le message chiffré et comparer avec la fréquence relative des lettres dans la langue du message d'origine pour trouver les clés les plus probables.\\
 
 		Dans le cadre de ce projet, nous étudierons une méthode alternative, utilisant la programmation par contrainte, pour retrouver la clé de tels chiffrements à partir du message chiffré. Il est évidemment impossible pour un programme automatisé de trouver la clé de façon certaine, car il n'y a pas nécessairement moyen de reconnaître le message d'origine lorsque la bonne clé est trouvée. Par contre, nous pourrons ordonner les clés les plus probables selon, notamment, la fréquence relative de chaque lettre dans le message déchiffré.\\
 
 		L'objectif ici est d'étudier la viabilité d'une telle approche, par contrainte, pour l'attaque du chiffrement par substitution. Nous étudierons l'efficacité de l'approche selon la longueur du message et, dans le cas du chiffre de Vigenère, de la longueur de la clé.\\
 
-		Par exemple, en prenant le message encrypté LXFOPVEFRNHR, le solveur doit trouver que la clé la plus probable est LEMON et que le texte original est ATTACKATDAWN. L'implémentation utilisée utilisera les fréquences des lettres trouvées d'une langue donnée.\footnote{Wikipedia, [En ligne]. \url{https://en.wikipedia.org/wiki/Letter\_frequency} (Page consultée le 3 avril 2016)} Cette implémentation sera donc plus efficace si la chaine est longue et si elle utilise des vrais mots de la langue choisie.\\
+		Par exemple, en prenant le message crypté LXFOPVEFRNHR, le solveur doit trouver que la clé la plus probable est LEMON et que le texte original est ATTACKATDAWN. L'implémentation utilisée utilisera les fréquences des lettres trouvées d'une langue donnée.\footnote{Wikipedia, [En ligne]. \url{https://en.wikipedia.org/wiki/Letter\_frequency} (Page consultée le 3 avril 2016)} Cette implémentation sera donc plus efficace si la chaine est longue et si elle utilise des vrais mots de la langue choisie.\\
 
 	\section{Approche proposée}
 
@@ -62,7 +62,7 @@
 
 			Le modèle présenté ici est le premier modèle conçu, purement théorique, avant toute tentative de l'implémenter dans le solveur de contraintes.
 
-			\subsubsection{Modèlisation du chiffrement de Vigenère}
+			\subsubsection{Modélisation du chiffrement de Vigenère}
 
 				Soit:
 				\begin{itemize}
@@ -174,7 +174,7 @@
 
 			\subsubsection{Gestion des nombres réels}
 
-				Pour simplifier l'implémentation avec le solveur, nous avons adopté une stratégie pour les transformer en entiers.
+				Pour simplifier l'implémentation avec le solveur, nous avons adopté une stratégie pour les transformer en entier.
 				Nous avons choisi le niveau de précision désiré, selon la précision des fréquences dont nous disposons\footnote{Wikipedia, [En ligne]. \url{https://en.wikipedia.org/wiki/Letter_frequency} (Page consultée le 24 avril 2016)} pour les langues cibles.
 
 				Soit donc:
@@ -251,19 +251,19 @@
 				Nous avons $n$ contraintes de type (\ref{eq:5}) et (\ref{eq:6}), $l$ contraintes de type (\ref{eq:2}), (\ref{eq:8}), (\ref{eq:9}), (\ref{eq:12}) et (\ref{eq:13}) ainsi qu'une contrainte de type (\ref{eq:10}). Le nombre de contraintes est donc borné par $\theta(n + l)$.
 
 		\subsection{Amélioration des heuristiques}
-			Pour tenter d'améliorer les performances du solver, nous avons créé une nouvelle heuristique adapté au modèle.
-			Cette nouvelle heurisitque comprend le choix de la variable ainsi que le choix de la valeur.
-			Elle fait tout ses calculs lors de son initialisation et elle retourne les résultats de ses calculs lors d'une requète par le solveur.
+			Pour tenter d'améliorer les performances du solveur, nous avons créé une nouvelle heuristique adapté au modèle.
+			Cette nouvelle heuristique comprend le choix de la variable ainsi que le choix de la valeur.
+			Elle fait tous ses calculs lors de son initialisation et elle retourne les résultats de ses calculs lors d'une requête par le solveur.
 
 			\subsubsection{Stratégie pour choisir la variable}
-				L'heuristique se contruit avec le message chiffré $C$ et la longueur de la clé à trouver $k$ comme paramètres.
-				Ensuite, elle place toutes les indices des caractères $c \in C$ dans une liste, dans l'ordre de celui qui à le plus d'occurences pour l'une des $k$ sous-chaînes.
-				Ces sous-chaînes commencent aux différentes indices $[0...k-1]$ dans $C$ et elles contienent toutes les caractères à des bonds de $k$.
+				L'heuristique se construit avec le message chiffré $C$ et la longueur de la clé à trouver $k$ comme paramètres.
+				Ensuite, elle place tous les indices des caractères $c \in C$ dans une liste, dans l'ordre de celui qui a le plus d'occurrences pour l'une des $k$ sous-chaînes.
+				Ces sous-chaînes commencent aux différents indices $[0...k-1]$ dans $C$ et elles contiennent tous les caractères à des bonds de $k$.
 				Nous séparons en sous-chaînes, puisqu'on sait que deux caractères identiques dans la chaîne chiffrée resteront identiques s'ils sont à une distance égale à $k$.
-				De cette façon, la variable associé au caractère le plus fréquent est aussi celle qui assigne le plus de variable à une valeur (toutes les autres occurences du caractère).
-				Lors de la requète d'une variable à choisir par le solveur, l'heurisitque ne fait que retourné les indices de sa liste dans l'ordre.
+				De cette façon, la variable associée au caractère le plus fréquent est aussi celle qui assigne le plus de variable à une valeur (toutes les autres occurrences du caractère).
+				Lors de la requête d'une variable à choisir par le solveur, l'heuristique ne fait que retourner les indices de sa liste dans l'ordre.
 
-				Voyons deux examples avec $C = "ABABBCACBC"$
+				Voyons deux exemples avec $C = "ABABBCACBC"$
 				\begin{center}
 					\begin{tabular}{| c | c | c | c | c | c | c | c | c | c |}
 						\hline
@@ -274,44 +274,44 @@
 					\end{tabular}
 				\end{center}
 
-				Example avec $k=1$ \\
+				Exemple avec $k=1$ \\
 				Dans ce cas, on a une seule sous-chaîne $S$ qui contient "ABABBCACBC"
-				On trouve alors que le caractère le plus présent est 'B' avec 4 occurences.
+				On trouve alors que le caractère le plus présent est 'B' avec 4 occurrences.
 				On place finalement le premier indice de B dans la sous-chaîne $S$, soit $1$, dans la liste.
 				Les caractères restants 'A' et 'C' ont la même fréquence dans $S$, alors on place leur premier indice dans la liste.
 				La liste final est donc: [1,0,5] qui représente: ['B','A','C'] \\
 
-				Example avec $k=2$
-				Maintenant, on a deux sous-chaîne à considérer. \\
+				Exemple avec $k=2$
+				Maintenant, on a deux sous-chaînes à considérer. \\
 				$S_1 = "AABAB"$ les caractères aux indices pairs. \\
 				$S_2 = "BBCCC"$ les caractères aux indices impairs. \\
 				Pour $S_1$, le caractère le plus fréquent est 'A' avec un $3$ occurences. \\
-				Pour $S_2$, il s'agit plutôt de 'C' avec 3 occurences.
-				On compare maintenant les caractères retournées par les sous-chaînes et on prend celui qui était le plus fréquent dans sa sous-chaînes.
-				En cas, d'égalité, on choisi le premier caractère trouvé, soit 'A' dans cet example.
+				Pour $S_2$, il s'agit plutôt de 'C' avec 3 occurrences.
+				On compare maintenant les caractères retournés par les sous-chaînes et on prend celui qui était le plus fréquent dans sa sous-chaîne.
+				En cas, d'égalité, on choisi le premier caractère trouvé, soit 'A' dans cet exemple.
 				On ajoute à la liste le premier indice de ce caractère dans la chaîne de départ.
-				Après toutes les itération on obtient [0,5,4,1] qui représente: [ 'A', 'C', 'B' de $S_1$, 'B' de $S_2$]
+				Après toutes les itérations on obtient [0,5,4,1] qui représente: [ 'A', 'C', 'B' de $S_1$, 'B' de $S_2$]
 
 				On remarque ici que pour une même chaîne chiffrée de départ, on retourne un indice différent selon la longueur de la clé. \\
 
 			\subsubsection{Stratégie pour choisir la valeur}
-				Nous avons déterminé les lettres les plus utilité pour un language.
-				Par example, pour l'anglais, on à dans l'ordre les lettres suivantes: \\
+				Nous avons déterminé les lettres les plus utilité pour un langage.
+				Par exemple, pour l'anglais, on a dans l'ordre les lettres suivantes: \\
 				e,t,a,o,i,n,s,h,r,d,l,c,u,m,w,f,g,y,p,b,v,k,j,x,q,z \\
-				Cette infomation est passé en paramètre pour construire la stratégie.
+				Cette information est passée en paramètre pour construire la stratégie.
 				Elle s'en servira pour créer une liste avec les positions de chaque lettres dans l'alphabet dans le même ordre.
-				Il s'agit alors d'une heuristique statique puisqu'elle ne fait que retouner les indices dans un ordre précis.
+				Il s'agit alors d'une heuristique statique puisqu'elle ne fait que retourner les indices dans un ordre précis.
 				On commence donc par retourner 4 pour la lettre 'e', suivit de 19 pour 't' et ainsi de suite.
 
 		\subsection{Recherche des m meilleures solutions}
-			Dans la majorité des cas, on problème d'optimisation combinatoire demande une solution valide, la meilleure solution ou toutes les solutions.
+			Dans la majorité des cas, un problème d'optimisation combinatoire demande une solution valide, la meilleure solution ou toutes les solutions.
 			Dans notre cas, seulement la meilleure solution n'est pas suffisante, puisqu'il n'est pas assuré que la solution la plus probable du point de vue de l'analyse de fréquence sera réellement la solution qui mène au bon message en clair.
 			En effet, certains messages peuvent ne pas respecter les fréquences relatives typiques des lettres de la langue dans laquelle il est écrit.
 			Trouver toutes les solutions n'est pas n'ont plus envisageable, puisqu'il serait beaucoup trop long de toutes les calculer et qu'au final, ce serait même moins efficace qu'une attaque par force brute traditionnelle.
 
-			Ce que l'on veut donc, c'est obtenir une liste des $m$ solutions les plus probables, pour qu'elles soit ensuite analysées par un humain ou un autre programme.
+			Ce que l'on veut donc, c'est obtenir une liste des $m$ solutions les plus probables, pour qu'elle soit ensuite analysée par un humain ou un autre programme.
 			Le choix de $m$ est important: s'il est trop petit, la bonne solution ne sera pas trouvée; s'il est trop grand, la recherche sera beaucoup trop longue.
-			Pour être efficace, $m$ doit varier selon la longueur de la clé et la longueur de l'alphabet de la langue cible, puisque ce sont les paramètre qui font varier le nombre total de solutions.
+			Pour être efficace, $m$ doit varier selon la longueur de la clé et la longueur de l'alphabet de la langue cible, puisque ce sont les paramètres qui font varier le nombre total de solutions.
 			Le nombre total de solutions est $l^k$. Le nombre de solutions à retourner que nous avons choisi est $(\frac{l}{4})^k$.
 			Par contre, pour trouver toutes ces solutions, plus de $(\frac{l}{4})^k$ solutions doivent être explorées.
 
@@ -319,7 +319,7 @@
     \section{Protocole d'expérimentation}
 		Nous avons choisi de faire des tests  sur des instances de différentes
 		longueurs de message et de clé, des messages qui respectent bien la
-		distribution de lettres anglaises, d'autre qui ne la respectent pas. Les
+		distribution de lettres anglaises, d'autres qui ne la respectent pas. Les
 		métriques que nous allons observer durant les expérimentations sont le
 		temps de réponse, le nombre de retours arrière, ainsi que le nombre de
 		solutions trouver. \\
@@ -327,8 +327,6 @@
 		La première instance est une instance qui est considérée comme étant un message
 		long ayant une clé de longueur 4 et qui devrait avoir une distribution correcte de la fréquence des lettres. \\
 		Voici le texte brut : {\tiny FRIEN DSROM ANSCO UNTRY MENLE NDMEY OUREA RSICO METOB URYCA ESARN OTTOP RAISE HIMTH EEVIL THATM ENDOL IVESA FTERT HEMTH EGOOD ISOFT INTER REDWI THTHE IRBON ESSOL ETITB EWITH CAESA RTHEN OBLEB RUTUS HATHT OLDYO UCAES ARWAS AMBIT IOUSI FITWE RESOI TWASA GRIEV OUSFA ULTAN DGRIE VOUSL YHATH CAESA RANSW ERDIT HEREU NDERL EAVEO FBRUT USAND THERE STFOR BRUTU SISAN HONOU RABLE MANSO ARETH EYALL ALLHO NOURA BLEME NCOME ITOSP EAKIN CAESA RSFUN ERAL} \\
-		\\ Voici le texte encrypté : {\tiny YKBXG WLKHF TGLVH NGMKR FXGEX GWFXR HNKXT KLBVH FXMHU NKRVT XLTKG HMMHI KTBLX ABFMA XXOBE MATMF XGWHE BOXLT YMXKM AXFMA XZHHW BLHYM BGMXK KXWPB MAMAX BKUHG XLLHE XMBMU XPBMA VTXLT KMAXG HUEXU KNMNL ATMAM HEWRH NVTXL TKPTL TFUBM BHNLB YBMPX KXLHB MPTLT ZKBXO HNLYT NEMTG WZKBX OHNLE RATMA VTXLT KTGLP XKWBM AXKXN GWXKE XTOXH YUKNM NLTGW MAXKX LMYHK UKNMN LBLTG AHGHN KTUEX FTGLH TKXMA XRTEE TEEAH GHNKT UEXFX GVHFX BMHLI XTDBG VTXLT KLYNG XKTE} \\
-
 
 		La deuxième instance est une instance qui est considérée comme étant un message
 		d'une courte longueur ayant une clé de longueur 1 et qui a une bonne distribution de la fréquence des lettres.
@@ -356,21 +354,21 @@
 			& \textbf{clé} & \textbf{arrière} & \textbf{de réponse} & \textbf{(trouvées/retournées)}\\
 			\hline
 
-			\multirow{4}{*}{1} & 1 & 51 & 0.038 secondes & 15/6 \\ \cline{2-5}
-							   & 2 & 1 361 & 0.432 secondes & 163/36 \\ \cline{2-5}
+			\multirow{4}{*}{1} & 1 & 51 & 0.038 seconde & 15/6 \\ \cline{2-5}
+							   & 2 & 1 361 & 0.432 seconde & 163/36 \\ \cline{2-5}
 							   & 3 & 32,259 & 7.134 secondes & 1 139/216 \\ \cline{2-5}
 							   & 4 & 648,563 & 105.211 secondes & 10 316/1 296 \\ \hline
-			\multirow{5}{*}{2} & 1 & 55 & 0.007 secondes & 19/6 \\ \cline{2-5}
-							   & 2 & 1369 & 0.306 secondes & 172/36 \\ \cline{2-5}
-							   & 3 & 68 345 & 1.944 secondes & 1 576/216 \\ \cline{2-5}
+			\multirow{5}{*}{2} & 1 & 55 & 0.007 seconde & 19/6 \\ \cline{2-5}
+							   & 2 & 1369 & 0.306 seconde & 172/36 \\ \cline{2-5}
+							   & 3 & 68 345 & 1.944 seconde & 1 576/216 \\ \cline{2-5}
 							   & 4 & 6 607 263 & 114.837 secondes & 11 646/1 296 \\ \cline{2-5}
 							   & 5 & 1 611 566 903 & 6h 49m 47s & 292/{\color{red}{10}} \\ \hline
-			\multirow{4}{*}{3} & 1 & 51 & 0.047 secondes & 15/6 \\ \cline{2-5}
-							   & 2 & 1 345 & 0.535 secondes & 155/36 \\ \cline{2-5}
+			\multirow{4}{*}{3} & 1 & 51 & 0.047 seconde & 15/6 \\ \cline{2-5}
+							   & 2 & 1 345 & 0.535 seconde & 155/36 \\ \cline{2-5}
 							   & 3 & 32 091 & 8.419 secondes & 1 372/216 \\ \cline{2-5}
 							   & 4 & 648 031 & 134.406 secondes & 10 309/1 296 \\ \hline
-			\multirow{4}{*}{4} & 1 & 63 & 0.034 secondes & 15/6 \\ \cline{2-5}
-							   & 2 & 4 297 & 0.251 secondes & 166/36 \\ \cline{2-5}
+			\multirow{4}{*}{4} & 1 & 63 & 0.034 seconde & 15/6 \\ \cline{2-5}
+							   & 2 & 4 297 & 0.251 seconde & 166/36 \\ \cline{2-5}
 							   & 3 & 263 683 & 3.301 secondes & 1 497/216 \\ \cline{2-5}
 							   & 4 & 3 097 089 & 25.853 secondes & 13 062/1 296 \\ \hline
 			\end{tabular}
@@ -387,22 +385,22 @@
 			& \textbf{clé} & \textbf{arrière} & \textbf{de réponse} & \textbf{(trouvées/retournées)}\\
 			\hline
 
-			\multirow{4}{*}{1} & 1 & 51 & 0.041 secondes & 10/6 \\ \cline{2-5}
-							   & 2 & 1 351 & 0.502 secondes & 69/36 \\ \cline{2-5}
+			\multirow{4}{*}{1} & 1 & 51 & 0.041 seconde & 10/6 \\ \cline{2-5}
+							   & 2 & 1 351 & 0.502 seconde & 69/36 \\ \cline{2-5}
 							   & 3 & 35 151 & 9.579 secondes & 542/216 \\ \cline{2-5}
 							   & 4 & 913 951 & 187.582 secondes & 3 947/1 296 \\ \hline
-			\multirow{5}{*}{2} & 1 & 51 & 0.029 secondes & 8/6 \\ \cline{2-5}
-							   & 2 & 1 351 & 0.073 secondes & 98/36 \\ \cline{2-5}
-							   & 3 & 35 151 & 1.266 secondes & 663/216 \\ \cline{2-5}
+			\multirow{5}{*}{2} & 1 & 51 & 0.029 seconde & 8/6 \\ \cline{2-5}
+							   & 2 & 1 351 & 0.073 seconde & 98/36 \\ \cline{2-5}
+							   & 3 & 35 151 & 1.266 seconde & 663/216 \\ \cline{2-5}
 							   & 4 & 913 951 & 26.016 secondes & 5 920/1 296 \\ \cline{2-5}
 							   & 5 & 23 575 363 & 548,744 secondes & 44 471/7 776 \\ \hline
-			\multirow{4}{*}{3} & 1 & 51 & 0.173 secondes & 12/6 \\ \cline{2-5}
-							   & 2 & 1 351 & 0.585 secondes & 67/36 \\ \cline{2-5}
+			\multirow{4}{*}{3} & 1 & 51 & 0.173 seconde & 12/6 \\ \cline{2-5}
+							   & 2 & 1 351 & 0.585 seconde & 67/36 \\ \cline{2-5}
 							   & 3 & 35 151 & 11.192 secondes & 499/216 \\ \cline{2-5}
 							   & 4 & 913 951 & 209.476 secondes & 5 470/1 296 \\ \hline
-			\multirow{4}{*}{4} & 1 & 51 & 0.042 secondes & 10/6 \\ \cline{2-5}
-							   & 2 & 1 351 & 0.021 secondes & 102/36 \\ \cline{2-5}
-							   & 3 & 35 151 & 0.437 secondes & 774/216 \\ \cline{2-5}
+			\multirow{4}{*}{4} & 1 & 51 & 0.042 seconde & 10/6 \\ \cline{2-5}
+							   & 2 & 1 351 & 0.021 seconde & 102/36 \\ \cline{2-5}
+							   & 3 & 35 151 & 0.437 seconde & 774/216 \\ \cline{2-5}
 							   & 4 & 240 687 & 2.853 secondes & 7 105/1 296 \\ \hline
 
 			\end{tabular}
@@ -410,7 +408,7 @@
 
 		Il est important de noter que le test de l'instance 2 avec une clé de 5 lettres a été modifié pour ne retourner que les 10 meilleures solutions lorsque nous l'avons exécuté sans notre heuristique, en raison du temps d'exécution très élevé. C'est indiqué en rouge dans les tableaux ci-dessus et en pointillés dans la figure \ref{fig:1} ci-dessous.
 
-		Il est aussi important de noter que, pour tous ces tests, la fréquence relative des lettres est assez près de la fréquence relative typique de l'anglais pour que le solveur trouve la bonne solution parmi celles retournées, à l'exception des tests de l'instance 4 et du test mentionné précédemment pour lequel on a spécifié manuellement de ne retourner que les 10 meilleures solutions.
+		Il est aussi important de noter que, pour tous ces tests, la fréquence relative des lettres est assez près de la fréquence relative typique de l'anglais pour que le solveur trouve la bonne solution parmi celles qui sont retournées, à l'exception des tests de l'instance 4 et du test mentionné précédemment pour lequel qu'on a spécifié manuellement de ne retourner que les 10 meilleures solutions.
 
 		\begin{figure}[!htbp] \label{fig:1}
 		    \centering
