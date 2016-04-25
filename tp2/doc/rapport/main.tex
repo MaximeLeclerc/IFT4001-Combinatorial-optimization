@@ -251,7 +251,7 @@
 				Nous avons $n$ contraintes de type (\ref{eq:5}) et (\ref{eq:6}), $l$ contraintes de type (\ref{eq:2}), (\ref{eq:8}), (\ref{eq:9}), (\ref{eq:12}) et (\ref{eq:13}) ainsi qu'une contrainte de type (\ref{eq:10}). Le nombre de contraintes est donc borné par $\theta(n + l)$.
 
 		\subsection{Amélioration des heuristiques}
-			Pour tenter d'améliorer les performances du solveur, nous avons créé une nouvelle heuristique adapté au modèle.
+			Pour tenter d'améliorer les performances du solveur, nous avons créé une nouvelle heuristique adaptée au modèle.
 			Cette nouvelle heuristique comprend le choix de la variable ainsi que le choix de la valeur.
 			Elle fait tous ses calculs lors de son initialisation et elle retourne les résultats de ses calculs lors d'une requête par le solveur.
 
@@ -260,7 +260,7 @@
 				Ensuite, elle place tous les indices des caractères $c \in C$ dans une liste, dans l'ordre de celui qui a le plus d'occurrences pour l'une des $k$ sous-chaînes.
 				Ces sous-chaînes commencent aux différents indices $[0...k-1]$ dans $C$ et elles contiennent tous les caractères à des bonds de $k$.
 				Nous séparons en sous-chaînes, puisqu'on sait que deux caractères identiques dans la chaîne chiffrée resteront identiques s'ils sont à une distance égale à $k$.
-				De cette façon, la variable associée au caractère le plus fréquent est aussi celle qui assigne le plus de variable à une valeur (toutes les autres occurrences du caractère).
+				De cette façon, la variable associée au caractère le plus fréquent est aussi celle qui assigne le plus de variables à une valeur (toutes les autres occurrences du caractère).
 				Lors de la requête d'une variable à choisir par le solveur, l'heuristique ne fait que retourner les indices de sa liste dans l'ordre.
 
 				Voyons deux exemples avec $C = "ABABBCACBC"$
@@ -279,13 +279,13 @@
 				On trouve alors que le caractère le plus présent est 'B' avec 4 occurrences.
 				On place finalement le premier indice de B dans la sous-chaîne $S$, soit $1$, dans la liste.
 				Les caractères restants 'A' et 'C' ont la même fréquence dans $S$, alors on place leur premier indice dans la liste.
-				La liste final est donc: [1,0,5] qui représente: ['B','A','C'] \\
+				La liste finale est donc: [1,0,5] qui représente: ['B','A','C'] \\
 
 				Exemple avec $k=2$
 				Maintenant, on a deux sous-chaînes à considérer. \\
 				$S_1 = "AABAB"$ les caractères aux indices pairs. \\
 				$S_2 = "BBCCC"$ les caractères aux indices impairs. \\
-				Pour $S_1$, le caractère le plus fréquent est 'A' avec un $3$ occurences. \\
+				Pour $S_1$, le caractère le plus fréquent est 'A' avec une $3$ occurrence. \\
 				Pour $S_2$, il s'agit plutôt de 'C' avec 3 occurrences.
 				On compare maintenant les caractères retournés par les sous-chaînes et on prend celui qui était le plus fréquent dans sa sous-chaîne.
 				En cas, d'égalité, on choisi le premier caractère trouvé, soit 'A' dans cet exemple.
@@ -299,7 +299,7 @@
 				Par exemple, pour l'anglais, on a dans l'ordre les lettres suivantes: \\
 				e,t,a,o,i,n,s,h,r,d,l,c,u,m,w,f,g,y,p,b,v,k,j,x,q,z \\
 				Cette information est passée en paramètre pour construire la stratégie.
-				Elle s'en servira pour créer une liste avec les positions de chaque lettres dans l'alphabet dans le même ordre.
+				Elle s'en servira pour créer une liste avec les positions de chaque lettre dans l'alphabet dans le même ordre.
 				Il s'agit alors d'une heuristique statique puisqu'elle ne fait que retourner les indices dans un ordre précis.
 				On commence donc par retourner 4 pour la lettre 'e', suivit de 19 pour 't' et ainsi de suite.
 
