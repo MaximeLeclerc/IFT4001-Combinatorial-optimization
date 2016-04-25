@@ -307,13 +307,13 @@
 			Dans la majorité des cas, un problème d'optimisation combinatoire demande une solution valide, la meilleure solution ou toutes les solutions.
 			Dans notre cas, seulement la meilleure solution n'est pas suffisante, puisqu'il n'est pas assuré que la solution la plus probable du point de vue de l'analyse de fréquence sera réellement la solution qui mène au bon message en clair.
 			En effet, certains messages peuvent ne pas respecter les fréquences relatives typiques des lettres de la langue dans laquelle il est écrit.
-			Trouver toutes les solutions n'est pas n'ont plus envisageable, puisqu'il serait beaucoup trop long de toutes les calculer et qu'au final, ce serait même moins efficace qu'une attaque par force brute traditionnelle.
+			Trouver toutes les solutions n'est pas n'ont plus envisageable, puisqu'il serait beaucoup trop long de toutes les calculer et qu'au final, ce serait même moins efficace qu'une attaque par force brute traditionnelle.\\
 
 			Ce que l'on veut donc, c'est obtenir une liste des $m$ solutions les plus probables, pour qu'elle soit ensuite analysée par un humain ou un autre programme.
 			Le choix de $m$ est important: s'il est trop petit, la bonne solution ne sera pas trouvée; s'il est trop grand, la recherche sera beaucoup trop longue.
 			Pour être efficace, $m$ doit varier selon la longueur de la clé et la longueur de l'alphabet de la langue cible, puisque ce sont les paramètres qui font varier le nombre total de solutions.
 			Le nombre total de solutions est $l^k$. Le nombre de solutions à retourner que nous avons choisi est $(\frac{l}{4})^k$.
-			Par contre, pour trouver toutes ces solutions, plus de $(\frac{l}{4})^k$ solutions doivent être explorées.
+			Par contre, pour trouver toutes ces solutions, plus de $(\frac{l}{4})^k$ solutions doivent être explorées.\\
 
 
     \section{Protocole d'expérimentation}
@@ -374,7 +374,6 @@
 			\end{tabular}
 		\end{center}
 
-
 		Voici les résultats avec l'heuristique que nous avons créée:
 		\begin{center}
 			\begin{tabular}{| c | c | c | c | c |}
@@ -406,7 +405,7 @@
 			\end{tabular}
 		\end{center}
 
-		Il est important de noter que le test de l'instance 2 avec une clé de 5 lettres a été modifié pour ne retourner que les 10 meilleures solutions lorsque nous l'avons exécuté sans notre heuristique, en raison du temps d'exécution très élevé. C'est indiqué en rouge dans les tableaux ci-dessus et en pointillés dans la figure \ref{fig:1} ci-dessous.
+		Il est important de noter que le test de l'instance 2 avec une clé de 5 lettres a été modifié pour ne retourner que les 10 meilleures solutions lorsque nous l'avons exécuté sans notre heuristique, en raison du temps d'exécution très élevé. C'est indiqué en rouge dans les tableaux ci-dessus et en pointillés dans la figure 1 ci-dessous.\\
 
 		Il est aussi important de noter que, pour tous ces tests, la fréquence relative des lettres est assez près de la fréquence relative typique de l'anglais pour que le solveur trouve la bonne solution parmi celles qui sont retournées, à l'exception des tests de l'instance 4 et du test mentionné précédemment pour lequel qu'on a spécifié manuellement de ne retourner que les 10 meilleures solutions.
 
@@ -486,12 +485,9 @@
 
 
 	\section{Discussion}
-		En observant les figures ci-dessus, on peut voir que notre modèle fonctionne bien pour des textes cryptés avec une clé inférieure ou égale à 5.
-		Par contre, on peut voir que lorsque nous utilisons l'heuristique par défaut avec l'instance 2, le temps de résolutions augmente de façon exponentiellement selon la longueur de la clé.
-		Par contre, nous pouvons voir ci-dessus, que lorsque nous utilisons notre heuristique, le temps de résolutions est diminue très considérablement le temps de résolution. Nous avons réussi à faire
-		passer le temps de résolution de presque 7 heures à 9 minutes. Cependant, l'heuristique n'est pas totalement parfaite.
-		Lorsque l'on regarde la figure de l'instance 1 et 4, nous voyons que l'heuristique par défaut fait un meilleur travail que lui que nous avons créé.
-		De plus, cela nous a permis de trouver des limitations telles que lorsque le message est plus court et ainsi que le langage est non formel.
+		En observant les figures ci-dessus, on peut voir que notre modèle fonctionne bien pour des textes cryptés avec une clé inférieure ou égale à 5. Par contre, on peut voir que lorsque nous utilisons l'heuristique par défaut avec l'instance 2, le temps de résolutions augmente de façon exponentiellement selon la longueur de la clé. Par contre, nous pouvons voir ci-dessus, que lorsque nous utilisons notre heuristique, le temps de résolutions est diminue très considérablement le temps de résolution. Nous avons réussi à faire passer le temps de résolution de presque 7 heures à 9 minutes. Cependant, l'heuristique n'est pas totalement parfaite. Lorsque l'on regarde la figure de l'instance 1 et 4, nous voyons que l'heuristique par défaut fait un meilleur travail que lui que nous avons créé.\\
+
+		De plus, cela nous a permis de trouver des limitations telles que lorsque le message est plus court. En effet, puisque notre modèle choisit la bonne clé en fonction de la fréquence, il est plus facile d'avoir un bon résultat avec une longue chaine. On peut aussi voir une limitation si le message crypté n'est pas dans un langage formel. Par exemple, si ce sont des dérivations de mots tels que « coooooool » à la place de « cool ».\\
 
 	\section{Conclusion}
 
