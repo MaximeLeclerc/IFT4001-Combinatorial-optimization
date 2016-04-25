@@ -251,17 +251,17 @@
 				Nous avons $n$ contraintes de type (\ref{eq:5}) et (\ref{eq:6}), $l$ contraintes de type (\ref{eq:2}), (\ref{eq:8}), (\ref{eq:9}), (\ref{eq:12}) et (\ref{eq:13}) ainsi qu'une contrainte de type (\ref{eq:10}). Le nombre de contraintes est donc borné par $\theta(n + l)$.
 
 		\subsection{Amélioration des heuristiques}
-			Pour tenter d'améliorer les performances du solver, nous avons créé une nouvelle heuristique adapté au modèle.
-			Cette nouvelle heurisitque comprend le choix de la variable ainsi que le choix de la valeur.
-			Elle fait tout ses calculs lors de son initialisation et elle retourne les résultats de ses calculs lors d'une requète par le solveur.
+			Pour tenter d'améliorer les performances du solveur, nous avons créé une nouvelle heuristique adaptée au modèle.
+			Cette nouvelle heuristique comprend le choix de la variable ainsi que le choix de la valeur.
+			Elle fait tous ses calculs lors de son initialisation et elle retourne les résultats de ses calculs lors d'une requête par le solveur.
 
 			\subsubsection{Stratégie pour choisir la variable}
-				L'heuristique se contruit avec le message chiffré $C$ et la longueur de la clé à trouver $k$ comme paramètres.
-				Ensuite, elle place toutes les indices des caractères $c \in C$ dans une liste, dans l'ordre de celui qui à le plus d'occurences pour l'une des $k$ sous-chaînes.
-				Ces sous-chaînes commencent aux différentes indices $[0...k-1]$ dans $C$ et elles contienent toutes les caractères à des bonds de $k$.
+				L'heuristique se construit avec le message chiffré $C$ et la longueur de la clé à trouver $k$ comme paramètres.
+				Ensuite, elle place tous les indices des caractères $c \in C$ dans une liste, dans l'ordre de celui qui a le plus d'occurences pour l'une des $k$ sous-chaînes.
+				Ces sous-chaînes commencent aux différents indices $[0...k-1]$ dans $C$ et elles contiennent toutes les caractères à des bonds de $k$.
 				Nous séparons en sous-chaînes, puisqu'on sait que deux caractères identiques dans la chaîne chiffrée resteront identiques s'ils sont à une distance égale à $k$.
-				De cette façon, la variable associé au caractère le plus fréquent est aussi celle qui assigne le plus de variable à une valeur (toutes les autres occurences du caractère).
-				Lors de la requète d'une variable à choisir par le solveur, l'heurisitque ne fait que retourné les indices de sa liste dans l'ordre.
+				De cette façon, la variable associée au caractère le plus fréquent est aussi celle qui assigne le plus de variables à une valeur (toutes les autres occurences du caractère).
+				Lors de la requête d'une variable à choisir par le solveur, l'heuristique ne fait que retourner les indices de sa liste dans l'ordre.
 
 				Voyons deux examples avec $C = "ABABBCACBC"$
 				\begin{center}
@@ -275,30 +275,30 @@
 				\end{center}
 
 				Example avec $k=1$ \\
-				Dans ce cas, on a une seule sous-chaîne $S$ qui contient "ABABBCACBC"
-				On trouve alors que le caractère le plus présent est 'B' avec 4 occurences.
+				Dans ce cas, on a une seule sous-chaîne $S$ qui contient \emph{ABABBCACBC}
+				On trouve alors que le caractère le plus présent est \emph{B} avec 4 occurences.
 				On place finalement le premier indice de B dans la sous-chaîne $S$, soit $1$, dans la liste.
-				Les caractères restants 'A' et 'C' ont la même fréquence dans $S$, alors on place leur premier indice dans la liste.
-				La liste final est donc: [1,0,5] qui représente: ['B','A','C'] \\
+				Les caractères restants \emph{A} et \emph{C} ont la même fréquence dans $S$, alors on place leur premier indice dans la liste.
+				La liste finale est donc: [1,0,5] qui représente: [\emph{B},\emph{A},\emph{C}] \\
 
 				Example avec $k=2$
 				Maintenant, on a deux sous-chaîne à considérer. \\
-				$S_1 = "AABAB"$ les caractères aux indices pairs. \\
-				$S_2 = "BBCCC"$ les caractères aux indices impairs. \\
-				Pour $S_1$, le caractère le plus fréquent est 'A' avec un $3$ occurences. \\
-				Pour $S_2$, il s'agit plutôt de 'C' avec 3 occurences.
-				On compare maintenant les caractères retournées par les sous-chaînes et on prend celui qui était le plus fréquent dans sa sous-chaînes.
-				En cas, d'égalité, on choisi le premier caractère trouvé, soit 'A' dans cet example.
+				$S_1 = AABAB$ les caractères aux indices pairs. \\
+				$S_2 = BBCCC$ les caractères aux indices impairs. \\
+				Pour $S_1$, le caractère le plus fréquent est \emph{A} avec $3$ occurences. \\
+				Pour $S_2$, il s'agit plutôt de \emph{C} avec 3 occurences.
+				On compare maintenant les caractères retournés par les sous-chaînes et on prend celui qui était le plus fréquent dans sa sous-chaîne.
+				En cas, d'égalité, on choisi le premier caractère trouvé, soit \emph{A} dans cet exemple.
 				On ajoute à la liste le premier indice de ce caractère dans la chaîne de départ.
-				Après toutes les itération on obtient [0,5,4,1] qui représente: [ 'A', 'C', 'B' de $S_1$, 'B' de $S_2$]
+				Après toutes les itérations on obtient [0,5,4,1] qui représente: [ \emph{A}, \emph{C}, \emph{B} de $S_1$, \emph{B} de $S_2$]
 
 				On remarque ici que pour une même chaîne chiffrée de départ, on retourne un indice différent selon la longueur de la clé. \\
 
 			\subsubsection{Stratégie pour choisir la valeur}
-				Nous avons déterminé les lettres les plus utilité pour un language.
-				Par example, pour l'anglais, on à dans l'ordre les lettres suivantes: \\
+				Nous avons déterminé les lettres les plus utilisées pour un language.
+				Par example, pour l'anglais, on a dans l'ordre les lettres suivantes: \\
 				e,t,a,o,i,n,s,h,r,d,l,c,u,m,w,f,g,y,p,b,v,k,j,x,q,z \\
-				Cette infomation est passé en paramètre pour construire la stratégie.
+				Cette infomation est passée en paramètre pour construire la stratégie.
 				Elle s'en servira pour créer une liste avec les positions de chaque lettres dans l'alphabet dans le même ordre.
 				Il s'agit alors d'une heuristique statique puisqu'elle ne fait que retouner les indices dans un ordre précis.
 				On commence donc par retourner 4 pour la lettre 'e', suivit de 19 pour 't' et ainsi de suite.
@@ -408,11 +408,11 @@
 			\end{tabular}
 		\end{center}
 
-		Il est important de noter que le test de l'instance 2 avec une clé de 5 lettres a été modifié pour ne retourner que les 10 meilleures solutions lorsque nous l'avons exécuté sans notre heuristique, en raison du temps d'exécution très élevé. C'est indiqué en rouge dans les tableaux ci-dessus et en pointillés dans la figure \ref{fig:1} ci-dessous.
+		Il est important de noter que le test de l'instance 2 avec une clé de 5 lettres a été modifié pour ne retourner que les 10 meilleures solutions lorsque nous l'avons exécuté sans notre heuristique, en raison du temps d'exécution très élevé. C'est indiqué en rouge dans les tableaux ci-dessus et en pointillés dans la figure~\ref{fig:1} ci-dessous.
 
 		Il est aussi important de noter que, pour tous ces tests, la fréquence relative des lettres est assez près de la fréquence relative typique de l'anglais pour que le solveur trouve la bonne solution parmi celles retournées, à l'exception des tests de l'instance 4 et du test mentionné précédemment pour lequel on a spécifié manuellement de ne retourner que les 10 meilleures solutions.
 
-		\begin{figure}[!htbp] \label{fig:1}
+		\begin{figure}[!htbp]
 		    \centering
 			{\renewcommand{\arraystretch}{3}
 				\begin{tabu}{X[c]X[c]}
@@ -483,7 +483,7 @@
 				\end{tabu}
 			}
 
-			\caption{Différence entre l'heuristique par défaut (domOverWDeg) et notre heuristique personnalisée}
+			\caption{Différence entre l'heuristique par défaut (domOverWDeg) et notre heuristique personnalisée} \label{fig:1}
 		\end{figure}
 
 
