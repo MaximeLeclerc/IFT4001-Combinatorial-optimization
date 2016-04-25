@@ -47,7 +47,7 @@
 
 		L'objectif ici est d'étudier la viabilité d'une telle approche, par contrainte, pour l'attaque du chiffrement par substitution. Nous étudierons l'efficacité de l'approche selon la longueur du message et, dans le cas du chiffre de Vigenère, de la longueur de la clé.\\
 
-		Par exemple, en prenant le message chiffré LXFOPVEFRNHR, le solveur doit trouver que la clé la plus probable est LEMON et que le texte original est ATTACKATDAWN. L'implémentation utilisée utilisera les fréquences des lettres trouvées d'une langue donnée.\footnote{Wikipedia, [En ligne]. \url{https://en.wikipedia.org/wiki/Letter\_frequency} (Page consultée le 3 avril 2016)} Cette implémentation sera donc plus efficace si la chaine est longue et si elle utilise des vrais mots de la langue choisie.\\
+		Par exemple, en prenant le message chiffré LXFOPVEFRNHR, le solveur doit trouver que la clé la plus probable est LEMON et que le texte original est ATTACKATDAWN. L'implémentation utilisée utilisera les fréquences des lettres trouvées d'une langue donnée.\footnote{Wikipedia, [En ligne]. \url{https://en.wikipedia.org/wiki/Letter\_frequency} (Page consultée le 3 avril 2016)} Cette implémentation sera donc plus efficace si la chaîne est longue et si elle utilise des vrais mots de la langue choisie.\\
 
 	\section{Approche proposée}
 
@@ -317,32 +317,30 @@
 
 
     \section{Protocole d'expérimentation}
-		Nous avons choisi de faire des tests  sur des instances de différentes
-		longueurs de message et de clé, des messages qui respectent bien la
-		distribution de lettres anglaises, d'autres qui ne la respectent pas. Les
-		métriques que nous allons observer durant les expérimentations sont le
-		temps de réponse, le nombre de retours arrière, ainsi que le nombre de
-		solutions trouver. \\
+		Nous avons choisi de faire des tests  sur des instances de différentes longueurs de message et de clé, avec des messages qui respectent bien la distribution de lettres anglaises et d'autres qui ne la respectent pas.
+		Les métriques que nous allons observer durant les expérimentations sont le temps de réponse, le nombre de retours arrière, ainsi que le nombre de solutions trouver. \\
 
-		La première instance est une instance qui est considérée comme étant un message
-		long ayant une clé de longueur 4 et qui devrait avoir une distribution correcte de la fréquence des lettres. \\
-		Voici le texte brut : {\tiny FRIEN DSROM ANSCO UNTRY MENLE NDMEY OUREA RSICO METOB URYCA ESARN OTTOP RAISE HIMTH EEVIL THATM ENDOL IVESA FTERT HEMTH EGOOD ISOFT INTER REDWI THTHE IRBON ESSOL ETITB EWITH CAESA RTHEN OBLEB RUTUS HATHT OLDYO UCAES ARWAS AMBIT IOUSI FITWE RESOI TWASA GRIEV OUSFA ULTAN DGRIE VOUSL YHATH CAESA RANSW ERDIT HEREU NDERL EAVEO FBRUT USAND THERE STFOR BRUTU SISAN HONOU RABLE MANSO ARETH EYALL ALLHO NOURA BLEME NCOME ITOSP EAKIN CAESA RSFUN ERAL} \\
+		La première instance est considérée comme étant un message long qui a une distribution correcte de la fréquence des lettres par rapport à la distribution typique en anglais. \\
+		Voici le texte en clair : {\tiny FRIEN DSROM ANSCO UNTRY MENLE NDMEY OUREA RSICO METOB URYCA ESARN OTTOP RAISE HIMTH EEVIL THATM ENDOL IVESA FTERT HEMTH EGOOD ISOFT INTER REDWI THTHE IRBON ESSOL ETITB EWITH CAESA RTHEN OBLEB RUTUS HATHT OLDYO UCAES ARWAS AMBIT IOUSI FITWE RESOI TWASA GRIEV OUSFA ULTAN DGRIE VOUSL YHATH CAESA RANSW ERDIT HEREU NDERL EAVEO FBRUT USAND THERE STFOR BRUTU SISAN HONOU RABLE MANSO ARETH EYALL ALLHO NOURA BLEME NCOME ITOSP EAKIN CAESA RSFUN ERAL} \\
 
-		La deuxième instance est une instance qui est considérée comme étant un message
-		d'une courte longueur ayant une clé de longueur 1 et qui a une bonne distribution de la fréquence des lettres.
-		De plus, cette instance va être réutilisée pour faire des tests avec des clés de longueur 2,3,4,5.
-		\\ Voici le texte brut : {\tiny GENIUS WITHOUT EDUCATION IS LIKE SILVER IN THE MINE} \\
+		\bigskip
 
-		La troisième instance est une instance qui est considérée comme un long message ayant une
-		très bonne distribution de la fréquence des lettres que nous avons testées sur une clé de 1 à 4.
-		\\ Voici le texte brut : {\tiny HEREUPON LEGRAND AROSE WITH A GRAVE AND STATELY AIR AND BROUGHT ME THE BEETLE FROM A GLASS CASE IN WHICH IT WAS ENCLOSED IT WAS A BEAUTIFUL SCARABAEUS AND AT THAT TIME UNKNOWN TO NATURALISTS OF COURSE A GREAT PRIZE IN A SCIENTIFIC POINT OF VIEW THERE WERE TWO ROUND BLACK SPOTS NEAR ONE EXTREMITY OF THE BACK AND A LONG ONE NEAR THE OTHER THE SCALES WERE EXCEEDINGLY HARD AND GLOSSY WITH ALL THE APPEARANCE OF BURNISHED GOLD THE WEIGHT OF THE INSECT WAS VERY REMARKABLE AND TAKING ALL THINGS INTO CONSIDERATION I COULD HARDLY BLAME JUPITER FOR HIS OPINION RESPECTING IT}\\
+		La deuxième instance est considérée comme étant un message d'une courte longueur et qui a une distribution de la fréquence des lettres moyenne.
+		Par contre, les lettres les plus courantes en anglais apparaissent particulièrement souvent dans ce message.
+		Voici le texte en clair : {\tiny GENIUS WITHOUT EDUCATION IS LIKE SILVER IN THE MINE}\\
 
-		La quatrième instance est une instance ayant une longueur courte et qui
-		ne respect pas très bien la distribution des lettres. Nous l'avons testé
-		sur une clé de longueur 1. \\ Voici le texte brut : {\tiny ZJXQKB} \\
+		La troisième instance est une instance qui est considérée comme un long message ayant une très bonne distribution de la fréquence des lettres.
+		\\ Voici le texte en clair : {\tiny HEREUPON LEGRAND AROSE WITH A GRAVE AND STATELY AIR AND BROUGHT ME THE BEETLE FROM A GLASS CASE IN WHICH IT WAS ENCLOSED IT WAS A BEAUTIFUL SCARABAEUS AND AT THAT TIME UNKNOWN TO NATURALISTS OF COURSE A GREAT PRIZE IN A SCIENTIFIC POINT OF VIEW THERE WERE TWO ROUND BLACK SPOTS NEAR ONE EXTREMITY OF THE BACK AND A LONG ONE NEAR THE OTHER THE SCALES WERE EXCEEDINGLY HARD AND GLOSSY WITH ALL THE APPEARANCE OF BURNISHED GOLD THE WEIGHT OF THE INSECT WAS VERY REMARKABLE AND TAKING ALL THINGS INTO CONSIDERATION I COULD HARDLY BLAME JUPITER FOR HIS OPINION RESPECTING IT}\\
+
+		La quatrième instance est une instance ayant une longueur courte et qui ne respect pas bien la distribution des lettres de la langue anglaise. \\
+		Voici le texte en clair : {\tiny ZJXQKB}
+
+		\bigskip
+
+		Tous les tests ont été effectués avec des clé de longueur 1 à 4, et aussi de longueur 5 dans le cas de la deuxième instance. Ils ont aussi été faits avec l'heuristique par défaut du solveur (domOverWDeg) ainsi que notre propre heuristique.
 
 	\newpage
-    \section{Résultats}
+    \section{Résultats}\footnote{Nous avons effectué nos tests sur une machine équippée d'un processeur i7-4770K et de 16 Go de mémoire.}
 
  		Voici les résultats sans l'heuristique que nous avons créée:
 		\begin{center}
@@ -485,14 +483,28 @@
 
 
 	\section{Discussion}
-		En observant les figures ci-dessus, on peut voir que notre modèle fonctionne bien pour des textes chiffrés avec une clé inférieure ou égale à 5. Par contre, on peut voir que lorsque nous utilisons l'heuristique par défaut avec l'instance 2, le temps de résolutions augmente de façon exponentiellement selon la longueur de la clé. Par contre, nous pouvons voir ci-dessus, que lorsque nous utilisons notre heuristique, le temps de résolutions est diminue très considérablement le temps de résolution. Nous avons réussi à faire passer le temps de résolution de presque 7 heures à 9 minutes. Cependant, l'heuristique n'est pas totalement parfaite. Lorsque l'on regarde la figure de l'instance 1 et 4, nous voyons que l'heuristique par défaut fait un meilleur travail que lui que nous avons créé.\\
+		En observant les figures ci-dessus, on peut voir que notre modèle fonctionne bien pour des textes chiffrés avec une clé inférieure ou égale à 5.
+		Par contre, le temps de résolution augmente de façon exponentielle selon la longueur de la clé, ce qui fait que c'est moins pratique pour des clés plus longues.
 
-		De plus, cela nous a permis de trouver des limitations telles que lorsque le message est plus court. En effet, puisque notre modèle choisit la bonne clé en fonction de la fréquence, il est plus facile d'avoir un bon résultat avec une longue chaine. On peut aussi voir une limitation si le message chiffré n'est pas dans un langage formel. Par exemple, si ce sont des dérivations de mots tels que « coooooool » à la place de « cool ».\\
+		On peut aussi voir que la même heuristique n'est pas la meilleure pour toutes les instances.
+
+		L'heuristique que nous avons créée nous a apporté un impressionnant gain en temps par rapport à l'heuristique par défaut sur notre deuxième instance de test, passant de près de 7 heures pour trouver les 10 meilleures solutions à seulement 9 minutes pour trouver les 1296 meilleures.
+		Ça s'explique par le fait que les lettres les plus fréquentes en anglais se répètent souvent dans cette instance, ce qui est idéal pour notre heuristique qui essaie les lettres les plus courantes d'abord.
+
+		Dans d'autre cas, l'heuristique par défaut est plus rapide, bien que la différence soit moins grande que dans le cas précédent.
+
+		On peut toutefois remarquer que dans tous les cas, notre heuristique trouve moins de solutions au total, c'est-à-dire qu'elle trouve les meilleures plus rapidement.
+		Ça laisse croire qu'il y aurait moyen de l'optimiser, ce qu'il serait intéressant d'explorer en guise de travail futur.
+		Il serait aussi intéressant d'essayer plusieurs heuristiques en parallèle, pour pouvoir bénéficier de l'heuristique la mieux adaptée à chaque problème.
+
+		De plus, cela nous a permis de trouver des limitations telles que lorsque le message est plus court.
+		En effet, puisque notre modèle choisit la bonne clé en fonction de la fréquence, il est plus facile d'avoir un bon résultat avec une longue chaîne.
+		On peut aussi voir une limitation si le message chiffré n'est pas dans un langage formel. Par exemple, si ce sont des dérivations de mots tels que \emph{coooooool} plutôt que \emph{cool}.\\
 
 	\section{Conclusion}
 
-		Dans le cadre de ce travail, nous avons attaqué la cryptographie classique par substitution à l'aide de la programmation par contrainte. Pour faire cela, nous avons fait un modèle que nous avons implémenté à l'aide de \emph{Choco}. L'expérimentation a été un succès et nous avons résolu des problèmes simples de cryptographie. Par contre, nous avons vite réalisé que la programmation par contrainte ne serait pas bien adaptée pour régler des problèmes plus complexes.\\
+		Dans le cadre de ce travail, nous avons attaqué la cryptographie classique par substitution à l'aide de la programmation par contrainte. Pour faire cela, nous avons fait un modèle que nous avons implémenté à l'aide de \emph{Choco}. L'expérimentation a été un succès et nous avons résolu des problèmes simples de cryptographie. Par contre, nous avons vite réalisé que la programmation par contraintes ne serait pas bien adaptée pour régler des problèmes plus complexes telle que la cryptographie moderne.\\
 
-		Il aurait été intéressant de tester différents types de cryptographie pour pouvoir comparer l'efficacité de ceux-ci.\\
+		Il aurait été intéressant de tester différents types de cryptographie pour pouvoir comparer l'efficacité de ceux-ci.
 
 \end{document}
